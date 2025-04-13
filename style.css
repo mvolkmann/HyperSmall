@@ -1,15 +1,22 @@
+body {
+  margin: 0;
+}
+
 .menuBar {
+  background: #ddd;
   display: flex;
 
   .menu {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: relative;
 
     button {
       background: transparent;
       border: none;
       display: ink;
+      font-weight: bold;
     }
 
     hr {
@@ -17,10 +24,17 @@
     }
 
     .menuItems {
-      /* display: flex; */
       display: none;
       flex-direction: column;
       align-items: flex-start;
+
+      position: absolute;
+      top: 1rem;
+      width: 9rem;
+
+      background: #ddd;
+      border: 1px solid black;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     }
 
     .menuLabel {

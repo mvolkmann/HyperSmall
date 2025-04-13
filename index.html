@@ -6,11 +6,41 @@
     <title>HyperSmall</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
+    <script>
+      function configureMenus() {
+        const menus = document.querySelectorAll(".menu");
+        for (const menu of menus) {
+          const button = menu.querySelector("button");
+          button.addEventListener("click", () => {
+            const menu = button.parentElement;
+            const menuItems = menu.querySelector(".menuItems");
+            const style = menuItems.style;
+
+            const visible = style.display === "flex";
+            if (!visible) {
+              // Hide any menus that are visible.
+              for (const menu of menus) {
+                const menuItems = menu.querySelector(".menuItems");
+                menuItems.style.display = "none";
+              }
+            }
+
+            // Toggle the visibility of the clicked menu.
+            style.display = visible ? "none" : "flex";
+          });
+        }
+      }
+
+      window.onload = () => {
+        configureMenus();
+        console.log("loaded");
+      };
+    </script>
   </head>
   <body>
     <div class="menuBar">
       <div class="menu">
-        <button class="menuLabel" onClick="menuClick()">File</button>
+        <button class="menuLabel">File</button>
         <div class="menuItems">
           <button>New Stack...</button>
           <button>Open Stack...</button>
