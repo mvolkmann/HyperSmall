@@ -1,0 +1,30 @@
+.menuBar {
+  display: flex;
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    button {
+      background: transparent;
+      border: none;
+      display: ink;
+    }
+
+    hr {
+      width: 100%;
+    }
+
+    .menuItems {
+      /* display: flex; */
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .menuLabel {
+      font-weight: bold;
+    }
+  }
+}
