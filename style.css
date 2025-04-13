@@ -31,15 +31,24 @@ body {
 
       position: absolute;
       top: 1rem;
-      width: 10rem;
 
       background: #ddd;
       border: 1px solid black;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
+      button:hover {
+        background: #339;
+        color: white;
+      }
     }
 
     .menuLabel {
       font-weight: bold;
+    }
+
+    .selected {
+      background: #339;
+      color: white;
     }
   }
 }

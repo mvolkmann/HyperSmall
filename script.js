@@ -2,6 +2,9 @@ let menus;
 
 function closeMenus() {
   for (const menu of menus) {
+    const button = menu.querySelector("button");
+    button.classList.remove("selected");
+
     const menuItems = menu.querySelector(".menuItems");
     menuItems.style.display = "none";
   }
@@ -10,20 +13,24 @@ function closeMenus() {
 function configureMenus() {
   menus = document.querySelectorAll(".menu");
   for (const menu of menus) {
-    menu.addEventListener("click", onMenuClick);
-
     const button = menu.querySelector("button");
-    button.addEventListener("click", onMenuItemClick);
+    button.addEventListener("click", onMenuClick);
+    menu.addEventListener("click", onMenuItemClick);
   }
 }
 
-function onMenuClick(event) {
-  alert("That is not implemented yet.");
+function onMenuItemClick(event) {
+  playClick();
   closeMenus();
+  setTimeout(() => {
+    alert("That is not implemented yet.");
+  }, 100);
 }
 
-function onMenuItemClick(event) {
+function onMenuClick(event) {
   event.stopPropagation();
+
+  playClick();
 
   const button = event.target;
   const menu = button.parentElement;
@@ -31,8 +38,20 @@ function onMenuItemClick(event) {
   const style = menuItems.style;
 
   const visible = style.display === "flex";
-  if (!visible) closeMenus();
+  if (visible) {
+    style.display = "none";
+  } else {
+    closeMenus();
+    style.display = "flex";
+    setTimeout(() => {
+      style.width = "fit-contents";
+    }, 100);
+  }
 
-  // Toggle the visibility of the clicked menu.
-  style.display = visible ? "none" : "flex";
+  button.classList.toggle("selected");
+}
+
+function playClick() {
+  const audio = new Audio("sounds/click.mp3");
+  audio.play();
 }
