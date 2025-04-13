@@ -1,3 +1,4 @@
+let clickAudio;
 let menus;
 
 function closeMenus() {
@@ -22,9 +23,9 @@ function configureMenus() {
 function onMenuItemClick(event) {
   playClick();
   closeMenus();
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     alert("That is not implemented yet.");
-  }, 100);
+  });
 }
 
 function onMenuClick(event) {
@@ -43,15 +44,15 @@ function onMenuClick(event) {
   } else {
     closeMenus();
     style.display = "flex";
-    setTimeout(() => {
-      style.width = "fit-contents";
-    }, 100);
+    requestAnimationFrame(() => {
+      style.width = "fit-content";
+    });
   }
 
   button.classList.toggle("selected");
 }
 
 function playClick() {
-  const audio = new Audio("sounds/click.mp3");
-  audio.play();
+  if (!clickAudio) clickAudio = new Audio("sounds/click.mp3");
+  clickAudio.play();
 }
