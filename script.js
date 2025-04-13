@@ -1,6 +1,10 @@
 let clickAudio;
 let menus;
 
+const handlers = {
+  "New Stack...": newStack,
+};
+
 function closeMenus() {
   for (const menu of menus) {
     const button = menu.querySelector("button");
@@ -20,12 +24,23 @@ function configureMenus() {
   }
 }
 
+function newStack() {
+  console.log("script.js newStack: entered");
+}
+
 function onMenuItemClick(event) {
   playClick();
   closeMenus();
-  requestAnimationFrame(() => {
-    alert("That is not implemented yet.");
-  });
+
+  const button = event.target;
+  const handler = handlers[button.textContent];
+  if (handler) {
+    handler();
+  } else {
+    requestAnimationFrame(() => {
+      alert("That is not implemented yet.");
+    });
+  }
 }
 
 function onMenuClick(event) {
