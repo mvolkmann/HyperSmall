@@ -1,11 +1,18 @@
 body {
+  background-color: #63639c;
   margin: 0;
+  height: 100vh;
+  width: 100vw;
 }
 
 .menuBar {
-  background: #ddd;
   display: flex;
-  padding: 0.2rem;
+  align-items: center;
+
+  background: #ddd;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 0.1rem 0.7rem;
 
   .menu {
     display: flex;
@@ -14,11 +21,10 @@ body {
     position: relative;
 
     button {
-      background: transparent;
+      background-color: transparent;
       border: none;
       cursor: pointer;
       display: ink;
-      font-weight: bold;
     }
 
     hr {
@@ -33,7 +39,7 @@ body {
       position: absolute;
       top: 1.2rem;
 
-      background: #ddd;
+      background-color: #ddd;
       border: 1px solid black;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 
@@ -43,23 +49,33 @@ body {
       }
 
       button:hover {
-        background: #339;
+        background-color: #339;
         color: white;
       }
     }
 
-    .menuLabel {
-      font-weight: bold;
-    }
-
     .selected {
-      background: #339;
+      background-color: #339;
       color: white;
     }
   }
 
   .menuBarLogo {
     height: 1rem;
-    margin: 0 0.4rem;
+    margin.right: 0.4rem;
+  }
+
+  .menuLabel {
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  #time {
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
   }
 }

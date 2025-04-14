@@ -1,5 +1,8 @@
 let clickAudio;
 let menus;
+let menuOpen;
+
+setInterval(updateTime, 60000);
 
 const handlers = {
   "New Stack...": newStack,
@@ -16,16 +19,19 @@ function closeMenus() {
 }
 
 function configureMenus() {
+  document.body.addEventListener("click", closeMenus);
   menus = document.querySelectorAll(".menu");
   for (const menu of menus) {
     const button = menu.querySelector("button");
     button.addEventListener("click", onMenuClick);
+    button.addEventListener("mouseover", onMenuHover);
     menu.addEventListener("click", onMenuItemClick);
   }
 }
 
 function newStack() {
-  console.log("script.js newStack: entered");
+  const dialog = document.getElementById("newStackDialog");
+  dialog.show(); // or showModal()
 }
 
 function onMenuItemClick(event) {
@@ -48,6 +54,8 @@ function onMenuClick(event) {
 
   playClick();
 
+  menuOpen = true;
+
   const button = event.target;
   const menu = button.parentElement;
   const menuItems = menu.querySelector(".menuItems");
@@ -67,7 +75,20 @@ function onMenuClick(event) {
   button.classList.toggle("selected");
 }
 
+function onMenuHover(event) {
+  if (menuOpen) onMenuClick(event);
+}
+
 function playClick() {
   if (!clickAudio) clickAudio = new Audio("sounds/click.mp3");
   clickAudio.play();
+}
+
+function updateTime() {
+  const div = document.getElementById("time");
+  div.textContent = new Date().toLocaleTimeString(navigator.language, {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 }
