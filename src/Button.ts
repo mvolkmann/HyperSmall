@@ -10,6 +10,10 @@ class Button extends Container {
   icon = "";
   showName = true;
   style: ButtonStyle = ButtonStyle.RoundRect;
+
+  toHTML(): string {
+    return `<button>${this.name}</button>`;
+  }
 }
 
 export default Button;

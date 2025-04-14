@@ -13,6 +13,10 @@ class Field extends Container {
   multipleLines = false;
   showLines = false;
   wideMargins = false;
+
+  toHTML(): string {
+    return `<textarea></textarea>`;
+  }
 }
 
 export default Field;

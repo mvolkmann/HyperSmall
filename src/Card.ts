@@ -24,6 +24,10 @@ class Card {
   deleteField(field: Field) {
     this.fields.splice(this.fields.indexOf(field), 1);
   }
+
+  toHTML(): string {
+    return `<div></div>`;
+  }
 }
 
 export default Card;
