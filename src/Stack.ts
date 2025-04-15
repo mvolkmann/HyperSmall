@@ -19,3 +19,5 @@ class Stack {
     this.cards.splice(this.cards.indexOf(card), 1);
   }
 }
+
+export default Stack;

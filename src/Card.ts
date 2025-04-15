@@ -4,7 +4,7 @@ import Field from "./Field";
 
 class Card {
   private index: number = 0;
-  background: Background;
+  background?: Background;
   buttons: Button[] = [];
   fields: Field[] = [];
   script = "";

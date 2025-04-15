@@ -1,9 +1,11 @@
+import TextStyle from "./TextStyle";
+
 class Container {
-  height: number;
+  height = 480;
   name = "";
-  script: string;
+  script = "";
   textStyle = new TextStyle();
-  width: number;
+  width = 640;
 }
 
 export default Container;
