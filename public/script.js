@@ -98,6 +98,11 @@ function onStackNameChange(event) {
   submitButton.disabled = event.target.value === "";
 }
 
+function onStackSelected(event) {
+  const submitButton = document.querySelector("button[type=submit]");
+  submitButton.disabled = event.target.value === "";
+}
+
 function playClick() {
   if (!clickAudio) clickAudio = new Audio("sounds/click.mp3");
   clickAudio.play();

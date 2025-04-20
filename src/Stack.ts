@@ -2,7 +2,7 @@ import Card from "./Card";
 import CardSize from "./CardSize";
 
 class Stack {
-  private name: string = "";
+  name: string = "";
   cards: Card[] = [];
   copyBg = false;
   openNew = false;

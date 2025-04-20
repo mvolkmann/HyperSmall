@@ -6,7 +6,11 @@ import Stack from "./Stack";
 
 const app = new Hono();
 
-const stacks: Stack[] = [];
+const stacks: Stack[] = [
+  new Stack("Alpha"),
+  new Stack("Beta"),
+  new Stack("Gamma"),
+];
 
 /*
 app.get("/", (c) => {
@@ -85,6 +89,44 @@ app.get("/new-stack", (c: Context) => {
             &nbsp; &#x2195;
             <span id="cardHeight">240</span>
           </div>
+        </div>
+      </form>
+    </>
+  );
+});
+
+app.get("/open-stack", (c: Context) => {
+  return c.html(
+    <>
+      <form hx-post="/stack" x-data="{name: ''}">
+        <div class="column">
+          <label class="mb1" for="cardSize">
+            Stack Name:
+          </label>
+          <select
+            class="mb4"
+            id="stackName"
+            name="stackName"
+            size={7}
+            x-model="name"
+            x-on:change="onStackSelected($event)"
+          >
+            {stacks.map((stack) => (
+              <option>{stack.name}</option>
+            ))}
+          </select>
+          <div class="row">
+            <input type="checkbox" id="openNew" name="openNew" />
+            <label for="openNew">Open stack in new window</label>
+          </div>
+        </div>
+        <div class="column gap2">
+          <button autofocus onclick="closeDialog(this)">
+            Cancel
+          </button>
+          <button disabled={true} onclick="closeDialog(this)" type="submit">
+            Open
+          </button>
         </div>
       </form>
     </>
