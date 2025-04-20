@@ -62,6 +62,7 @@ app.get("/new-stack", (c: Context) => {
             Card size:
           </label>
           <select
+            class="mb4"
             id="cardSize"
             name="cardSize"
             x-model="cardSize"
@@ -75,12 +76,12 @@ app.get("/new-stack", (c: Context) => {
             <option>Window</option>
           </select>
           <div>
-            <label>Width:</label>
-            <span id="cardWidth"></span>
+            <label>Width: </label>
+            <span id="cardWidth">416</span>
           </div>
           <div>
-            <label>Height:</label>
-            <span id="cardHeight"></span>
+            <label>Height: </label>
+            <span id="cardHeight">240</span>
           </div>
         </div>
       </form>

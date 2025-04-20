@@ -49,7 +49,6 @@ function newStack() {
 }
 
 function onCardSizeChange(event) {
-  console.log("index.tsx onCardSizeChange: entered");
   const cardSize = event.target.value;
   document.querySelector("#cardWidth").textContent = cardWidth[cardSize];
   document.querySelector("#cardHeight").textContent = cardHeight[cardSize];

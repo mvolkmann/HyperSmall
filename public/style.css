@@ -29,13 +29,18 @@ input[type="checkbox"] {
   margin-right: 0.3rem;
 }
 
-label {
+label,
+span {
   font-size: 0.8rem;
   font-weight: bold;
 }
 
 .mb1 {
   margin-bottom: 0.25rem;
+}
+
+.mb4 {
+  margin-bottom: 1rem;
 }
 
 .menuBar {
