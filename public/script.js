@@ -2,6 +2,24 @@ let clickAudio;
 let menus;
 let menuOpen;
 
+const cardHeight = {
+  Small: 240,
+  Classic: 342,
+  PowerBook: 400,
+  Large: 480,
+  MacPaint: 720,
+  Window: 480, // same as Large
+};
+
+const cardWidth = {
+  Small: 416,
+  Classic: 512,
+  PowerBook: 640,
+  Large: 640,
+  MacPaint: 576,
+  Window: 640, // same as Large
+};
+
 setInterval(updateTime, 60000);
 
 function closeMenus() {

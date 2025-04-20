@@ -22,7 +22,14 @@ app.get("/new-stack", (c: Context) => {
       <form
         hx-post="/stack"
         x-data="{
+          cardSize: 'Small',
           name: '',
+          onCardSizeChange(event) {
+            console.log('index.tsx onCardSizeChange: entered');
+            const cardSize = event.target.value;
+            document.querySelector('#cardWidth').textContent = cardWidth[cardSize];
+            document.querySelector('#cardHeight').textContent = cardHeight[cardSize];
+          },
           onNameChange(event) {
             const submitButton = document.querySelector('button[type=submit]');
            submitButton.disabled = event.target.value === '';
@@ -62,7 +69,12 @@ app.get("/new-stack", (c: Context) => {
           <label class="mb1" for="cardSize">
             Card size:
           </label>
-          <select id="cardSize" name="cardSize">
+          <select
+            id="cardSize"
+            name="cardSize"
+            x-model="cardSize"
+            x-on:change="onCardSizeChange($event)"
+          >
             <option>Small</option>
             <option>Classic</option>
             <option>PowerBook</option>
@@ -70,6 +82,14 @@ app.get("/new-stack", (c: Context) => {
             <option>MacPaint</option>
             <option>Window</option>
           </select>
+          <div>
+            <label>Width:</label>
+            <span id="cardWidth"></span>
+          </div>
+          <div>
+            <label>Height:</label>
+            <span id="cardHeight"></span>
+          </div>
         </div>
       </form>
     </>
