@@ -38,6 +38,7 @@ function onMenuItemClick(event) {
   playClick();
   closeMenus();
 
+  /*
   const button = event.target;
   const handler = handlers[button.textContent];
   if (handler) {
@@ -47,6 +48,7 @@ function onMenuItemClick(event) {
       alert("That is not implemented yet.");
     });
   }
+  */
 }
 
 function onMenuClick(event) {

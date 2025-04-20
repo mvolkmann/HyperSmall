@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HyperSmall</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="script.js"></script>
     <script>
       window.onload = () => {
         configureMenus();
         updateTime();
       };
+
+      document.addEventListener("htmx:afterSwap", function (event) {
+        const element = event.detail.elt;
+        if (element.id === "modal-dialog") element.showModal();
+      });
     </script>
   </head>
   <body>
@@ -19,7 +25,9 @@
       <div class="menu">
         <button class="menuLabel">File</button>
         <div class="menuItems">
-          <button onclick="newStack()">New Stack...</button>
+          <button hx-get="/new-stack" hx-target="#modal-dialog">
+            New Stack...
+          </button>
           <button>Open Stack...</button>
           <button>Close Stack</button>
           <hr />
@@ -133,10 +141,6 @@
       />
       <div class="menuLabel">HyperCard</div>
     </div>
-
-    <dialog id="newStackDialog">
-      <button autofocus onclick="parentElement.close()">Close</button>
-      <p>This modal dialog has a groovy backdrop!</p>
-    </dialog>
+    <dialog id="modal-dialog"></dialog>
   </body>
 </html>

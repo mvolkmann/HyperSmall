@@ -2,11 +2,15 @@
   "name": "hypersmall",
   "version": "1.0.0",
   "description": "HyperCard for the Web",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc --watch"
-  },
   "author": "R. Mark Volkmann",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "bun run --hot src/index.tsx"
+  },
+  "dependencies": {
+    "hono": "^4.7.7"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
 }
