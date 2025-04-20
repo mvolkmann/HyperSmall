@@ -54,14 +54,10 @@ app.get("/new-stack", (c: Context) => {
           </div>
         </div>
         <div class="border-right-dotted column gap2">
-          <button autofocus onclick="this.closest('dialog').close()">
+          <button autofocus onclick="closeDialog(this)">
             Cancel
           </button>
-          <button
-            disabled={true}
-            onclick="this.closest('dialog').close()"
-            type="submit"
-          >
+          <button disabled={true} onclick="closeDialog(this)" type="submit">
             Save
           </button>
         </div>

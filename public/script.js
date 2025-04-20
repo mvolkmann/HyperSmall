@@ -22,6 +22,10 @@ const cardWidth = {
 
 setInterval(updateTime, 60000);
 
+function closeDialog(element) {
+  element.closest("dialog").close();
+}
+
 function closeMenus() {
   for (const menu of menus) {
     const button = menu.querySelector("button");
