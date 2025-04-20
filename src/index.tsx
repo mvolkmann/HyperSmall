@@ -50,7 +50,7 @@ app.get("/new-stack", (c: Context) => {
           </div>
         </div>
         <div class="border-right-dotted column gap2">
-          <button autofocus onclick="parentElement.parentElement.close()">
+          <button autofocus onclick="this.closest('dialog').close()">
             Cancel
           </button>
           <button disabled={true} type="submit">

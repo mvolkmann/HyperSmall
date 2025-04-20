@@ -11,6 +11,11 @@ body {
   padding-right: 1rem;
 }
 
+button {
+  border-radius: 0.25rem;
+  border-width: 2px;
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -29,6 +34,7 @@ input[type="checkbox"] {
   margin-right: 0.3rem;
 }
 
+button,
 label,
 span {
   font-size: 0.8rem;
