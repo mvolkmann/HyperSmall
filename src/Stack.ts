@@ -4,6 +4,8 @@ import CardSize from "./CardSize";
 class Stack {
   private name: string = "";
   cards: Card[] = [];
+  copyBg = false;
+  openNew = false;
   script = "";
   size: CardSize = CardSize.Large;
 
