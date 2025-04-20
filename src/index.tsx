@@ -29,26 +29,39 @@ app.get("/new-stack", (c: Context) => {
           }
         }"
       >
-        <div>
-          <label for="name">New stack name:</label>
+        <div class="column">
+          <label class="mb1" for="name">
+            New stack name:
+          </label>
           <input
-            type="text"
             id="name"
             name="name"
+            style="margin-bottom: 1rem"
+            type="text"
             x-model="name"
             x-on:keyup="onNameChange($event)"
           />
+          <div class="row">
+            <input type="checkbox" id="copyBg" name="copyBg" />
+            <label for="copyBg">Copy current background</label>
+          </div>
+          <div class="row">
+            <input type="checkbox" id="openNew" name="openNew" />
+            <label for="openNew">Open stack in new window</label>
+          </div>
         </div>
-        <div>
-          <input type="checkbox" id="copyBg" name="copyBg" />
-          <label for="copyBg">Copy current background</label>
+        <div class="border-right-dotted column gap2">
+          <button autofocus onclick="parentElement.parentElement.close()">
+            Cancel
+          </button>
+          <button disabled={true} type="submit">
+            Save
+          </button>
         </div>
-        <div>
-          <input type="checkbox" id="openNew" name="openNew" />
-          <label for="openNew">Open stack in new window</label>
-        </div>
-        <div>
-          <label for="cardSize">Card size:</label>
+        <div class="column">
+          <label class="mb1" for="cardSize">
+            Card size:
+          </label>
           <select id="cardSize" name="cardSize">
             <option>Small</option>
             <option>Classic</option>
@@ -58,12 +71,6 @@ app.get("/new-stack", (c: Context) => {
             <option>Window</option>
           </select>
         </div>
-        <button autofocus onclick="parentElement.parentElement.close()">
-          Cancel
-        </button>
-        <button disabled={true} type="submit">
-          Save
-        </button>
       </form>
     </>
   );
