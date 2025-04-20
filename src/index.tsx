@@ -6,11 +6,13 @@ import Stack from "./Stack";
 
 const app = new Hono();
 
-const stacks: Stack[] = [
-  new Stack("Alpha"),
-  new Stack("Beta"),
-  new Stack("Gamma"),
-];
+let stack: Stack | undefined = undefined;
+
+const stacks: { [key: string]: Stack } = {
+  Alpha: new Stack("Alpha"),
+  Beta: new Stack("Beta"),
+  Gamma: new Stack("Gamma"),
+};
 
 /*
 app.get("/", (c) => {
@@ -98,22 +100,24 @@ app.get("/new-stack", (c: Context) => {
 app.get("/open-stack", (c: Context) => {
   return c.html(
     <>
-      <form hx-post="/stack" x-data="{name: ''}">
+      <form hx-post="/select-stack" x-data="{name: ''}">
         <div class="column">
           <label class="mb1" for="cardSize">
             Stack Name:
           </label>
           <select
             class="mb4"
-            id="stackName"
-            name="stackName"
+            id="name"
+            name="name"
             size={7}
             x-model="name"
             x-on:change="onStackSelected($event)"
           >
-            {stacks.map((stack) => (
-              <option>{stack.name}</option>
-            ))}
+            {Object.keys(stacks)
+              .sort()
+              .map((name: string) => (
+                <option>{name}</option>
+              ))}
           </select>
           <div class="row">
             <input type="checkbox" id="openNew" name="openNew" />
@@ -133,16 +137,25 @@ app.get("/open-stack", (c: Context) => {
   );
 });
 
+app.post("/select-stack", async (c: Context) => {
+  console.log("index.tsx post /select-stack: entered");
+  const formData = await c.req.formData();
+  stack = new Stack(formData.get("name") as string);
+  console.log("index.tsx post /select-stack: stack =", stack);
+  return c.body(null, 204); // No Content
+});
+
 app.post("/stack", async (c: Context) => {
   const formData = await c.req.formData();
 
-  const stack = new Stack(formData.get("name") as string);
+  const name = formData.get("name") as string;
+  const stack = new Stack(name);
   stack.copyBg = Boolean(formData.get("copyBg"));
   stack.openNew = Boolean(formData.get("openNew"));
   const cardSize = formData.get("cardSize") as string;
   stack.size = CardSize[cardSize as keyof typeof CardSize];
   console.log("index.tsx post /stack: stack =", stack);
-  stacks.push(stack);
+  stacks[name] = stack;
 
   return c.body(null, 204); // No Content
 });
