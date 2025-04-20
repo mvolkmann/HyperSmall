@@ -4,10 +4,6 @@ let menuOpen;
 
 setInterval(updateTime, 60000);
 
-const handlers = {
-  "New Stack...": newStack,
-};
-
 function closeMenus() {
   for (const menu of menus) {
     const button = menu.querySelector("button");
@@ -37,18 +33,6 @@ function newStack() {
 function onMenuItemClick(event) {
   playClick();
   closeMenus();
-
-  /*
-  const button = event.target;
-  const handler = handlers[button.textContent];
-  if (handler) {
-    handler();
-  } else {
-    requestAnimationFrame(() => {
-      alert("That is not implemented yet.");
-    });
-  }
-  */
 }
 
 function onMenuClick(event) {

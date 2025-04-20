@@ -19,10 +19,25 @@ app.use("/*", serveStatic({ root: "./public" }));
 app.get("/new-stack", (c: Context) => {
   return c.html(
     <>
-      <form hx-post="/stack">
+      <form
+        hx-post="/stack"
+        x-data="{
+          name: '',
+          onNameChange(event) {
+            const submitButton = document.querySelector('button[type=submit]');
+           submitButton.disabled = event.target.value === '';
+          }
+        }"
+      >
         <div>
           <label for="name">New stack name:</label>
-          <input type="text" id="name" name="name" />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            x-model="name"
+            x-on:keyup="onNameChange($event)"
+          />
         </div>
         <div>
           <input type="checkbox" id="copyBg" name="copyBg" />
@@ -46,7 +61,9 @@ app.get("/new-stack", (c: Context) => {
         <button autofocus onclick="parentElement.parentElement.close()">
           Cancel
         </button>
-        <button type="submit">Save</button>
+        <button disabled={true} type="submit">
+          Save
+        </button>
       </form>
     </>
   );
