@@ -24,16 +24,8 @@ app.get("/new-stack", (c: Context) => {
         x-data="{
           cardSize: 'Small',
           name: '',
-          onCardSizeChange(event) {
-            console.log('index.tsx onCardSizeChange: entered');
-            const cardSize = event.target.value;
-            document.querySelector('#cardWidth').textContent = cardWidth[cardSize];
-            document.querySelector('#cardHeight').textContent = cardHeight[cardSize];
-          },
-          onNameChange(event) {
-            const submitButton = document.querySelector('button[type=submit]');
-           submitButton.disabled = event.target.value === '';
-          }
+          onCardSizeChange,
+          onStackNameChange
         }"
       >
         <div class="column">
@@ -46,7 +38,7 @@ app.get("/new-stack", (c: Context) => {
             style="margin-bottom: 1rem"
             type="text"
             x-model="name"
-            x-on:keyup="onNameChange($event)"
+            x-on:keyup="onStackNameChange($event)"
           />
           <div class="row">
             <input type="checkbox" id="copyBg" name="copyBg" />

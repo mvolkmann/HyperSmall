@@ -48,6 +48,13 @@ function newStack() {
   dialog.show(); // or showModal()
 }
 
+function onCardSizeChange(event) {
+  console.log("index.tsx onCardSizeChange: entered");
+  const cardSize = event.target.value;
+  document.querySelector("#cardWidth").textContent = cardWidth[cardSize];
+  document.querySelector("#cardHeight").textContent = cardHeight[cardSize];
+}
+
 function onMenuItemClick(event) {
   playClick();
   closeMenus();
@@ -81,6 +88,11 @@ function onMenuClick(event) {
 
 function onMenuHover(event) {
   if (menuOpen) onMenuClick(event);
+}
+
+function onStackNameChange(event) {
+  const submitButton = document.querySelector("button[type=submit]");
+  submitButton.disabled = event.target.value === "";
 }
 
 function playClick() {
