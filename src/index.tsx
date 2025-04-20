@@ -57,7 +57,11 @@ app.get("/new-stack", (c: Context) => {
           <button autofocus onclick="this.closest('dialog').close()">
             Cancel
           </button>
-          <button disabled={true} type="submit">
+          <button
+            disabled={true}
+            onclick="this.closest('dialog').close()"
+            type="submit"
+          >
             Save
           </button>
         </div>
