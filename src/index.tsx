@@ -76,11 +76,9 @@ app.get("/new-stack", (c: Context) => {
             <option>Window</option>
           </select>
           <div>
-            <label>Width: </label>
+            &#x2194;
             <span id="cardWidth">416</span>
-          </div>
-          <div>
-            <label>Height: </label>
+            &nbsp; &#x2195;
             <span id="cardHeight">240</span>
           </div>
         </div>
