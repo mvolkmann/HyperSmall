@@ -2,7 +2,7 @@ import Button from "./Button";
 import Field from "./Field";
 
 class Background {
-  private index: number = 0;
+  private id: number = 0;
   buttons: Button[] = [];
   fields: Field[] = [];
 
