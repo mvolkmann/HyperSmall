@@ -4,7 +4,7 @@ enum CardSize {
   PowerBook, // 640 x 400
   Large, // 640 x 480
   MacPaint, // 576 x 720
-  Window, // 640 x 480 (same as Large)
+  Window // 640 x 480 (same as Large)
 }
 
 export default CardSize;

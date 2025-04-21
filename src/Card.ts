@@ -1,13 +1,13 @@
-import Background from "./Background";
-import Button from "./Button";
-import Field from "./Field";
+import Background from './Background';
+import Button from './Button';
+import Field from './Field';
 
 class Card {
   private index: number = 0;
   background?: Background;
   buttons: Button[] = [];
   fields: Field[] = [];
-  script = "";
+  script = '';
 
   addButton(button: Button) {
     this.buttons.push(button);

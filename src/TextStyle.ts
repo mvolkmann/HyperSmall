@@ -1,9 +1,9 @@
-import Align from "./Align";
+import Align from './Align';
 
 class TextStyle {
   align: Align = Align.Center;
   bold = false;
-  fontFamily = "sans-serif";
+  fontFamily = 'sans-serif';
   fontSize = 12;
   italic = false;
   outline = false;

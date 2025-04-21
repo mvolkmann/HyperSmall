@@ -1,14 +1,14 @@
-import Card from "./Card";
-import CardSize from "./CardSize";
+import Card from './Card';
+import CardSize from './CardSize';
 
 class Stack {
   cards: Card[] = [];
   cardSize: CardSize = CardSize.Large;
   copyBg = false;
   id = 0;
-  name: string = "";
+  name: string = '';
   openNew = false;
-  script = "";
+  script = '';
 
   constructor(name: string) {
     this.name = name;

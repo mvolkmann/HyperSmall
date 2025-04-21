@@ -1,5 +1,5 @@
-import Button from "./Button";
-import Field from "./Field";
+import Button from './Button';
+import Field from './Field';
 
 class Background {
   private id: number = 0;

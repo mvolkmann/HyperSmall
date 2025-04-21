@@ -9,7 +9,7 @@ enum ButtonStyle {
   Standard,
   Default,
   Oval,
-  Popup,
+  Popup
 }
 
 export default ButtonStyle;

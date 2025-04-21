@@ -1,5 +1,5 @@
-import Stack from "./Stack";
-import Tool from "./Tool";
+import Stack from './Stack';
+import Tool from './Tool';
 
 class HyperCard {
   tool: Tool = Tool.Browse;

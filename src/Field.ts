@@ -1,6 +1,6 @@
-import Container from "./Container";
-import FieldStyle from "./FieldStyle";
-import TextStyle from "./TextStyle";
+import Container from './Container';
+import FieldStyle from './FieldStyle';
+import TextStyle from './TextStyle';
 
 class Field extends Container {
   autoSelect = false;

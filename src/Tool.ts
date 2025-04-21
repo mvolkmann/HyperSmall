@@ -16,7 +16,7 @@ enum Tool {
   RegularPolygon,
   RoundRectangle,
   Spray,
-  Text,
+  Text
 }
 
 export default Tool;

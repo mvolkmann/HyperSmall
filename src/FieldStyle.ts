@@ -3,7 +3,7 @@ enum FieldStyle {
   Opaque,
   Rectangle,
   Shadow,
-  Scrolling,
+  Scrolling
 }
 
 export default FieldStyle;

@@ -1,21 +1,21 @@
-import { Database } from "bun:sqlite";
-import { type Context, Hono } from "hono";
-import { serveStatic } from "hono/bun";
-import { logger } from "hono/logger";
+import {Database} from 'bun:sqlite';
+import {type Context, Hono} from 'hono';
+import {serveStatic} from 'hono/bun';
+import {logger} from 'hono/logger';
 
-import CardSize from "./CardSize";
-import Stack from "./Stack";
+import CardSize from './CardSize';
+import Stack from './Stack';
 
-const db = new Database("hypersmall.db");
-db.exec("PRAGMA journal_mode = WAL;");
+const db = new Database('hypersmall.db');
+db.exec('PRAGMA journal_mode = WAL;');
 
 const app = new Hono();
 
 const insertStackPS = db.prepare(
-  "insert into stacks (cardSize, copyBg, name, openNew, script) values (?, ?, ?, ?, ?)"
+  'insert into stacks (cardSize, copyBg, name, openNew, script) values (?, ?, ?, ?, ?)'
 );
 
-const getStacksPS = db.prepare("select * from stacks");
+const getStacksPS = db.prepare('select * from stacks');
 
 let stack: Stack | undefined = undefined;
 
@@ -26,12 +26,12 @@ app.get("/", (c) => {
 */
 
 // This logs all HTTP requests to the terminal where the server is running.
-app.use("/*", logger());
+app.use('/*', logger());
 
 // This serves static files from the public directory.
-app.use("/*", serveStatic({ root: "./public" }));
+app.use('/*', serveStatic({root: './public'}));
 
-app.get("/new-stack", (c: Context) => {
+app.get('/new-stack', (c: Context) => {
   return c.html(
     <>
       <form
@@ -102,9 +102,9 @@ app.get("/new-stack", (c: Context) => {
   );
 });
 
-app.get("/open-stack", (c: Context) => {
+app.get('/open-stack', (c: Context) => {
   const stacks = getStacksPS.all() as Stack[];
-  const stackNames = stacks.map((stack) => stack.name).sort();
+  const stackNames = stacks.map(stack => stack.name).sort();
 
   return c.html(
     <>
@@ -143,22 +143,22 @@ app.get("/open-stack", (c: Context) => {
   );
 });
 
-app.post("/select-stack", async (c: Context) => {
+app.post('/select-stack', async (c: Context) => {
   const formData = await c.req.formData();
-  stack = new Stack(formData.get("name") as string);
+  stack = new Stack(formData.get('name') as string);
   return c.body(null, 204); // No Content
 });
 
-app.post("/stack", async (c: Context) => {
+app.post('/stack', async (c: Context) => {
   const formData = await c.req.formData();
 
-  const name = formData.get("name") as string;
+  const name = formData.get('name') as string;
   const stack = new Stack(name);
-  stack.copyBg = Boolean(formData.get("copyBg"));
-  stack.openNew = Boolean(formData.get("openNew"));
-  const cardSize = formData.get("cardSize") as string;
+  stack.copyBg = Boolean(formData.get('copyBg'));
+  stack.openNew = Boolean(formData.get('openNew'));
+  const cardSize = formData.get('cardSize') as string;
   stack.cardSize = CardSize[cardSize as keyof typeof CardSize];
-  stack.script = "";
+  stack.script = '';
 
   const result = insertStackPS.run(
     stack.cardSize,
