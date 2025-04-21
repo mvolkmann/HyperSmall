@@ -20,9 +20,9 @@
         updateTime();
       };
 
-      document.addEventListener("htmx:afterSwap", function (event) {
+      document.addEventListener('htmx:afterSwap', function (event) {
         const element = event.detail.elt;
-        if (element.id === "modal-dialog") element.showModal();
+        if (element.id === 'modal-dialog') element.showModal();
       });
     </script>
   </head>
@@ -40,7 +40,9 @@
           </button>
           <button>Close Stack</button>
           <hr />
-          <button>Delete Stack...</button>
+          <button hx-delete="/stack" hx-target="#modal-dialog">
+            Delete Stack...
+          </button>
         </div>
       </div>
       <div class="menu">

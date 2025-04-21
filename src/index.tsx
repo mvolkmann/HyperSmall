@@ -149,6 +149,21 @@ app.post('/select-stack', async (c: Context) => {
   return c.body(null, 204); // No Content
 });
 
+app.delete('/stack', (c: Context) => {
+  const name = stack?.name ?? 'unknown';
+  return c.html(
+    <>
+      <p>Delete all n cards in this stack named "{name}"?</p>
+      <div>
+        <button onclick="closeDialog(this)">Delete</button>
+        <button autofocus onclick="closeDialog(this)">
+          Cancel
+        </button>
+      </div>
+    </>
+  );
+});
+
 app.post('/stack', async (c: Context) => {
   const formData = await c.req.formData();
 
