@@ -1,10 +1,19 @@
+import { Database } from "bun:sqlite";
 import { type Context, Hono } from "hono";
 import { serveStatic } from "hono/bun";
 import { logger } from "hono/logger";
+
 import CardSize from "./CardSize";
 import Stack from "./Stack";
 
+const db = new Database("hypersmall.db");
+db.exec("PRAGMA journal_mode = WAL;");
+
 const app = new Hono();
+
+const insertStackPS = db.prepare(
+  "insert into stacks (cardSize, copyBg, name, openNew, script) values (?, ?, ?, ?, ?)"
+);
 
 let stack: Stack | undefined = undefined;
 
@@ -153,8 +162,18 @@ app.post("/stack", async (c: Context) => {
   stack.copyBg = Boolean(formData.get("copyBg"));
   stack.openNew = Boolean(formData.get("openNew"));
   const cardSize = formData.get("cardSize") as string;
-  stack.size = CardSize[cardSize as keyof typeof CardSize];
+  stack.cardSize = CardSize[cardSize as keyof typeof CardSize];
+  stack.script = "";
   console.log("index.tsx post /stack: stack =", stack);
+
+  const result: RunResult = insertStackPS.run(
+    stack.cardSize,
+    stack.copyBg,
+    stack.name,
+    stack.openNew,
+    stack.script
+  );
+  stack.id = result.lastInsertRowid as number;
   stacks[name] = stack;
 
   return c.body(null, 204); // No Content

@@ -1,2 +1,4 @@
 node_modules/
 hypersmall.db
+hypersmall.db-shm
+hypersmall.db-wal

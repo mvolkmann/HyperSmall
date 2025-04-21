@@ -5,13 +5,12 @@ class Stack {
   cards: Card[] = [];
   cardSize: CardSize = CardSize.Large;
   copyBg = false;
-  id: number;
+  id = 0;
   name: string = "";
   openNew = false;
   script = "";
 
-  constructor(id: number, name: string) {
-    this.id = id;
+  constructor(name: string) {
     this.name = name;
   }
 
