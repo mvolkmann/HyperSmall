@@ -15,13 +15,9 @@ const insertStackPS = db.prepare(
   "insert into stacks (cardSize, copyBg, name, openNew, script) values (?, ?, ?, ?, ?)"
 );
 
-let stack: Stack | undefined = undefined;
+const getStacksPS = db.prepare("select * from stacks");
 
-const stacks: { [key: string]: Stack } = {
-  Alpha: new Stack("Alpha"),
-  Beta: new Stack("Beta"),
-  Gamma: new Stack("Gamma"),
-};
+let stack: Stack | undefined = undefined;
 
 /*
 app.get("/", (c) => {
@@ -107,6 +103,9 @@ app.get("/new-stack", (c: Context) => {
 });
 
 app.get("/open-stack", (c: Context) => {
+  const stacks = getStacksPS.all() as Stack[];
+  const stackNames = stacks.map((stack) => stack.name).sort();
+
   return c.html(
     <>
       <form hx-post="/select-stack" x-data="{name: ''}">
@@ -122,11 +121,9 @@ app.get("/open-stack", (c: Context) => {
             x-model="name"
             x-on:change="onStackSelected($event)"
           >
-            {Object.keys(stacks)
-              .sort()
-              .map((name: string) => (
-                <option>{name}</option>
-              ))}
+            {stackNames.map((name: string) => (
+              <option>{name}</option>
+            ))}
           </select>
           <div class="row">
             <input type="checkbox" id="openNew" name="openNew" />
@@ -147,10 +144,8 @@ app.get("/open-stack", (c: Context) => {
 });
 
 app.post("/select-stack", async (c: Context) => {
-  console.log("index.tsx post /select-stack: entered");
   const formData = await c.req.formData();
   stack = new Stack(formData.get("name") as string);
-  console.log("index.tsx post /select-stack: stack =", stack);
   return c.body(null, 204); // No Content
 });
 
@@ -164,9 +159,8 @@ app.post("/stack", async (c: Context) => {
   const cardSize = formData.get("cardSize") as string;
   stack.cardSize = CardSize[cardSize as keyof typeof CardSize];
   stack.script = "";
-  console.log("index.tsx post /stack: stack =", stack);
 
-  const result: RunResult = insertStackPS.run(
+  const result = insertStackPS.run(
     stack.cardSize,
     stack.copyBg,
     stack.name,
@@ -174,7 +168,6 @@ app.post("/stack", async (c: Context) => {
     stack.script
   );
   stack.id = result.lastInsertRowid as number;
-  stacks[name] = stack;
 
   return c.body(null, 204); // No Content
 });
