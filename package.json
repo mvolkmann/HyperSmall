@@ -5,6 +5,8 @@
   "author": "R. Mark Volkmann",
   "license": "MIT",
   "scripts": {
+    "dbcreate": "sqlite3 hypersmall.db < schema.sql",
+    "dbi": "sqlite3 hypersmall.db",
     "dev": "bun run --hot src/index.tsx"
   },
   "dependencies": {
