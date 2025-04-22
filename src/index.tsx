@@ -11,11 +11,12 @@ db.exec('PRAGMA journal_mode = WAL;');
 
 const app = new Hono();
 
+const deleteStackPS = db.prepare('delete from stacks where id = ?');
+const getStackByIdPS = db.prepare('select * from stacks where id = ?');
+const getStacksPS = db.prepare('select * from stacks');
 const insertStackPS = db.prepare(
   'insert into stacks (cardSize, copyBg, name, openNew, script) values (?, ?, ?, ?, ?)'
 );
-
-const getStacksPS = db.prepare('select * from stacks');
 
 let stack: Stack | undefined = undefined;
 
@@ -25,12 +26,14 @@ app.get("/", (c) => {
 });
 */
 
-// This logs all HTTP requests to the terminal where the server is running.
+// Log all HTTP requests to the terminal where the server is running.
 app.use('/*', logger());
 
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+// Return HTML for a dialog to collection
+// information needed to create a new stack.
 app.get('/new-stack', (c: Context) => {
   return c.html(
     <>
@@ -102,27 +105,28 @@ app.get('/new-stack', (c: Context) => {
   );
 });
 
+// Return HTML for a dialog to select a stack to open.
 app.get('/open-stack', (c: Context) => {
   const stacks = getStacksPS.all() as Stack[];
-  const stackNames = stacks.map(stack => stack.name).sort();
+  stacks.sort((a: Stack, b: Stack) => a.name.localeCompare(b.name));
 
   return c.html(
     <>
-      <form hx-post="/select-stack" x-data="{name: ''}">
+      <form hx-post="/select-stack" x-data="{stackId: 0}">
         <div class="column">
           <label class="mb1" for="cardSize">
             Stack Name:
           </label>
           <select
             class="mb4"
-            id="name"
-            name="name"
+            id="id"
+            name="id"
             size={7}
-            x-model="name"
+            x-model="stackId"
             x-on:change="onStackSelected($event)"
           >
-            {stackNames.map((name: string) => (
-              <option>{name}</option>
+            {stacks.map((stack: Stack) => (
+              <option value={stack.id}>{stack.name}</option>
             ))}
           </select>
           <div class="row">
@@ -143,19 +147,28 @@ app.get('/open-stack', (c: Context) => {
   );
 });
 
+// Make the stack with a given name be the active stack.
 app.post('/select-stack', async (c: Context) => {
   const formData = await c.req.formData();
-  stack = new Stack(formData.get('name') as string);
-  return c.body(null, 204); // No Content
+  const id = Number(formData.get('id'));
+  console.log('index.tsx post /select-stack: id =', id);
+  stack = getStackByIdPS.get(id) as Stack;
+  console.log('index.tsx post /select-stack: stack =', stack);
+  return c.body(null, stack ? 204 : 404); // No Content or Not Found
 });
 
+// Return HTML for a dialog to confirm the delete.
 app.delete('/stack', (c: Context) => {
-  const name = stack?.name ?? 'unknown';
+  console.log('index.tsx delete /stack: stack =', stack);
+  if (!stack) return c.body(null, 404); // Not Found
+
   return c.html(
     <>
-      <p>Delete all n cards in this stack named "{name}"?</p>
+      <p>Delete all n cards in this stack named "{stack.name}"?</p>
       <div>
-        <button onclick="closeDialog(this)">Delete</button>
+        <button hx-delete={`/stack/${stack.id}`} onclick="closeDialog(this)">
+          Delete
+        </button>
         <button autofocus onclick="closeDialog(this)">
           Cancel
         </button>
@@ -164,6 +177,14 @@ app.delete('/stack', (c: Context) => {
   );
 });
 
+// Delete the stack with a given ID from the database.
+app.delete('/stack/:id', (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const result = deleteStackPS.run(id);
+  return c.body(null, result.changes > 0 ? 204 : 404); // No Content or Not Found
+});
+
+// Create a new stack using data from an HTML form..
 app.post('/stack', async (c: Context) => {
   const formData = await c.req.formData();
 
