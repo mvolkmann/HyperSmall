@@ -164,8 +164,12 @@ app.delete('/stack', (c: Context) => {
 
   return c.html(
     <>
-      <p>Delete all n cards in this stack named "{stack.name}"?</p>
-      <div>
+      <p>
+        Delete all n cards in the
+        <br />
+        stack named "{stack.name}"?
+      </p>
+      <div class="gap2 right-aligned row">
         <button hx-delete={`/stack/${stack.id}`} onclick="closeDialog(this)">
           Delete
         </button>
