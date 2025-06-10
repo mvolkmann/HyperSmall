@@ -8,7 +8,7 @@ const cardHeight = {
   PowerBook: 400,
   Large: 480,
   MacPaint: 720,
-  Window: 480, // same as Large
+  Window: 480 // same as Large
 };
 
 const cardWidth = {
@@ -17,45 +17,46 @@ const cardWidth = {
   PowerBook: 640,
   Large: 640,
   MacPaint: 576,
-  Window: 640, // same as Large
+  Window: 640 // same as Large
 };
 
 setInterval(updateTime, 60000);
 
 function closeDialog(element) {
-  element.closest("dialog").close();
+  element.closest('dialog').close();
 }
 
 function closeMenus() {
   for (const menu of menus) {
-    const button = menu.querySelector("button");
-    button.classList.remove("selected");
+    const button = menu.querySelector('button');
+    button.classList.remove('selected');
 
-    const menuItems = menu.querySelector(".menuItems");
-    menuItems.style.display = "none";
+    const menuItems = menu.querySelector('.menuItems');
+    menuItems.style.display = 'none';
   }
 }
 
 function configureMenus() {
-  document.body.addEventListener("click", closeMenus);
-  menus = document.querySelectorAll(".menu");
+  document.body.addEventListener('click', closeMenus);
+  menus = document.querySelectorAll('.menu');
   for (const menu of menus) {
-    const button = menu.querySelector("button");
-    button.addEventListener("click", onMenuClick);
-    button.addEventListener("mouseover", onMenuHover);
-    menu.addEventListener("click", onMenuItemClick);
+    const button = menu.querySelector('button');
+    button.addEventListener('click', onMenuClick);
+    button.addEventListener('mouseover', onMenuHover);
+    menu.addEventListener('click', onMenuItemClick);
   }
 }
 
 function newStack() {
-  const dialog = document.getElementById("newStackDialog");
+  //closeDialog();
+  const dialog = document.getElementById('newStackDialog');
   dialog.show(); // or showModal()
 }
 
 function onCardSizeChange(event) {
   const cardSize = event.target.value;
-  document.querySelector("#cardWidth").textContent = cardWidth[cardSize];
-  document.querySelector("#cardHeight").textContent = cardHeight[cardSize];
+  document.querySelector('#cardWidth').textContent = cardWidth[cardSize];
+  document.querySelector('#cardHeight').textContent = cardHeight[cardSize];
 }
 
 function onMenuItemClick(event) {
@@ -72,21 +73,21 @@ function onMenuClick(event) {
 
   const button = event.target;
   const menu = button.parentElement;
-  const menuItems = menu.querySelector(".menuItems");
+  const menuItems = menu.querySelector('.menuItems');
   const style = menuItems.style;
 
-  const visible = style.display === "flex";
+  const visible = style.display === 'flex';
   if (visible) {
-    style.display = "none";
+    style.display = 'none';
   } else {
     closeMenus();
-    style.display = "flex";
+    style.display = 'flex';
     requestAnimationFrame(() => {
-      style.width = "fit-content";
+      style.width = 'fit-content';
     });
   }
 
-  button.classList.toggle("selected");
+  button.classList.toggle('selected');
 }
 
 function onMenuHover(event) {
@@ -94,25 +95,25 @@ function onMenuHover(event) {
 }
 
 function onStackNameChange(event) {
-  const submitButton = document.querySelector("button[type=submit]");
-  submitButton.disabled = event.target.value === "";
+  const submitButton = document.getElementById('saveBtn');
+  submitButton.disabled = event.target.value === '';
 }
 
 function onStackSelected(event) {
-  const submitButton = document.querySelector("button[type=submit]");
-  submitButton.disabled = event.target.value === "";
+  const submitButton = document.querySelector('button[type=submit]');
+  submitButton.disabled = event.target.value === '';
 }
 
 function playClick() {
-  if (!clickAudio) clickAudio = new Audio("sounds/click.mp3");
+  if (!clickAudio) clickAudio = new Audio('sounds/click.mp3');
   clickAudio.play();
 }
 
 function updateTime() {
-  const div = document.getElementById("time");
+  const div = document.getElementById('time');
   div.textContent = new Date().toLocaleTimeString(navigator.language, {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
   });
 }

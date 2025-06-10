@@ -53,6 +53,7 @@ app.get('/new-stack', (c: Context) => {
           <input
             id="name"
             name="name"
+            required
             style="margin-bottom: 1rem"
             type="text"
             x-model="name"
@@ -71,7 +72,7 @@ app.get('/new-stack', (c: Context) => {
           <button autofocus onclick="closeDialog(this)">
             Cancel
           </button>
-          <button disabled={true} onclick="closeDialog(this)" type="submit">
+          <button id="saveBtn" onclick="newStack(this)">
             Save
           </button>
         </div>
@@ -138,7 +139,7 @@ app.get('/open-stack', (c: Context) => {
           <button autofocus onclick="closeDialog(this)">
             Cancel
           </button>
-          <button disabled={true} onclick="closeDialog(this)" type="submit">
+          <button id="openBtn" disabled={true} onclick="closeDialog(this)">
             Open
           </button>
         </div>
@@ -208,7 +209,9 @@ app.post('/stack', async (c: Context) => {
     stack.script
   );
   stack.id = result.lastInsertRowid as number;
+  console.log('index.tsx post /stack: stack =', stack);
 
+  c.header('HX-Trigger', 'new-stack');
   return c.body(null, 204); // No Content
 });
 
