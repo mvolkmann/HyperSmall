@@ -47,10 +47,12 @@ function configureMenus() {
   }
 }
 
-function newStack() {
-  //closeDialog();
-  const dialog = document.getElementById('newStackDialog');
-  dialog.show(); // or showModal()
+function newStack(dialogDescendant) {
+  console.log('script.js newStack: dialogDescendant =', dialogDescendant);
+  closeDialog(dialogDescendant);
+  //"const dialog = document.getElementById('newStackDialog');
+  //const dialog = document.createElement('dialog');
+  //dialog.show();
 }
 
 function onCardSizeChange(event) {
@@ -107,6 +109,10 @@ function onStackSelected(event) {
 function playClick() {
   if (!clickAudio) clickAudio = new Audio('sounds/click.mp3');
   clickAudio.play();
+}
+
+function replaceStack() {
+  alert('replaceStack called');
 }
 
 function updateTime() {

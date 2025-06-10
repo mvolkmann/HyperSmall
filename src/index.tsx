@@ -211,8 +211,16 @@ app.post('/stack', async (c: Context) => {
   stack.id = result.lastInsertRowid as number;
   console.log('index.tsx post /stack: stack =', stack);
 
-  c.header('HX-Trigger', 'new-stack');
-  return c.body(null, 204); // No Content
+  if (stack.openNew) {
+    return c.html(
+      <dialog style="width: 400px; height: 300px">
+        <div>My Dialog</div>
+      </dialog>
+    );
+  } else {
+    c.header('HX-Trigger', 'replace-stack');
+    return c.body(null, 204); // No Content
+  }
 });
 
 export default app;
