@@ -39,6 +39,7 @@ app.get('/new-stack', (c: Context) => {
     <>
       <form
         hx-post="/stack"
+        hx-target="body"
         x-data="{
           cardSize: 'Small',
           name: '',
@@ -212,8 +213,11 @@ app.post('/stack', async (c: Context) => {
   console.log('index.tsx post /stack: stack =', stack);
 
   if (stack.openNew) {
+    const id = 'dialog-' + name;
+    const trigger = {'open-new-stack': id};
+    c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
-      <dialog style="width: 400px; height: 300px">
+      <dialog id={id} style="width: 400px; height: 300px">
         <div>My Dialog</div>
       </dialog>
     );

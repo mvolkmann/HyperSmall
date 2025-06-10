@@ -48,11 +48,12 @@ function configureMenus() {
 }
 
 function newStack(dialogDescendant) {
-  console.log('script.js newStack: dialogDescendant =', dialogDescendant);
   closeDialog(dialogDescendant);
   //"const dialog = document.getElementById('newStackDialog');
-  //const dialog = document.createElement('dialog');
-  //dialog.show();
+  const dialog = document.createElement('dialog');
+  dialog.style.width = '600px';
+  dialog.style.height = '400px';
+  dialog.show();
 }
 
 function onCardSizeChange(event) {
@@ -104,6 +105,14 @@ function onStackNameChange(event) {
 function onStackSelected(event) {
   const submitButton = document.querySelector('button[type=submit]');
   submitButton.disabled = event.target.value === '';
+}
+
+function openNewStack(event) {
+  const dialogId = event.detail.value;
+  requestAnimationFrame(() => {
+    const dialog = document.getElementById(dialogId);
+    dialog.show();
+  });
 }
 
 function playClick() {
