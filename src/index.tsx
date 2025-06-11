@@ -217,8 +217,15 @@ app.post('/stack', async (c: Context) => {
     const trigger = {'open-new-stack': id};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
-      <dialog id={id} style="width: 400px; height: 300px">
-        <div>My Dialog</div>
+      <dialog id={id} class="stack" style="width: 400px; height: 300px">
+        <div class="titleBar">
+          <input type="checkbox" />
+          <div>{name}</div>
+          <div>
+            <button>Zoom</button>
+            <button>Collapse</button>
+          </div>
+        </div>
       </dialog>
     );
   } else {

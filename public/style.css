@@ -133,3 +133,13 @@ span {
   display: flex;
   align-items: center;
 }
+
+.stack {
+  padding: 0;
+}
+
+.titleBar {
+  background-color: #bfbfbf;
+  display: flex;
+  justify-content: space-between;
+}
