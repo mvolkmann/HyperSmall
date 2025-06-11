@@ -39,7 +39,7 @@ app.get('/new-stack', (c: Context) => {
     <>
       <form
         hx-post="/stack"
-        hx-target="body"
+        hx-target="main"
         x-data="{
           cardSize: 'Small',
           name: '',
