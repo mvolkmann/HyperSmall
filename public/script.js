@@ -20,6 +20,8 @@ const cardWidth = {
   Window: 640 // same as Large
 };
 
+let isDragging = false;
+
 setInterval(updateTime, 60000);
 
 function closeDialog(element) {
@@ -47,13 +49,41 @@ function configureMenus() {
   }
 }
 
+function makeDraggable(element, handle) {
+  let isDragging = false;
+  let offsetX, offsetY;
+  if (!handle) handle = element;
+
+  handle.addEventListener('mousedown', event => {
+    isDragging = true;
+    const rect = element.getBoundingClientRect();
+    offsetX = event.clientX - rect.left;
+    offsetY = event.clientY - rect.top;
+  });
+
+  document.addEventListener('mousemove', event => {
+    if (isDragging) {
+      element.style.position = 'absolute';
+      element.style.left = `${event.clientX - offsetX}px`;
+      element.style.top = `${event.clientY - offsetY}px`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+}
+
 function newStack(dialogDescendant) {
   closeDialog(dialogDescendant);
-  //"const dialog = document.getElementById('newStackDialog');
+  /*
   const dialog = document.createElement('dialog');
   dialog.style.width = '600px';
   dialog.style.height = '400px';
+  document.body.appendChild(dialog);
+  //TODO: Add title bar and event handling to enable dragging.
   dialog.show();
+  */
 }
 
 function onCardSizeChange(event) {
@@ -112,6 +142,9 @@ function openNewStack(event) {
   requestAnimationFrame(() => {
     const dialog = document.getElementById(dialogId);
     dialog.show();
+
+    const titleBar = dialog.querySelector('.titleBar');
+    makeDraggable(dialog, titleBar);
   });
 }
 

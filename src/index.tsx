@@ -65,7 +65,7 @@ app.get('/new-stack', (c: Context) => {
             <label for="copyBg">Copy current background</label>
           </div>
           <div class="row">
-            <input type="checkbox" id="openNew" name="openNew" />
+            <input type="checkbox" checked id="openNew" name="openNew" />
             <label for="openNew">Open stack in new window</label>
           </div>
         </div>
@@ -219,7 +219,7 @@ app.post('/stack', async (c: Context) => {
     return c.html(
       <dialog id={id} class="stack" style="width: 400px; height: 300px">
         <div class="titleBar">
-          <input type="checkbox" />
+          <input type="checkbox" onclick="closeDialog(this)" />
           <div>{name}</div>
           <div>
             <button>Zoom</button>
