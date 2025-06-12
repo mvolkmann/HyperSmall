@@ -42,6 +42,10 @@ span {
   font-weight: bold;
 }
 
+main {
+  position: relative;
+}
+
 .mb1 {
   margin-bottom: 0.25rem;
 }
@@ -135,6 +139,11 @@ span {
 }
 
 .stack {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  margin: 0;
   padding: 0;
 }
 

@@ -50,27 +50,26 @@ function configureMenus() {
 }
 
 function makeDraggable(element, handle) {
-  let isDragging = false;
-  let offsetX, offsetY;
   if (!handle) handle = element;
 
   handle.addEventListener('mousedown', event => {
-    isDragging = true;
-    const rect = element.getBoundingClientRect();
-    offsetX = event.clientX - rect.left;
-    offsetY = event.clientY - rect.top;
-  });
+    const rect = handle.getBoundingClientRect();
+    let offsetX = event.clientX - rect.left;
+    let offsetY = event.clientY - rect.top + rect.height;
 
-  document.addEventListener('mousemove', event => {
-    if (isDragging) {
-      element.style.position = 'absolute';
+    function onMouseMove(event) {
       element.style.left = `${event.clientX - offsetX}px`;
       element.style.top = `${event.clientY - offsetY}px`;
     }
-  });
 
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener(
+      'mouseup',
+      () => {
+        document.removeEventListener('mousemove', onMouseMove);
+      },
+      {once: true}
+    );
   });
 }
 
