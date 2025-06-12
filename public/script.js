@@ -50,16 +50,22 @@ function configureMenus() {
 }
 
 function makeDraggable(element, handle) {
-  if (!handle) handle = element;
+  const mainElement = document.body.querySelector('main');
+  const mainRect = mainElement.getBoundingClientRect();
 
-  handle.addEventListener('mousedown', event => {
-    const rect = handle.getBoundingClientRect();
-    let offsetX = event.clientX - rect.left;
-    let offsetY = event.clientY - rect.top + rect.height;
+  const target = handle || element;
+  target.addEventListener('mousedown', event => {
+    const elementRect = element.getBoundingClientRect();
+    let offsetX = event.clientX - elementRect.left;
+    let offsetY = event.clientY - elementRect.top;
+    if (handle) offsetY += handle.getBoundingClientRect().height;
+
+    let maxX = mainRect.width - elementRect.width;
+    let maxY = mainRect.height - elementRect.height;
 
     function onMouseMove(event) {
-      const left = Math.max(0, event.clientX - offsetX);
-      const top = Math.max(0, event.clientY - offsetY);
+      const left = Math.max(0, Math.min(maxX, event.clientX - offsetX));
+      const top = Math.max(0, Math.min(maxY, event.clientY - offsetY));
       element.style.left = left + 'px';
       element.style.top = top + 'px';
     }
