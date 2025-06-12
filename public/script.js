@@ -58,8 +58,10 @@ function makeDraggable(element, handle) {
     let offsetY = event.clientY - rect.top + rect.height;
 
     function onMouseMove(event) {
-      element.style.left = `${event.clientX - offsetX}px`;
-      element.style.top = `${event.clientY - offsetY}px`;
+      const left = Math.max(0, event.clientX - offsetX);
+      const top = Math.max(0, event.clientY - offsetY);
+      element.style.left = left + 'px';
+      element.style.top = top + 'px';
     }
 
     document.addEventListener('mousemove', onMouseMove);
