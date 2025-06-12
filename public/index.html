@@ -106,7 +106,9 @@
           <button>Bring Closer</button>
           <button>Send Farther</button>
           <hr />
-          <button>New Button</button>
+          <button hx-get="/new-button" hx-target={'#dialog-' + currentStackName}>
+            New Button
+          </button>
           <button>New Field</button>
           <button>New Background</button>
         </div>

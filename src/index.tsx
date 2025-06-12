@@ -196,8 +196,8 @@ app.delete('/stack/:id', (c: Context) => {
 app.post('/stack', async (c: Context) => {
   const formData = await c.req.formData();
 
-  const name = formData.get('name') as string;
-  const stack = new Stack(name);
+  const stackName = formData.get('name') as string;
+  const stack = new Stack(stackName);
   stack.copyBg = Boolean(formData.get('copyBg'));
   stack.openNew = Boolean(formData.get('openNew'));
   const cardSize = formData.get('cardSize') as string;
@@ -215,14 +215,13 @@ app.post('/stack', async (c: Context) => {
   console.log('index.tsx post /stack: stack =', stack);
 
   if (stack.openNew) {
-    const dialogId = 'dialog-' + name;
-    const trigger = {'open-new-stack': {cardSize, dialogId}};
+    const trigger = {'open-new-stack': {cardSize, stackName}};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
-      <dialog id={dialogId} class="stack">
+      <dialog id={'dialog-' + stackName} class="stack">
         <div class="titleBar">
           <input type="checkbox" onclick="closeDialog(this)" />
-          <div>{name}</div>
+          <div>{stackName}</div>
           <div>
             <button>Zoom</button>
             <button>Collapse</button>

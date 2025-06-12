@@ -20,6 +20,7 @@ const cardWidth = {
   Window: 640 // same as Large
 };
 
+let currentStackName = '';
 let isDragging = false;
 
 setInterval(updateTime, 60000);
@@ -145,7 +146,8 @@ function onStackSelected(event) {
 }
 
 function openNewStack(event) {
-  const {cardSize, dialogId} = event.detail;
+  const {cardSize, stackName} = event.detail;
+  const dialogId = 'dialog-' + stackName;
   requestAnimationFrame(() => {
     const dialog = document.getElementById(dialogId);
     dialog.style.width = cardWidth[cardSize] + 'px';
@@ -154,6 +156,8 @@ function openNewStack(event) {
 
     const titleBar = dialog.querySelector('.titleBar');
     makeDraggable(dialog, titleBar);
+
+    dialog.addEventListener('click', event => selectStack(event));
   });
 }
 
@@ -164,6 +168,18 @@ function playClick() {
 
 function replaceStack() {
   alert('replaceStack called');
+}
+
+function selectStack(event) {
+  if (currentStackName) {
+    const id = 'dialog-' + currentStackName;
+    let dialog = document.getElementById(id);
+    dialog.style.zIndex = 0;
+  }
+
+  dialog = event.target.closest('dialog');
+  dialog.style.zIndex = 1;
+  currentStackName = dialog.id.split('-')[1];
 }
 
 function updateTime() {
