@@ -32,6 +32,12 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+app.get('/new-button', (c: Context) => {
+  // TODO: Add a button to the stack in the database.
+  c.header('HX-Trigger', 'new-button');
+  return c.body(null, 204); // No Content
+});
+
 // Return HTML for a dialog to collection
 // information needed to create a new stack.
 app.get('/new-stack', (c: Context) => {
@@ -215,7 +221,7 @@ app.post('/stack', async (c: Context) => {
   console.log('index.tsx post /stack: stack =', stack);
 
   if (stack.openNew) {
-    const trigger = {'open-new-stack': {cardSize, stackName}};
+    const trigger = {'new-stack': {cardSize, stackName}};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
       <dialog id={'dialog-' + stackName} class="stack">

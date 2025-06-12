@@ -27,7 +27,8 @@
     </script>
   </head>
   <body
-    hx-on:open-new-stack="openNewStack(event)"
+    hx-on:new-button="newButton(event)"
+    hx-on:new-stack="newStack(event)"
     hx-on:replace-stack="replaceStack(event)"
   >
     <div class="menuBar">
@@ -106,9 +107,7 @@
           <button>Bring Closer</button>
           <button>Send Farther</button>
           <hr />
-          <button hx-get="/new-button" hx-target={'#dialog-' + currentStackName}>
-            New Button
-          </button>
+          <button hx-get="/new-button">New Button</button>
           <button>New Field</button>
           <button>New Background</button>
         </div>

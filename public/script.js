@@ -22,6 +22,7 @@ const cardWidth = {
 
 let currentStackName = '';
 let isDragging = false;
+let titleBarHeight = 0;
 
 setInterval(updateTime, 60000);
 
@@ -51,6 +52,8 @@ function configureMenus() {
 }
 
 function makeDraggable(element, handle) {
+  console.log('script.js makeDraggable: element =', element);
+  element.style.position = 'absolute';
   const mainElement = document.body.querySelector('main');
   const mainRect = mainElement.getBoundingClientRect();
 
@@ -59,7 +62,8 @@ function makeDraggable(element, handle) {
     const elementRect = element.getBoundingClientRect();
     let offsetX = event.clientX - elementRect.left;
     let offsetY = event.clientY - elementRect.top;
-    if (handle) offsetY += handle.getBoundingClientRect().height;
+    //if (handle) offsetY += handle.getBoundingClientRect().height;
+    offsetY += titleBarHeight;
 
     let maxX = mainRect.width - elementRect.width;
     let maxY = mainRect.height - elementRect.height;
@@ -82,16 +86,35 @@ function makeDraggable(element, handle) {
   });
 }
 
-function newStack(dialogDescendant) {
-  closeDialog(dialogDescendant);
-  /*
-  const dialog = document.createElement('dialog');
-  dialog.style.width = '600px';
-  dialog.style.height = '400px';
-  document.body.appendChild(dialog);
-  //TODO: Add title bar and event handling to enable dragging.
-  dialog.show();
-  */
+function newButton() {
+  const button = document.createElement('button');
+  button.textContent = 'Click Me';
+  button.addEventListener('click', () => alert('Got Click!'));
+  console.log('script.js newButton: currentStackName =', currentStackName);
+  const dialog = document.getElementById('dialog-' + currentStackName);
+  console.log('script.js newButton: dialog =', dialog);
+  dialog.appendChild(button);
+  makeDraggable(button);
+}
+
+function newStack(event) {
+  const {cardSize, stackName} = event.detail;
+  const dialogId = 'dialog-' + stackName;
+  requestAnimationFrame(() => {
+    const dialog = document.getElementById(dialogId);
+    const {style} = dialog;
+    style.width = cardWidth[cardSize] + 'px';
+    style.height = cardHeight[cardSize] + 'px';
+    style.zIndex = 1;
+    dialog.show();
+    currentStackName = stackName;
+
+    const titleBar = dialog.querySelector('.titleBar');
+    titleBarHeight = titleBar.getBoundingClientRect().height;
+    makeDraggable(dialog, titleBar);
+
+    dialog.addEventListener('click', event => selectStack(event));
+  });
 }
 
 function onCardSizeChange(event) {
@@ -143,24 +166,6 @@ function onStackNameChange(event) {
 function onStackSelected(event) {
   const submitButton = document.querySelector('button[type=submit]');
   submitButton.disabled = event.target.value === '';
-}
-
-function openNewStack(event) {
-  const {cardSize, stackName} = event.detail;
-  const dialogId = 'dialog-' + stackName;
-  requestAnimationFrame(() => {
-    const dialog = document.getElementById(dialogId);
-    const {style} = dialog;
-    style.width = cardWidth[cardSize] + 'px';
-    style.height = cardHeight[cardSize] + 'px';
-    style.zIndex = 1;
-    dialog.show();
-
-    const titleBar = dialog.querySelector('.titleBar');
-    makeDraggable(dialog, titleBar);
-
-    dialog.addEventListener('click', event => selectStack(event));
-  });
 }
 
 function playClick() {
