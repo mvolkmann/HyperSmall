@@ -233,6 +233,7 @@ app.post('/stack', async (c: Context) => {
             <button>Collapse</button>
           </div>
         </div>
+        <section></section>
       </dialog>
     );
   } else {

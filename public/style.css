@@ -149,12 +149,21 @@ main {
 }
 
 .stack {
+  display: flex;
+  flex-direction: column;
+
   position: absolute;
   left: 0px;
   top: 0px;
 
   margin: 0;
   padding: 0;
+
+  section {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+  }
 }
 
 .titleBar {

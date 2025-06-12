@@ -1,6 +1,8 @@
 let clickAudio;
-let menus;
+let currentStackName = '';
+let isDragging = false;
 let menuOpen;
+let menus;
 
 const cardHeight = {
   Small: 240,
@@ -19,10 +21,6 @@ const cardWidth = {
   MacPaint: 576,
   Window: 640 // same as Large
 };
-
-let currentStackName = '';
-let isDragging = false;
-let titleBarHeight = 0;
 
 setInterval(updateTime, 60000);
 
@@ -52,21 +50,18 @@ function configureMenus() {
 }
 
 function makeDraggable(element, handle) {
-  console.log('script.js makeDraggable: element =', element);
   element.style.position = 'absolute';
-  const mainElement = document.body.querySelector('main');
-  const mainRect = mainElement.getBoundingClientRect();
+  const {parentElement} = element;
+  parentElement.style.position = 'relative';
+  const parentRect = parentElement.getBoundingClientRect();
 
   const target = handle || element;
   target.addEventListener('mousedown', event => {
     const elementRect = element.getBoundingClientRect();
-    let offsetX = event.clientX - elementRect.left;
-    let offsetY = event.clientY - elementRect.top;
-    //if (handle) offsetY += handle.getBoundingClientRect().height;
-    offsetY += titleBarHeight;
-
-    let maxX = mainRect.width - elementRect.width;
-    let maxY = mainRect.height - elementRect.height;
+    let offsetX = event.clientX;
+    let offsetY = event.clientY;
+    let maxX = parentRect.width - elementRect.width;
+    let maxY = parentRect.height - elementRect.height;
 
     function onMouseMove(event) {
       const left = Math.max(0, Math.min(maxX, event.clientX - offsetX));
@@ -90,10 +85,9 @@ function newButton() {
   const button = document.createElement('button');
   button.textContent = 'Click Me';
   button.addEventListener('click', () => alert('Got Click!'));
-  console.log('script.js newButton: currentStackName =', currentStackName);
   const dialog = document.getElementById('dialog-' + currentStackName);
-  console.log('script.js newButton: dialog =', dialog);
-  dialog.appendChild(button);
+  const section = dialog.querySelector('section');
+  section.appendChild(button);
   makeDraggable(button);
 }
 
@@ -110,7 +104,6 @@ function newStack(event) {
     currentStackName = stackName;
 
     const titleBar = dialog.querySelector('.titleBar');
-    titleBarHeight = titleBar.getBoundingClientRect().height;
     makeDraggable(dialog, titleBar);
 
     dialog.addEventListener('click', event => selectStack(event));
