@@ -40,6 +40,7 @@ app.get('/new-stack', (c: Context) => {
       <form
         hx-post="/stack"
         hx-target="main"
+        hx-swap="beforeend"
         x-data="{
           cardSize: 'Small',
           name: '',
@@ -52,6 +53,7 @@ app.get('/new-stack', (c: Context) => {
             New stack name:
           </label>
           <input
+            autofocus
             id="name"
             name="name"
             required
@@ -213,11 +215,11 @@ app.post('/stack', async (c: Context) => {
   console.log('index.tsx post /stack: stack =', stack);
 
   if (stack.openNew) {
-    const id = 'dialog-' + name;
-    const trigger = {'open-new-stack': id};
+    const dialogId = 'dialog-' + name;
+    const trigger = {'open-new-stack': {cardSize, dialogId}};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
-      <dialog id={id} class="stack" style="width: 400px; height: 300px">
+      <dialog id={dialogId} class="stack">
         <div class="titleBar">
           <input type="checkbox" onclick="closeDialog(this)" />
           <div>{name}</div>

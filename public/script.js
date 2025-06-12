@@ -145,9 +145,11 @@ function onStackSelected(event) {
 }
 
 function openNewStack(event) {
-  const dialogId = event.detail.value;
+  const {cardSize, dialogId} = event.detail;
   requestAnimationFrame(() => {
     const dialog = document.getElementById(dialogId);
+    dialog.style.width = cardWidth[cardSize] + 'px';
+    dialog.style.height = cardHeight[cardSize] + 'px';
     dialog.show();
 
     const titleBar = dialog.querySelector('.titleBar');
