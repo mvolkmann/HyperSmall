@@ -150,8 +150,10 @@ function openNewStack(event) {
   const dialogId = 'dialog-' + stackName;
   requestAnimationFrame(() => {
     const dialog = document.getElementById(dialogId);
-    dialog.style.width = cardWidth[cardSize] + 'px';
-    dialog.style.height = cardHeight[cardSize] + 'px';
+    const {style} = dialog;
+    style.width = cardWidth[cardSize] + 'px';
+    style.height = cardHeight[cardSize] + 'px';
+    style.zIndex = 1;
     dialog.show();
 
     const titleBar = dialog.querySelector('.titleBar');
