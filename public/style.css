@@ -155,6 +155,7 @@ main {
 
 .titleBar {
   background-color: #bfbfbf;
+  cursor: grabbing;
   display: flex;
   justify-content: space-between;
 }
