@@ -24,6 +24,14 @@ const cardWidth = {
 
 setInterval(updateTime, 60000);
 
+function centerInParent(element) {
+  const parentRect = element.parentElement.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+  const {style} = element;
+  style.left = parentRect.width / 2 - elementRect.width / 2 + 'px';
+  style.top = parentRect.height / 2 - elementRect.height / 2 + 'px';
+}
+
 function closeDialog(element) {
   element.closest('dialog').close();
 }
@@ -82,13 +90,20 @@ function makeDraggable(element, handle) {
 }
 
 function newButton() {
+  // Create a new button.
   const button = document.createElement('button');
-  button.textContent = 'Click Me';
-  button.addEventListener('click', () => alert('Got Click!'));
+  button.textContent = 'New Button';
+  button.addEventListener('click', () => {
+    if (!isDragging) alert('Got Click!');
+  });
+
+  // Add the button to the section.
   const dialog = document.getElementById('dialog-' + currentStackName);
   const section = dialog.querySelector('section');
   section.appendChild(button);
+
   makeDraggable(button);
+  centerInParent(button);
 }
 
 function newStack(event) {
