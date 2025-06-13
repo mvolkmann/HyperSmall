@@ -161,15 +161,12 @@ app.get('/open-stack', (c: Context) => {
 app.post('/select-stack', async (c: Context) => {
   const formData = await c.req.formData();
   const id = Number(formData.get('id'));
-  console.log('index.tsx post /select-stack: id =', id);
   stack = getStackByIdPS.get(id) as Stack;
-  console.log('index.tsx post /select-stack: stack =', stack);
   return c.body(null, stack ? 204 : 404); // No Content or Not Found
 });
 
 // Return HTML for a dialog to confirm the delete.
 app.delete('/stack', (c: Context) => {
-  console.log('index.tsx delete /stack: stack =', stack);
   if (!stack) return c.body(null, 404); // Not Found
 
   return c.html(
@@ -218,7 +215,6 @@ app.post('/stack', async (c: Context) => {
     stack.script
   );
   stack.id = result.lastInsertRowid as number;
-  console.log('index.tsx post /stack: stack =', stack);
 
   if (stack.openNew) {
     const trigger = {'new-stack': {cardSize, stackName}};

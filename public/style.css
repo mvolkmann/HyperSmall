@@ -68,8 +68,6 @@ main {
 /* This adds a "marching ants" border to an element
    to indicate that it is selected. */
 .selected {
-  border: 1px solid red;
-  /*
   border: 1px solid transparent;
   background: linear-gradient(white, white) padding-box,
     repeating-linear-gradient(
@@ -81,7 +79,6 @@ main {
       )
       0 / 0.6em 0.6em;
   animation: ants 3s linear infinite;
-  */
 }
 
 .mb1 {

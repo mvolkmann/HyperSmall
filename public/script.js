@@ -34,7 +34,6 @@ function centerInParent(element) {
 
 function closeDialog(element) {
   const dialog = element.closest('dialog');
-  console.log('script.js closeDialog: dialog =', dialog);
   dialog.close();
 }
 
@@ -104,11 +103,10 @@ function newButton() {
   button.classList.add('button');
   button.classList.add('selected');
   button.textContent = 'New Button';
-  button.addEventListener('click', () => {
+  button.addEventListener('click', event => {
     if (!isDragging) {
-      //TODO: Why doesn't this work?
       button.classList.toggle('selected');
-      console.log('script.js newButton: classList =', button.classList);
+      event.stopPropagation();
     }
   });
 
