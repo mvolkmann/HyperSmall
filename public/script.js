@@ -33,7 +33,9 @@ function centerInParent(element) {
 }
 
 function closeDialog(element) {
-  element.closest('dialog').close();
+  const dialog = element.closest('dialog');
+  console.log('script.js closeDialog: dialog =', dialog);
+  dialog.close();
 }
 
 function closeMenus() {
@@ -118,7 +120,7 @@ function newStack(event) {
     dialog.show();
     currentStackName = stackName;
 
-    const titleBar = dialog.querySelector('.titleBar');
+    const titleBar = dialog.querySelector('.title-bar');
     makeDraggable(dialog, titleBar);
 
     dialog.addEventListener('click', event => selectStack(event));

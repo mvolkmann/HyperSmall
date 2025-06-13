@@ -225,7 +225,7 @@ app.post('/stack', async (c: Context) => {
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
       <dialog id={'dialog-' + stackName} class="stack">
-        <div class="titleBar">
+        <div class="title-bar">
           <input type="checkbox" onclick="closeDialog(this)" />
           <div>{stackName}</div>
           <div>
