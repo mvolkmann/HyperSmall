@@ -16,11 +16,14 @@ body {
 }
 
 button {
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   border-width: 2px;
 }
 
 .button {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
   position: absolute;
 }
 
@@ -53,6 +56,26 @@ span {
 main {
   flex-grow: 1;
   position: relative;
+}
+
+@keyframes ants {
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+.marching-ants {
+  border: 1px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+    repeating-linear-gradient(
+        -45deg,
+        black 0,
+        black 25%,
+        transparent 0,
+        transparent 50%
+      )
+      0 / 0.6em 0.6em;
+  animation: ants 3s linear infinite;
 }
 
 .mb1 {

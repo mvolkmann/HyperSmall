@@ -94,6 +94,8 @@ function makeDraggable(element, handle) {
 function newButton() {
   // Create a new button.
   const button = document.createElement('button');
+  button.classList.add('button');
+  button.classList.add('marching-ants');
   button.textContent = 'New Button';
   button.addEventListener('click', () => {
     if (!isDragging) alert('Got Click!');
