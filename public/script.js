@@ -59,6 +59,13 @@ function configureMenus() {
   }
 }
 
+function deselectAll(ancestor) {
+  const selected = ancestor.querySelectorAll('.selected');
+  for (const element of selected) {
+    element.classList.remove('selected');
+  }
+}
+
 function makeDraggable(element, handle) {
   element.style.position = 'absolute';
   const {parentElement} = element;
@@ -95,10 +102,14 @@ function newButton() {
   // Create a new button.
   const button = document.createElement('button');
   button.classList.add('button');
-  button.classList.add('marching-ants');
+  button.classList.add('selected');
   button.textContent = 'New Button';
   button.addEventListener('click', () => {
-    if (!isDragging) alert('Got Click!');
+    if (!isDragging) {
+      //TODO: Why doesn't this work?
+      button.classList.toggle('selected');
+      console.log('script.js newButton: classList =', button.classList);
+    }
   });
 
   // Add the button to the section.
@@ -121,6 +132,9 @@ function newStack(event) {
     style.zIndex = 1;
     dialog.show();
     currentStackName = stackName;
+
+    const section = dialog.querySelector('section');
+    section.addEventListener('click', () => deselectAll(section));
 
     const titleBar = dialog.querySelector('.title-bar');
     makeDraggable(dialog, titleBar);
