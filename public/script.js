@@ -69,11 +69,26 @@ function deselectAll(ancestor) {
   }
 }
 
-function makeDraggable(element, handle) {
+// This returns a Boolean indicating whether mouse cursor
+// is over the lower-right corner of the target element.
+function isOverLowerRight(event) {
+  const {left, top, width, height} = event.target.getBoundingClientRect();
+  const x = event.clientX - left;
+  const y = event.clientY - top;
+  return width - x < 10 && height - y < 10;
+}
+
+function makeDraggable(element, handle, canResize) {
   element.style.position = 'absolute';
   const {parentElement} = element;
   parentElement.style.position = 'relative';
   const parentRect = parentElement.getBoundingClientRect();
+
+  if (canResize) {
+    element.addEventListener('mousemove', event => {
+      element.style.cursor = isOverLowerRight(event) ? 'se-resize' : 'grab';
+    });
+  }
 
   const target = handle || element;
   target.addEventListener('mousedown', event => {
@@ -91,7 +106,7 @@ function makeDraggable(element, handle) {
 
       const {style} = element;
 
-      if (!isResizing) {
+      if (canResize && !isResizing) {
         // Determine if the user is dragging from
         // the lower-right corner of the draggable element.
         // If so, resize the element instead of moving it.
@@ -107,16 +122,14 @@ function makeDraggable(element, handle) {
         }
       }
 
-      // TODO: Add a mousemove listener that is listening before a click happens so you can update the cursor proactively.
-      style.cursor = isResizing ? 'se-resize' : 'auto';
-
       if (isResizing) {
         style.width = event.clientX - left + resizeOffsetX + 'px';
         style.height = event.clientY - top + resizeOffsetY + 'px';
-      } else if (!isResizing) {
+      } else {
         // TODO: Don't allow it to be resized outside the parent bounds.
         const newLeft = Math.max(0, Math.min(maxX, event.clientX - offsetX));
         const newTop = Math.max(0, Math.min(maxY, event.clientY - offsetY));
+        style.cursor = 'grabbing';
         style.left = newLeft + 'px';
         style.top = newTop + 'px';
       }
@@ -125,7 +138,8 @@ function makeDraggable(element, handle) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener(
       'mouseup',
-      () => {
+      event => {
+        event.target.style.cursor = 'auto';
         isResizing = false;
         document.removeEventListener('mousemove', onMouseMove);
       },
@@ -150,7 +164,7 @@ function newButton() {
   const section = dialog.querySelector('section');
   section.appendChild(button);
 
-  makeDraggable(button);
+  makeDraggable(button, null, true);
   centerInParent(button);
 }
 
@@ -170,7 +184,7 @@ function newStack(event) {
     section.addEventListener('click', () => deselectAll(section));
 
     const titleBar = dialog.querySelector('.title-bar');
-    makeDraggable(dialog, titleBar);
+    makeDraggable(dialog, titleBar, false);
 
     dialog.addEventListener('click', event => selectStack(event));
   });
