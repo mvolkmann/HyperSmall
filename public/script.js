@@ -51,7 +51,6 @@ function closeMenus() {
 }
 
 function configureMenus() {
-  //document.body.addEventListener('click', closeMenus);
   document.body.addEventListener('click', closeMenus);
   menus = document.querySelectorAll('.menu');
   for (const menu of menus) {
