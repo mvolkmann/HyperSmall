@@ -68,8 +68,8 @@ function makeDraggable(element, handle) {
   const target = handle || element;
   target.addEventListener('mousedown', event => {
     const elementRect = element.getBoundingClientRect();
-    let offsetX = event.clientX;
-    let offsetY = event.clientY;
+    let offsetX = parentRect.left + event.clientX - elementRect.left;
+    let offsetY = parentRect.top + event.clientY - elementRect.top;
     let maxX = parentRect.width - elementRect.width;
     let maxY = parentRect.height - elementRect.height;
 
