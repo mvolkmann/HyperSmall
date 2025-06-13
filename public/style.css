@@ -139,7 +139,7 @@ main {
       }
     }
 
-    .selected {
+    .open {
       background-color: #339;
       color: white;
     }

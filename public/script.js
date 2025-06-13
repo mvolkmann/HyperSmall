@@ -40,7 +40,7 @@ function closeDialog(element) {
 function closeMenus() {
   for (const menu of menus) {
     const button = menu.querySelector('button');
-    button.classList.remove('selected');
+    button.classList.remove('open');
 
     const menuItems = menu.querySelector('.menuItems');
     menuItems.style.display = 'none';
@@ -175,7 +175,7 @@ function onMenuClick(event) {
     });
   }
 
-  button.classList.toggle('selected');
+  button.classList.toggle('open');
 }
 
 function onMenuHover(event) {
