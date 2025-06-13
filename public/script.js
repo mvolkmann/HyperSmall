@@ -85,17 +85,18 @@ function makeDraggable(element, handle, canResize) {
   const parentRect = parentElement.getBoundingClientRect();
 
   const target = handle || element;
-  target.style.cursor = 'grab';
+  const targetStyle = target.style;
+  targetStyle.cursor = 'grab';
 
   if (canResize) {
     target.addEventListener('mousemove', () => {
-      target.style.cursor =
+      targetStyle.cursor =
         canResize && isOverLowerRight(event) ? 'se-resize' : 'grab';
     });
   }
 
   target.addEventListener('mousedown', event => {
-    if (target.style.cursor === 'grab') target.style.cursor = 'grabbing';
+    if (targetStyle.cursor === 'grab') targetStyle.cursor = 'grabbing';
 
     const elementRect = element.getBoundingClientRect();
     let offsetX = parentRect.left + event.clientX - elementRect.left;
@@ -143,7 +144,7 @@ function makeDraggable(element, handle, canResize) {
     document.addEventListener(
       'mouseup',
       () => {
-        target.style.cursor = 'grab';
+        targetStyle.cursor = 'grab';
         isResizing = false;
         document.removeEventListener('mousemove', onMouseMove);
       },
