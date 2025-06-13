@@ -1,7 +1,7 @@
 let clickAudio;
 let currentStackName = '';
 let isDragging = false;
-let menuOpen;
+let openMenu;
 let menus;
 
 const cardHeight = {
@@ -45,9 +45,11 @@ function closeMenus() {
     const menuItems = menu.querySelector('.menuItems');
     menuItems.style.display = 'none';
   }
+  openMenu = null;
 }
 
 function configureMenus() {
+  //document.body.addEventListener('click', closeMenus);
   document.body.addEventListener('click', closeMenus);
   menus = document.querySelectorAll('.menu');
   for (const menu of menus) {
@@ -157,18 +159,17 @@ function onMenuClick(event) {
 
   playClick();
 
-  menuOpen = true;
-
   const button = event.target;
-  const menu = button.parentElement;
-  const menuItems = menu.querySelector('.menuItems');
+  button.classList.add('hover');
+  openMenu = button.parentElement;
+  const menuItems = openMenu.querySelector('.menuItems');
   const style = menuItems.style;
 
   const visible = style.display === 'flex';
   if (visible) {
     style.display = 'none';
-  } else {
     closeMenus();
+  } else {
     style.display = 'flex';
     requestAnimationFrame(() => {
       style.width = 'fit-content';
@@ -179,7 +180,13 @@ function onMenuClick(event) {
 }
 
 function onMenuHover(event) {
-  if (menuOpen) onMenuClick(event);
+  if (openMenu) {
+    const button = openMenu.querySelector('.menu-label');
+    button.classList.remove('open');
+    const menuItems = openMenu.querySelector('.menuItems');
+    menuItems.style.display = 'none';
+    onMenuClick(event);
+  }
 }
 
 function onStackNameChange(event) {
