@@ -1,6 +1,6 @@
 let clickAudio;
 let currentStackName = '';
-let isDragging = false;
+let isResizing = false;
 let openMenu;
 let menus;
 
@@ -82,16 +82,30 @@ function makeDraggable(element, handle) {
     let maxY = parentRect.height - elementRect.height;
 
     function onMouseMove(event) {
-      const left = Math.max(0, Math.min(maxX, event.clientX - offsetX));
-      const top = Math.max(0, Math.min(maxY, event.clientY - offsetY));
-      element.style.left = left + 'px';
-      element.style.top = top + 'px';
+      // Determine if the user is dragging from
+      // the lower-right corner of the draggable element.
+      // If so, resize the element instead of moving it.
+      const targetRect = event.target.getBoundingClientRect();
+      const {left, top, width, height} = targetRect;
+      const x = event.clientX - left;
+      const y = event.clientY - top;
+      const resizing = width - x < 10 && height - y < 10;
+
+      if (resizing) {
+        isResizing = true;
+      } else if (!isResizing) {
+        const newLeft = Math.max(0, Math.min(maxX, event.clientX - offsetX));
+        const newTop = Math.max(0, Math.min(maxY, event.clientY - offsetY));
+        element.style.left = newLeft + 'px';
+        element.style.top = newTop + 'px';
+      }
     }
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener(
       'mouseup',
       () => {
+        isResizing = false;
         document.removeEventListener('mousemove', onMouseMove);
       },
       {once: true}
@@ -106,10 +120,8 @@ function newButton() {
   button.classList.add('selected');
   button.textContent = 'New Button';
   button.addEventListener('click', event => {
-    if (!isDragging) {
-      button.classList.toggle('selected');
-      event.stopPropagation();
-    }
+    button.classList.toggle('selected');
+    event.stopPropagation();
   });
 
   // Add the button to the section.
