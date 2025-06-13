@@ -1,6 +1,8 @@
 let clickAudio;
 let currentStackName = '';
 let isResizing = false;
+let resizeOffsetX;
+let resizeOffsetY;
 let openMenu;
 let menus;
 
@@ -82,22 +84,41 @@ function makeDraggable(element, handle) {
     let maxY = parentRect.height - elementRect.height;
 
     function onMouseMove(event) {
-      // Determine if the user is dragging from
-      // the lower-right corner of the draggable element.
-      // If so, resize the element instead of moving it.
       const targetRect = event.target.getBoundingClientRect();
       const {left, top, width, height} = targetRect;
       const x = event.clientX - left;
       const y = event.clientY - top;
-      const resizing = width - x < 10 && height - y < 10;
 
-      if (resizing) {
-        isResizing = true;
+      const {style} = element;
+
+      if (!isResizing) {
+        // Determine if the user is dragging from
+        // the lower-right corner of the draggable element.
+        // If so, resize the element instead of moving it.
+        isResizing = width - x < 10 && height - y < 10;
+        if (isResizing) {
+          // Calculate the distance from the right side
+          // of the element being resized to the mouse cursor x.
+          resizeOffsetX = elementRect.left + elementRect.width - event.clientX;
+
+          // Calculate the distance from the bottom side
+          // of the element being resized to the mouse cursor y.
+          resizeOffsetY = elementRect.top + elementRect.height - event.clientY;
+        }
+      }
+
+      // TODO: Add a mousemove listener that is listening before a click happens so you can update the cursor proactively.
+      style.cursor = isResizing ? 'se-resize' : 'auto';
+
+      if (isResizing) {
+        style.width = event.clientX - left + resizeOffsetX + 'px';
+        style.height = event.clientY - top + resizeOffsetY + 'px';
       } else if (!isResizing) {
+        // TODO: Don't allow it to be resized outside the parent bounds.
         const newLeft = Math.max(0, Math.min(maxX, event.clientX - offsetX));
         const newTop = Math.max(0, Math.min(maxY, event.clientY - offsetY));
-        element.style.left = newLeft + 'px';
-        element.style.top = newTop + 'px';
+        style.left = newLeft + 'px';
+        style.top = newTop + 'px';
       }
     }
 
