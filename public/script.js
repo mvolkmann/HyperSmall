@@ -98,10 +98,12 @@ function makeDraggable(element, handle, canResize) {
     if (targetStyle.cursor === 'grab') targetStyle.cursor = 'grabbing';
 
     const elementRect = element.getBoundingClientRect();
-    let offsetX = parentRect.left + event.clientX - elementRect.left;
-    let offsetY = parentRect.top + event.clientY - elementRect.top;
-    let maxX = parentRect.width - elementRect.width;
-    let maxY = parentRect.height - elementRect.height;
+    const offsetX = parentRect.left + event.clientX - elementRect.left;
+    const offsetY = parentRect.top + event.clientY - elementRect.top;
+    const maxDragX = parentRect.width - elementRect.width;
+    const maxDragY = parentRect.height - elementRect.height;
+    const maxResizeX = parentRect.left + parentRect.width;
+    const maxResizeY = parentRect.top + parentRect.height;
 
     function onMouseMove(event) {
       const targetRect = event.target.getBoundingClientRect();
@@ -128,12 +130,17 @@ function makeDraggable(element, handle, canResize) {
       }
 
       if (isResizing) {
-        style.width = event.clientX - left + resizeOffsetX + 'px';
-        style.height = event.clientY - top + resizeOffsetY + 'px';
+        // Don't allow the element to be resized outside its parent.
+        if (event.clientX < maxResizeX && event.clientY < maxResizeY) {
+          style.width = event.clientX - left + resizeOffsetX + 'px';
+          style.height = event.clientY - top + resizeOffsetY + 'px';
+        }
       } else {
-        // TODO: Don't allow it to be resized outside the parent bounds.
-        const newLeft = Math.max(0, Math.min(maxX, event.clientX - offsetX));
-        const newTop = Math.max(0, Math.min(maxY, event.clientY - offsetY));
+        const newLeft = Math.max(
+          0,
+          Math.min(maxDragX, event.clientX - offsetX)
+        );
+        const newTop = Math.max(0, Math.min(maxDragY, event.clientY - offsetY));
         style.left = newLeft + 'px';
         style.top = newTop + 'px';
       }
