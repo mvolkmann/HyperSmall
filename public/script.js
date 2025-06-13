@@ -84,14 +84,19 @@ function makeDraggable(element, handle, canResize) {
   parentElement.style.position = 'relative';
   const parentRect = parentElement.getBoundingClientRect();
 
+  const target = handle || element;
+  target.style.cursor = 'grab';
+
   if (canResize) {
-    element.addEventListener('mousemove', event => {
-      element.style.cursor = isOverLowerRight(event) ? 'se-resize' : 'grab';
+    target.addEventListener('mousemove', () => {
+      target.style.cursor =
+        canResize && isOverLowerRight(event) ? 'se-resize' : 'grab';
     });
   }
 
-  const target = handle || element;
   target.addEventListener('mousedown', event => {
+    if (target.style.cursor === 'grab') target.style.cursor = 'grabbing';
+
     const elementRect = element.getBoundingClientRect();
     let offsetX = parentRect.left + event.clientX - elementRect.left;
     let offsetY = parentRect.top + event.clientY - elementRect.top;
@@ -129,7 +134,6 @@ function makeDraggable(element, handle, canResize) {
         // TODO: Don't allow it to be resized outside the parent bounds.
         const newLeft = Math.max(0, Math.min(maxX, event.clientX - offsetX));
         const newTop = Math.max(0, Math.min(maxY, event.clientY - offsetY));
-        style.cursor = 'grabbing';
         style.left = newLeft + 'px';
         style.top = newTop + 'px';
       }
@@ -138,8 +142,8 @@ function makeDraggable(element, handle, canResize) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener(
       'mouseup',
-      event => {
-        event.target.style.cursor = 'auto';
+      () => {
+        target.style.cursor = 'grab';
         isResizing = false;
         document.removeEventListener('mousemove', onMouseMove);
       },
