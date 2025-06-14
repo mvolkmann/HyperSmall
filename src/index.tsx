@@ -38,6 +38,7 @@ app.get('/button-info', (c: Context) => {
     <>
       <form hx-post="/button-info">
         <div class="column gap2">
+          <div class="title-bar">Button Info</div>
           <div class="row gap1">
             <label class="mb1" for="cardSize">
               Button Name:

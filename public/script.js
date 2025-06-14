@@ -326,8 +326,11 @@ async function setup() {
   dialog.querySelector('#saveBtn').click();
   await waitForNextFrame();
 
-  selectMenuItem('New Button');
-  setupFinished = true;
+  //TODO: Why is this setTimeout necessary?
+  setTimeout(() => {
+    selectMenuItem('New Button');
+    setupFinished = true;
+  }, 100);
 }
 
 function updateTime() {
