@@ -1,10 +1,12 @@
 let clickAudio;
 let currentStackName = '';
 let isResizing = false;
+let menuButtons;
+let menus;
+let openMenu;
 let resizeOffsetX;
 let resizeOffsetY;
-let openMenu;
-let menus;
+let setupFinished = false;
 
 const cardHeight = {
   Small: 240,
@@ -35,8 +37,7 @@ function centerInParent(element) {
 }
 
 function closeDialog(element) {
-  const dialog = element.closest('dialog');
-  dialog.close();
+  if (element) element.closest('dialog').close();
 }
 
 function closeMenus() {
@@ -265,12 +266,36 @@ function onStackSelected(event) {
 }
 
 function playClick() {
+  // In order to prevent autoplay, sounds cannot be played
+  // until the user has interacted with the document.
+  if (!setupFinished) return;
+
+  // Lazily load the click sound.
   if (!clickAudio) clickAudio = new Audio('sounds/click.mp3');
+
   clickAudio.play();
 }
 
 function replaceStack() {
   alert('replaceStack called');
+}
+
+function selectMenuItem(name) {
+  // Lazily find all the menu buttons.
+  if (!menuButtons) {
+    const menuBar = document.querySelector('.menu-bar');
+    menuButtons = menuBar.querySelectorAll('button');
+  }
+
+  const button = Array.from(menuButtons).find(
+    b => b.textContent.trim() === name
+  );
+
+  if (button) {
+    button.click();
+  } else {
+    alert(`Unknown menu item "${name}"`);
+  }
 }
 
 function selectStack(event) {
@@ -285,17 +310,21 @@ function selectStack(event) {
   currentStackName = dialog.id.split('-')[1];
 }
 
-function setup() {
-  //TODO: Simulate user events to create a new stack and add a button to it.
-  const button = document.getElementById('new-stack-btn');
-  button.click();
-  requestAnimationFrame(() => {
-    const dialog = document.getElementById('modal-dialog');
-    requestAnimationFrame(() => {
-      dialog.querySelector('#name').value = 'Demo';
-      dialog.querySelector('#saveBtn').click();
-    });
-  });
+// This simulates user events to take some initial actions in the UI.
+// It is useful for debugging.
+async function setup() {
+  selectMenuItem('New Stack...');
+  await waitForNextFrame();
+
+  const dialog = document.getElementById('modal-dialog');
+  await waitForNextFrame();
+
+  dialog.querySelector('#name').value = 'Demo';
+  dialog.querySelector('#saveBtn').click();
+  await waitForNextFrame();
+
+  selectMenuItem('New Button');
+  setupFinished = true;
 }
 
 function updateTime() {
@@ -305,4 +334,8 @@ function updateTime() {
     minute: '2-digit',
     hour12: true
   });
+}
+
+async function waitForNextFrame() {
+  return new Promise(requestAnimationFrame);
 }

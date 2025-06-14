@@ -145,9 +145,7 @@ app.get('/new-stack', (c: Context) => {
           <button autofocus onclick="closeDialog(this)">
             Cancel
           </button>
-          <button id="saveBtn" onclick="newStack(this)">
-            Save
-          </button>
+          <button id="saveBtn">Save</button>
         </div>
         <div class="column">
           <label class="mb1" for="cardSize">
