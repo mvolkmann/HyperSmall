@@ -55,6 +55,7 @@ app.get('/button-info', (c: Context) => {
               <label>Family:</label>
             </div>
           </div>
+
           <div class="row">
             <div class="column">
               <div class="row">
@@ -71,23 +72,23 @@ app.get('/button-info', (c: Context) => {
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="grid3Columns">
-            <button>Text Style...</button>
-            <button>Icon...</button>
-            <button>LinkTo...</button>
-            <button>Script...</button>
-            <button>Contents...</button>
-            <button>Tasks...</button>
-          </div>
-          <div class="column gap2">
-            <button id="okBtn" disabled={true} onclick="closeDialog(this)">
-              OK
-            </button>
-            <button autofocus onclick="closeDialog(this)">
-              Cancel
-            </button>
+          <div class="row">
+            <div class="grid3Columns">
+              <button>Text Style...</button>
+              <button>Icon...</button>
+              <button>LinkTo...</button>
+              <button>Script...</button>
+              <button>Contents...</button>
+              <button>Tasks...</button>
+            </div>
+            <div class="column gap2">
+              <button id="okBtn" disabled={true} onclick="closeDialog(this)">
+                OK
+              </button>
+              <button autofocus onclick="closeDialog(this)">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </form>
