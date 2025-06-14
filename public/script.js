@@ -164,6 +164,9 @@ function newButton() {
   const button = document.createElement('button');
   button.classList.add('button');
   button.classList.add('selected');
+  button.setAttribute('hx-trigger', 'dblclick');
+  button.setAttribute('hx-get', '/button-info');
+  button.setAttribute('hx-target', '#modal-dialog');
   button.textContent = 'New Button';
   button.addEventListener('click', event => {
     button.classList.toggle('selected');
@@ -177,9 +180,13 @@ function newButton() {
 
   makeDraggable(button, null, true);
   centerInParent(button);
+
+  // Process the htmx attributes on an element that was added dynamically.
+  htmx.process(button);
 }
 
 function newStack(event) {
+  closeDialog(event.target);
   const {cardSize, stackName} = event.detail;
   const dialogId = 'dialog-' + stackName;
   requestAnimationFrame(() => {
@@ -276,6 +283,19 @@ function selectStack(event) {
   dialog = event.target.closest('dialog');
   dialog.style.zIndex = 1;
   currentStackName = dialog.id.split('-')[1];
+}
+
+function setup() {
+  //TODO: Simulate user events to create a new stack and add a button to it.
+  const button = document.getElementById('new-stack-btn');
+  button.click();
+  requestAnimationFrame(() => {
+    const dialog = document.getElementById('modal-dialog');
+    requestAnimationFrame(() => {
+      dialog.querySelector('#name').value = 'Demo';
+      dialog.querySelector('#saveBtn').click();
+    });
+  });
 }
 
 function updateTime() {

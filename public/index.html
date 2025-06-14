@@ -18,6 +18,7 @@
       window.onload = () => {
         configureMenus();
         updateTime();
+        setup();
       };
 
       document.addEventListener('htmx:afterSwap', function (event) {
@@ -40,7 +41,11 @@
       <div class="menu">
         <button class="menu-label">File</button>
         <div class="menuItems">
-          <button hx-get="/new-stack" hx-target="#modal-dialog">
+          <button
+            id="new-stack-btn"
+            hx-get="/new-stack"
+            hx-target="#modal-dialog"
+          >
             New Stack...
           </button>
           <button hx-get="/open-stack" hx-target="#modal-dialog">

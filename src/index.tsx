@@ -32,6 +32,69 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+// Return HTML for a dialog to edit button properties.
+app.get('/button-info', (c: Context) => {
+  return c.html(
+    <>
+      <form hx-post="/button-info">
+        <div class="column">
+          <div class="row">
+            <label class="mb1" for="cardSize">
+              Button Name:
+            </label>
+            <input name="buttonName" required />
+          </div>
+          <div class="row">
+            <div class="column">
+              <label>Card button number:</label>
+              <label>Card part number:</label>
+              <label>Card button ID:</label>
+            </div>
+            <div class="column">
+              <label>Style:</label>
+              <label>Family:</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column">
+              <div class="row">
+                <input type="checkbox" id="showName" name="showName" />
+                <label for="showName">Show name</label>
+              </div>
+              <div class="row">
+                <input type="checkbox" id="authHilite" name="authHilite" />
+                <label for="autoHilite">Auto Hilite</label>
+              </div>
+              <div class="row">
+                <input type="checkbox" id="enabled" name="enabled" />
+                <label for="enabled">Enabled</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="grid3Columns">
+            <button>Text Style...</button>
+            <button>Icon...</button>
+            <button>LinkTo...</button>
+            <button>Script...</button>
+            <button>Contents...</button>
+            <button>Tasks...</button>
+          </div>
+          <div class="column gap2">
+            <button id="okBtn" disabled={true} onclick="closeDialog(this)">
+              OK
+            </button>
+            <button autofocus onclick="closeDialog(this)">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </>
+  );
+});
+
 app.get('/new-button', (c: Context) => {
   // TODO: Add a button to the stack in the database.
   c.header('HX-Trigger', 'new-button');
@@ -47,6 +110,7 @@ app.get('/new-stack', (c: Context) => {
         hx-post="/stack"
         hx-target="main"
         hx-swap="beforeend"
+        id="new-stack-form"
         x-data="{
           cardSize: 'Small',
           name: '',

@@ -42,6 +42,12 @@ dialog > form {
   gap: 0.5rem;
 }
 
+.grid3Columns {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
 input[type='checkbox'] {
   margin-right: 0.3rem;
 }
