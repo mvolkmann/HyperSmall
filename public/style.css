@@ -38,13 +38,16 @@ dialog > form {
   gap: 1rem;
 }
 
+.gap1 {
+  gap: 0.25rem;
+}
+
 .gap2 {
   gap: 0.5rem;
 }
 
 .grid3Columns {
   display: grid;
-  gap: 0.25rem;
   grid-template-columns: repeat(3, 1fr);
 }
 
@@ -174,6 +177,11 @@ main {
 .row {
   display: flex;
   align-items: center;
+}
+
+.rowAlignStart {
+  display: flex;
+  align-items: flex-start;
 }
 
 .stack {

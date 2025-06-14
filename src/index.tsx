@@ -37,14 +37,14 @@ app.get('/button-info', (c: Context) => {
   return c.html(
     <>
       <form hx-post="/button-info">
-        <div class="column">
-          <div class="row">
+        <div class="column gap2">
+          <div class="row gap1">
             <label class="mb1" for="cardSize">
               Button Name:
             </label>
             <input name="buttonName" required />
           </div>
-          <div class="row">
+          <div class="rowAlignStart gap2">
             <div class="column">
               <label>Card button number:</label>
               <label>Card part number:</label>
@@ -72,8 +72,8 @@ app.get('/button-info', (c: Context) => {
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="grid3Columns">
+          <div class="row gap2">
+            <div class="grid3Columns gap1">
               <button>Text Style...</button>
               <button>Icon...</button>
               <button>LinkTo...</button>
@@ -81,7 +81,7 @@ app.get('/button-info', (c: Context) => {
               <button>Contents...</button>
               <button>Tasks...</button>
             </div>
-            <div class="column gap2">
+            <div class="column gap1">
               <button id="okBtn" disabled={true} onclick="closeDialog(this)">
                 OK
               </button>

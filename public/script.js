@@ -175,7 +175,9 @@ function newButton() {
   });
 
   // Add the button to the section.
+  console.log('script.js newButton: currentStackName =', currentStackName);
   const dialog = document.getElementById('dialog-' + currentStackName);
+  console.log('script.js newButton: dialog =', dialog);
   const section = dialog.querySelector('section');
   section.appendChild(button);
 
@@ -319,6 +321,7 @@ async function setup() {
   const dialog = document.getElementById('modal-dialog');
   await waitForNextFrame();
 
+  console.log('script.js setup: dialog =', dialog);
   dialog.querySelector('#name').value = 'Demo';
   dialog.querySelector('#saveBtn').click();
   await waitForNextFrame();
