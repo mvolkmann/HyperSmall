@@ -39,7 +39,7 @@ dialog > form {
 }
 
 .dialog-with-title-bar {
-  display: flex;
+  display: none; /* changed to flex when shown */
   flex-direction: column;
   margin: 0;
   padding: 0;
