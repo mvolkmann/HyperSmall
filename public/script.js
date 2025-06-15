@@ -183,18 +183,26 @@ async function newButton() {
   button.classList.add('button');
   button.classList.add('selected');
   button.textContent = 'New Button';
+
   button.addEventListener('click', event => {
     button.classList.toggle('selected');
     event.stopPropagation();
   });
+
   button.addEventListener('dblclick', () => {
     openTitledDialog('#button-info-dialog');
+  });
+
+  button.addEventListener('keydown', event => {
+    event.stopPropagation();
+    if (event.key === 'Backspace') button.remove();
   });
 
   // Add the button to the section.
   const dialog = await waitForElement(stackDialogSelector(currentStackName));
   const section = dialog.querySelector('section');
   section.appendChild(button);
+  button.focus();
 
   makeDraggable(button, null, true);
   centerInParent(button);
