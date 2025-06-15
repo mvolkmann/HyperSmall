@@ -239,6 +239,7 @@
           hx-post="/stack"
           hx-target="main"
           hx-swap="beforeend"
+          hx-on:htmx:after-request="this.reset()"
           id="new-stack-form"
           x-data="{
           cardSize: 'Small',
