@@ -190,7 +190,9 @@ async function newButton() {
   });
 
   button.addEventListener('dblclick', () => {
-    openTitledDialog('#button-info-dialog');
+    const dialog = openTitledDialog('#button-info-dialog');
+    const input = dialog.querySelector('#buttonName');
+    input.value = button.textContent;
   });
 
   button.addEventListener('keydown', event => {
@@ -300,6 +302,7 @@ function openTitledDialog(selector) {
   centerInParent(dialog);
   const titleBar = dialog.querySelector('.title-bar');
   makeDraggable(dialog, titleBar, false);
+  return dialog;
 }
 
 function playClick() {
