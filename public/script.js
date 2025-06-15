@@ -37,9 +37,8 @@ function centerInParent(element) {
 }
 
 function closeDialog(element) {
-  //console.log('script.js closeDialog: element =', element);
   const dialog = element.closest('dialog');
-  //console.log('script.js closeDialog: dialog =', dialog);
+  dialog.style.display = 'none';
   dialog.close();
 }
 
@@ -205,7 +204,10 @@ async function newButton() {
 }
 
 async function newStack(event) {
+  // Close the "New Stack..." dialog.
   closeDialog(event.target);
+
+  // Create a dialog for the new stack.
   const {cardSize, stackName} = event.detail;
   const dialog = await waitForElement(stackDialogSelector(stackName));
   const {style} = dialog;
@@ -221,7 +223,7 @@ async function newStack(event) {
   const titleBar = dialog.querySelector('.title-bar');
   makeDraggable(dialog, titleBar, false);
 
-  dialog.addEventListener('click', event => selectStack(event));
+  dialog.addEventListener('click', selectStack);
 }
 
 function onCardSizeChange(event) {
@@ -335,6 +337,7 @@ async function selectStack(event) {
 }
 
 async function setup() {
+  // Wire up menu items.
   document.getElementById('new-stack-btn').addEventListener('click', event => {
     document.getElementById('new-stack-dialog').showModal();
   });
@@ -346,8 +349,8 @@ async function setup() {
     makeDraggable(dialog, titleBar, false);
   }
 
-  // This simulates user events to take some initial actions in the UI.
-  // It is useful for debugging.
+  // Simulate user events to take some initial actions in the UI.
+  // This is useful for debugging.
   selectMenuItem('New Stack...');
   const dialog = await waitForElement('#new-stack-dialog');
   const stackName = 'Demo';

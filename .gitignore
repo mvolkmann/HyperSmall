@@ -1,4 +1,5 @@
-node_modules/
+.DS_Store
 hypersmall.db
 hypersmall.db-shm
 hypersmall.db-wal
+node_modules/
