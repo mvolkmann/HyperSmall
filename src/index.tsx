@@ -138,7 +138,7 @@ app.post('/stack', async (c: Context) => {
     const trigger = {'new-stack': {cardSize, stackName}};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
-      <dialog id={'dialog-' + stackName} class="stack">
+      <dialog id={'stack-' + stackName} class="stack">
         <div class="title-bar">
           <input type="checkbox" onclick="closeDialog(this)" />
           <div>{stackName}</div>

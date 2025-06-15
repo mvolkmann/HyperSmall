@@ -185,7 +185,7 @@ async function newButton() {
   });
 
   // Add the button to the section.
-  const dialog = await waitForElement('#dialog-' + currentStackName);
+  const dialog = await waitForElement(stackDialogSelector(currentStackName));
   const section = dialog.querySelector('section');
   section.appendChild(button);
 
@@ -199,7 +199,7 @@ async function newButton() {
 async function newStack(event) {
   closeDialog(event.target);
   const {cardSize, stackName} = event.detail;
-  const dialog = await waitForElement('#dialog-' + stackName);
+  const dialog = await waitForElement(stackDialogSelector(stackName));
   const {style} = dialog;
   style.width = cardWidth[cardSize] + 'px';
   style.height = cardHeight[cardSize] + 'px';
@@ -308,8 +308,7 @@ function selectMenuItem(name) {
 
 function selectStack(event) {
   if (currentStackName) {
-    const id = 'dialog-' + currentStackName;
-    let dialog = document.getElementById(id);
+    let dialog = document.getElementById(stackDialogSelector(currentStackName));
     dialog.style.zIndex = 0;
   }
 
@@ -323,6 +322,7 @@ async function setup() {
     document.getElementById('new-stack-dialog').showModal();
   });
 
+  // Make all dialogs with a title bar be draggable by its title bar.
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
   for (const dialog of dialogs) {
     const titleBar = dialog.querySelector('.title-bar');
@@ -336,10 +336,12 @@ async function setup() {
   const stackName = 'Demo';
   dialog.querySelector('#name').value = stackName;
   dialog.querySelector('#saveBtn').click();
-  await waitForElement('#dialog-' + stackName);
+  await waitForElement(stackDialogSelector(stackName));
   selectMenuItem('New Button');
   setupFinished = true;
 }
+
+const stackDialogSelector = stackName => '#stack-' + stackName;
 
 function updateTime() {
   const div = document.getElementById('time');
