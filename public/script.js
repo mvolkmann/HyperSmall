@@ -37,7 +37,10 @@ function centerInParent(element) {
 }
 
 function closeDialog(element) {
-  if (element) element.closest('dialog').close();
+  console.log('script.js closeDialog: element =', element);
+  const dialog = element.closest('dialog');
+  console.log('script.js closeDialog: dialog =', dialog);
+  dialog.close();
 }
 
 function closeMenus() {

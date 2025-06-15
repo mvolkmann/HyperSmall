@@ -189,7 +189,7 @@
         <form hx-post="/button-info">
             <div class="row gap1">
               <label class="mb1" for="cardSize"> Button Name: </label>
-              <input name="buttonName" required />
+              <input autofocus name="buttonName" required />
             </div>
             <div class="row-align-start gap2">
               <div class="column">
@@ -236,7 +236,9 @@
                 >
                   OK
                 </button>
-                <button autofocus onclick="closeDialog(this)">Cancel</button>
+                <button onclick="closeDialog(this)" type="button">
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
