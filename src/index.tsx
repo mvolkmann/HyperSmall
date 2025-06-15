@@ -149,7 +149,11 @@ app.post('/stack', async (c: Context) => {
           <div>{stackName}</div>
           <stripe-lines></stripe-lines>
           <img class="icon-button" src="images/zoom-icon.png" />
-          <img class="icon-button" src="images/collapse-icon.png" />
+          <img
+            class="icon-button"
+            onclick="toggleDialogCollapse(this)"
+            src="images/collapse-icon.png"
+          />
         </div>
         <section></section>
       </dialog>
