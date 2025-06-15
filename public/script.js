@@ -339,7 +339,9 @@ async function selectStack(event) {
 async function setup() {
   // Wire up menu items.
   document.getElementById('new-stack-btn').addEventListener('click', event => {
-    document.getElementById('new-stack-dialog').showModal();
+    const dialog = document.getElementById('new-stack-dialog');
+    dialog.style.display = 'flex';
+    dialog.showModal();
   });
 
   // Make all dialogs with a title bar be draggable by its title bar.
