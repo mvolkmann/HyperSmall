@@ -149,10 +149,14 @@ function makeDraggable(element, handle, canResize) {
           0,
           Math.min(maxDragX, event.clientX - parentRect.left - offsetX)
         );
-        const top = Math.max(
+        let top = Math.max(
           0,
           Math.min(maxDragY, event.clientY - parentRect.top - offsetY)
         );
+        // Handle special case for dialogs with a title bar.
+        if (element?.classList.contains('dialog-with-title-bar')) {
+          top += height;
+        }
         style.left = left + 'px';
         style.top = top + 'px';
       }
