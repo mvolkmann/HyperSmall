@@ -212,3 +212,9 @@ main {
   display: flex;
   justify-content: space-between;
 }
+
+.title-bar-text-only {
+  background-color: #bfbfbf;
+  display: flex;
+  justify-content: center;
+}

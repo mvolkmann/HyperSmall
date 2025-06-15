@@ -165,13 +165,13 @@ function newButton() {
   const button = document.createElement('button');
   button.classList.add('button');
   button.classList.add('selected');
-  button.setAttribute('hx-trigger', 'dblclick');
-  button.setAttribute('hx-get', '/button-info');
-  button.setAttribute('hx-target', '#modal-dialog');
   button.textContent = 'New Button';
   button.addEventListener('click', event => {
     button.classList.toggle('selected');
     event.stopPropagation();
+  });
+  button.addEventListener('dblclick', event => {
+    document.getElementById('button-info-dialog').showModal();
   });
 
   // Add the button to the section.
@@ -185,7 +185,7 @@ function newButton() {
   centerInParent(button);
 
   // Process the htmx attributes on an element that was added dynamically.
-  htmx.process(button);
+  //htmx.process(button);
 }
 
 function newStack(event) {
