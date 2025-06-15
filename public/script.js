@@ -215,6 +215,8 @@ async function newStack(event) {
   style.height = cardHeight[cardSize] + 'px';
   style.zIndex = 1;
   dialog.show();
+  centerInParent(dialog);
+
   currentStackName = stackName;
 
   const section = dialog.querySelector('section');
