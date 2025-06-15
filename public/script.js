@@ -315,6 +315,11 @@ function selectStack(event) {
 // This simulates user events to take some initial actions in the UI.
 // It is useful for debugging.
 async function setup() {
+  document.getElementById('new-stack-btn').addEventListener('click', event => {
+    document.getElementById('new-stack-dialog').showModal();
+  });
+
+  /*
   selectMenuItem('New Stack...');
   await waitForNextFrame();
 
@@ -331,6 +336,7 @@ async function setup() {
     selectMenuItem('New Button');
     setupFinished = true;
   }, 100);
+  */
 }
 
 function updateTime() {

@@ -32,82 +32,6 @@ app.get('/new-button', (c: Context) => {
   return c.body(null, 204); // No Content
 });
 
-// Return HTML for a dialog to collection
-// information needed to create a new stack.
-app.get('/new-stack', (c: Context) => {
-  return c.html(
-    <>
-      <form
-        hx-post="/stack"
-        hx-target="main"
-        hx-swap="beforeend"
-        id="new-stack-form"
-        x-data="{
-          cardSize: 'Small',
-          name: '',
-          onCardSizeChange,
-          onStackNameChange
-        }"
-      >
-        <div class="column">
-          <label class="mb1" for="name">
-            New stack name:
-          </label>
-          <input
-            autofocus
-            id="name"
-            name="name"
-            required
-            style="margin-bottom: 1rem"
-            type="text"
-            x-model="name"
-            x-on:keyup="onStackNameChange($event)"
-          />
-          <div class="row">
-            <input type="checkbox" id="copyBg" name="copyBg" />
-            <label for="copyBg">Copy current background</label>
-          </div>
-          <div class="row">
-            <input type="checkbox" checked id="openNew" name="openNew" />
-            <label for="openNew">Open stack in new window</label>
-          </div>
-        </div>
-        <div class="border-right-dotted column gap2">
-          <button autofocus onclick="closeDialog(this)">
-            Cancel
-          </button>
-          <button id="saveBtn">Save</button>
-        </div>
-        <div class="column">
-          <label class="mb1" for="cardSize">
-            Card size:
-          </label>
-          <select
-            class="mb4"
-            id="cardSize"
-            name="cardSize"
-            x-model="cardSize"
-            x-on:change="onCardSizeChange($event)"
-          >
-            <option>Small</option>
-            <option>Classic</option>
-            <option>PowerBook</option>
-            <option>Large</option>
-            <option>MacPaint</option>
-            <option>Window</option>
-          </select>
-          <div>
-            &#x2194;
-            <span id="cardWidth">416</span>
-            &nbsp; &#x2195;
-            <span id="cardHeight">240</span>
-          </div>
-        </div>
-      </form>
-    </>
-  );
-});
-
 // Return HTML for a dialog to select a stack to open.
 app.get('/open-stack', (c: Context) => {
   const stacks = getStacksPS.all() as Stack[];
@@ -210,6 +134,7 @@ app.post('/stack', async (c: Context) => {
   stack.id = result.lastInsertRowid as number;
 
   if (stack.openNew) {
+    //TODO: Does this need to change now that the GET /new-stack endpoint was removed?
     const trigger = {'new-stack': {cardSize, stackName}};
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
