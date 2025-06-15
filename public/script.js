@@ -37,9 +37,9 @@ function centerInParent(element) {
 }
 
 function closeDialog(element) {
-  console.log('script.js closeDialog: element =', element);
+  //console.log('script.js closeDialog: element =', element);
   const dialog = element.closest('dialog');
-  console.log('script.js closeDialog: dialog =', dialog);
+  //console.log('script.js closeDialog: dialog =', dialog);
   dialog.close();
 }
 
@@ -320,9 +320,9 @@ function selectMenuItem(name) {
   }
 }
 
-function selectStack(event) {
+async function selectStack(event) {
   if (currentStackName) {
-    let dialog = document.getElementById(stackDialogSelector(currentStackName));
+    const dialog = await waitForElement(stackDialogSelector(currentStackName));
     dialog.style.zIndex = 0;
   }
 
