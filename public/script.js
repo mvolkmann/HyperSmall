@@ -181,10 +181,8 @@ async function newButton() {
     button.classList.toggle('selected');
     event.stopPropagation();
   });
-  button.addEventListener('dblclick', event => {
-    const dialog = document.getElementById('button-info-dialog');
-    dialog.style.display = 'flex';
-    dialog.showModal();
+  button.addEventListener('dblclick', () => {
+    openTitledDialog('#button-info-dialog');
   });
 
   // Add the button to the section.
@@ -274,6 +272,15 @@ function onStackNameChange(event) {
 function onStackSelected(event) {
   const submitButton = document.querySelector('button[type=submit]');
   submitButton.disabled = event.target.value === '';
+}
+
+function openTitledDialog(selector) {
+  const dialog = document.querySelector(selector);
+  dialog.style.display = 'flex';
+  dialog.showModal();
+  centerInParent(dialog);
+  const titleBar = dialog.querySelector('.title-bar');
+  makeDraggable(dialog, titleBar, false);
 }
 
 function playClick() {

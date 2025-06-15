@@ -41,6 +41,7 @@ dialog > form {
 .dialog-with-title-bar {
   display: none; /* changed to flex before showModal is called */
   flex-direction: column;
+  margin: 0;
   padding: 0;
 
   form {
