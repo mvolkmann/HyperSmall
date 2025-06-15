@@ -65,6 +65,7 @@ dialog > form {
 }
 
 .icon-button {
+  cursor: pointer;
   height: 1rem;
   width: 1rem;
 }
