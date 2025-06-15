@@ -140,12 +140,16 @@ app.post('/stack', async (c: Context) => {
     return c.html(
       <dialog id={'stack-' + stackName} class="stack">
         <div class="title-bar">
-          <input type="checkbox" onclick="closeDialog(this)" />
+          <img
+            class="icon-button"
+            onclick="closeDialog(this)"
+            src="images/close-icon.png"
+          />
+          <stripe-lines></stripe-lines>
           <div>{stackName}</div>
-          <div>
-            <button>Zoom</button>
-            <button>Collapse</button>
-          </div>
+          <stripe-lines></stripe-lines>
+          <img class="icon-button" src="images/zoom-icon.png" />
+          <img class="icon-button" src="images/collapse-icon.png" />
         </div>
         <section></section>
       </dialog>

@@ -64,6 +64,11 @@ dialog > form {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.icon-button {
+  height: 1rem;
+  width: 1rem;
+}
+
 input[type='checkbox'] {
   margin-right: 0.3rem;
 }
@@ -203,6 +208,7 @@ main {
   top: 0px;
 
   margin: 0;
+  outline: none;
   padding: 0;
 
   section {
