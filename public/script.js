@@ -115,7 +115,7 @@ function makeDraggable(element, handle, canResize) {
     const maxResizeY = parentRect.top + parentRect.height;
 
     function onMouseMove(event) {
-      const targetRect = event.target.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
       const {left, top, width, height} = targetRect;
       const x = event.clientX - left;
       const y = event.clientY - top;
