@@ -82,7 +82,6 @@ function makeDraggable(element, handle, canResize) {
   element.style.position = 'absolute';
   const {parentElement} = element;
   parentElement.style.position = 'relative';
-  const parentRect = parentElement.getBoundingClientRect();
 
   const target = handle || element;
   const targetStyle = target.style;
@@ -100,12 +99,13 @@ function makeDraggable(element, handle, canResize) {
 
     const elementRect = element.getBoundingClientRect();
 
-    //TODO: I suspect these offset values are wrong if the dialog is
-    //TODO: dragged after a button is added and before a button is dragged.
-    const offsetX = parentRect.left + event.clientX - elementRect.left;
-    const offsetY = parentRect.top + event.clientY - elementRect.top;
+    // These values are the offset from the mouse location
+    // to the upper-left corner of the draggable element.
+    const offsetX = event.clientX - elementRect.left;
+    const offsetY = event.clientY - elementRect.top;
 
     // These values are relative to the upper-left corner of the parent element.
+    const parentRect = parentElement.getBoundingClientRect();
     const maxDragX = parentRect.width - elementRect.width;
     const maxDragY = parentRect.height - elementRect.height;
     const maxResizeX = parentRect.left + parentRect.width;
@@ -142,8 +142,14 @@ function makeDraggable(element, handle, canResize) {
           style.height = event.clientY - top + resizeOffsetY + 'px';
         }
       } else {
-        const left = Math.max(0, Math.min(maxDragX, event.clientX - offsetX));
-        const top = Math.max(0, Math.min(maxDragY, event.clientY - offsetY));
+        const left = Math.max(
+          0,
+          Math.min(maxDragX, event.clientX - parentRect.left - offsetX)
+        );
+        const top = Math.max(
+          0,
+          Math.min(maxDragY, event.clientY - parentRect.top - offsetY)
+        );
         style.left = left + 'px';
         style.top = top + 'px';
       }
