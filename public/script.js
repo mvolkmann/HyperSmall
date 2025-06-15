@@ -153,10 +153,13 @@ function makeDraggable(element, handle, canResize) {
           0,
           Math.min(maxDragY, event.clientY - parentRect.top - offsetY)
         );
+
         // Handle special case for dialogs with a title bar.
-        if (element?.classList.contains('dialog-with-title-bar')) {
-          top += height;
+        if (element.classList.contains('dialog-with-title-bar')) {
+          const titleBar = element.querySelector('title-bar');
+          top += titleBar.offsetHeight;
         }
+
         style.left = left + 'px';
         style.top = top + 'px';
       }
