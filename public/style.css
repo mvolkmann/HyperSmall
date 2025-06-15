@@ -38,6 +38,18 @@ dialog > form {
   gap: 1rem;
 }
 
+.dialog-with-title-bar {
+  display: none; /* changed to flex before showModal is called */
+  flex-direction: column;
+  padding: 0;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+
 .gap1 {
   gap: 0.25rem;
 }
@@ -46,7 +58,7 @@ dialog > form {
   gap: 0.5rem;
 }
 
-.grid3Columns {
+.grid-3-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
@@ -72,22 +84,6 @@ main {
   to {
     background-position: 100% 100%;
   }
-}
-
-/* This adds a "marching ants" border to an element
-   to indicate that it is selected. */
-.selected {
-  border: 1px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-    repeating-linear-gradient(
-        -45deg,
-        black 0,
-        black 25%,
-        transparent 0,
-        transparent 50%
-      )
-      0 / 0.6em 0.6em;
-  animation: ants 3s linear infinite;
 }
 
 .mb1 {
@@ -179,9 +175,25 @@ main {
   align-items: center;
 }
 
-.rowAlignStart {
+.row-align-start {
   display: flex;
   align-items: flex-start;
+}
+
+/* This adds a "marching ants" border to an element
+   to indicate that it is selected. */
+.selected {
+  border: 1px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+    repeating-linear-gradient(
+        -45deg,
+        black 0,
+        black 25%,
+        transparent 0,
+        transparent 50%
+      )
+      0 / 0.6em 0.6em;
+  animation: ants 3s linear infinite;
 }
 
 .stack {
@@ -208,13 +220,16 @@ main {
 }
 
 .title-bar {
-  background-color: #bfbfbf;
   display: flex;
   justify-content: space-between;
-}
+  align-items: center;
+  gap: 0.5rem;
 
-.title-bar-text-only {
   background-color: #bfbfbf;
-  display: flex;
-  justify-content: center;
+  padding: 0.25rem;
+
+  hr {
+    border-color: WhiteSmoke;
+    margin: 1px;
+  }
 }

@@ -21,6 +21,8 @@
         setup();
       };
 
+      // This displays a dynamically populated modal dialog
+      // after its contents is returned from an endpoint.
       document.addEventListener('htmx:afterSwap', function (event) {
         const element = event.detail.elt;
         if (element.id === 'modal-dialog') element.showModal();
@@ -164,15 +166,32 @@
            dynamic content returned from an endpoint. -->
       <dialog id="modal-dialog"></dialog>
 
-      <dialog id="button-info-dialog">
+      <dialog class="dialog-with-title-bar" id="button-info-dialog">
+        <div class="title-bar">
+          <div style="flex-grow: 1">
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+          </div>
+          <div>Button Info</div>
+          <div style="flex-grow: 1">
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+          </div>
+        </div>
         <form hx-post="/button-info">
-          <div class="column gap2">
-            <div class="title-bar-text-only">Button Info</div>
             <div class="row gap1">
               <label class="mb1" for="cardSize"> Button Name: </label>
               <input name="buttonName" required />
             </div>
-            <div class="rowAlignStart gap2">
+            <div class="row-align-start gap2">
               <div class="column">
                 <label>Card button number:</label>
                 <label>Card part number:</label>
@@ -201,7 +220,7 @@
               </div>
             </div>
             <div class="row gap2">
-              <div class="grid3Columns gap1">
+              <div class="grid-3-columns gap1">
                 <button>Text Style...</button>
                 <button>Icon...</button>
                 <button>LinkTo...</button>

@@ -168,7 +168,7 @@ function makeDraggable(element, handle, canResize) {
   });
 }
 
-function newButton() {
+async function newButton() {
   // Create a new button.
   const button = document.createElement('button');
   button.classList.add('button');
@@ -179,13 +179,13 @@ function newButton() {
     event.stopPropagation();
   });
   button.addEventListener('dblclick', event => {
-    document.getElementById('button-info-dialog').showModal();
+    const dialog = document.getElementById('button-info-dialog');
+    dialog.style.display = 'flex';
+    dialog.showModal();
   });
 
   // Add the button to the section.
-  console.log('script.js newButton: currentStackName =', currentStackName);
-  const dialog = document.getElementById('dialog-' + currentStackName);
-  console.log('script.js newButton: dialog =', dialog);
+  const dialog = await waitForElement('#dialog-' + currentStackName);
   const section = dialog.querySelector('section');
   section.appendChild(button);
 
@@ -196,27 +196,24 @@ function newButton() {
   //htmx.process(button);
 }
 
-function newStack(event) {
+async function newStack(event) {
   closeDialog(event.target);
   const {cardSize, stackName} = event.detail;
-  const dialogId = 'dialog-' + stackName;
-  requestAnimationFrame(() => {
-    const dialog = document.getElementById(dialogId);
-    const {style} = dialog;
-    style.width = cardWidth[cardSize] + 'px';
-    style.height = cardHeight[cardSize] + 'px';
-    style.zIndex = 1;
-    dialog.show();
-    currentStackName = stackName;
+  const dialog = await waitForElement('#dialog-' + stackName);
+  const {style} = dialog;
+  style.width = cardWidth[cardSize] + 'px';
+  style.height = cardHeight[cardSize] + 'px';
+  style.zIndex = 1;
+  dialog.show();
+  currentStackName = stackName;
 
-    const section = dialog.querySelector('section');
-    section.addEventListener('click', () => deselectAll(section));
+  const section = dialog.querySelector('section');
+  section.addEventListener('click', () => deselectAll(section));
 
-    const titleBar = dialog.querySelector('.title-bar');
-    makeDraggable(dialog, titleBar, false);
+  const titleBar = dialog.querySelector('.title-bar');
+  makeDraggable(dialog, titleBar, false);
 
-    dialog.addEventListener('click', event => selectStack(event));
-  });
+  dialog.addEventListener('click', event => selectStack(event));
 }
 
 function onCardSizeChange(event) {
@@ -247,6 +244,7 @@ function onMenuClick(event) {
     closeMenus();
   } else {
     style.display = 'flex';
+    //TODO: Why is this necessary?
     requestAnimationFrame(() => {
       style.width = 'fit-content';
     });
@@ -320,31 +318,27 @@ function selectStack(event) {
   currentStackName = dialog.id.split('-')[1];
 }
 
-// This simulates user events to take some initial actions in the UI.
-// It is useful for debugging.
 async function setup() {
   document.getElementById('new-stack-btn').addEventListener('click', event => {
     document.getElementById('new-stack-dialog').showModal();
   });
 
-  /*
+  const dialogs = document.querySelectorAll('.dialog-with-title-bar');
+  for (const dialog of dialogs) {
+    const titleBar = dialog.querySelector('.title-bar');
+    makeDraggable(dialog, titleBar, false);
+  }
+
+  // This simulates user events to take some initial actions in the UI.
+  // It is useful for debugging.
   selectMenuItem('New Stack...');
-  await waitForNextFrame();
-
-  const dialog = document.getElementById('modal-dialog');
-  await waitForNextFrame();
-
-  console.log('script.js setup: dialog =', dialog);
-  dialog.querySelector('#name').value = 'Demo';
+  const dialog = await waitForElement('#new-stack-dialog');
+  const stackName = 'Demo';
+  dialog.querySelector('#name').value = stackName;
   dialog.querySelector('#saveBtn').click();
-  await waitForNextFrame();
-
-  //TODO: Why is this setTimeout necessary?
-  setTimeout(() => {
-    selectMenuItem('New Button');
-    setupFinished = true;
-  }, 100);
-  */
+  await waitForElement('#dialog-' + stackName);
+  selectMenuItem('New Button');
+  setupFinished = true;
 }
 
 function updateTime() {
@@ -356,6 +350,19 @@ function updateTime() {
   });
 }
 
-async function waitForNextFrame() {
-  return new Promise(requestAnimationFrame);
+function waitForElement(selector) {
+  return new Promise(resolve => {
+    const element = document.querySelector(selector);
+    if (element) return resolve(element);
+
+    const observer = new MutationObserver(() => {
+      const element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect(); // stop observing
+        resolve(element);
+      }
+    });
+
+    observer.observe(document.body, {childList: true, subtree: true});
+  });
 }
