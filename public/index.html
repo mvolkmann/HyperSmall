@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="button-info-dialog.js"></script>
     <script src="menu-bar.js"></script>
     <script src="new-stack-dialog.js"></script>
     <script src="stripe-lines.js"></script>
@@ -49,68 +50,7 @@
            dynamic content returned from an endpoint. -->
       <dialog id="modal-dialog"></dialog>
 
-      <!-- TODO: Move this HTML to a custom element. -->
-      <dialog class="dialog-with-title-bar" id="button-info-dialog">
-        <title-bar></title-bar>
-        <form hx-post="/button-info">
-            <div class="row gap1">
-              <label class="mb1" for="cardSize"> Button Name: </label>
-              <input autofocus id="buttonName" name="buttonName" required />
-            </div>
-            <div class="row-align-start gap2">
-              <div class="column">
-                <label>Card button number:</label>
-                <label>Card part number:</label>
-                <label>Card button ID:</label>
-              </div>
-              <div class="column">
-                <label>Style:</label>
-                <label>Family:</label>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="column">
-                <div class="row">
-                  <input type="checkbox" id="showName" name="showName" />
-                  <label for="showName">Show name</label>
-                </div>
-                <div class="row">
-                  <input type="checkbox" id="authHilite" name="authHilite" />
-                  <label for="autoHilite">Auto Hilite</label>
-                </div>
-                <div class="row">
-                  <input type="checkbox" id="enabled" name="enabled" />
-                  <label for="enabled">Enabled</label>
-                </div>
-              </div>
-            </div>
-            <div class="row gap2">
-              <div class="grid-3-columns gap1">
-                <button>Text Style...</button>
-                <button>Icon...</button>
-                <button>LinkTo...</button>
-                <button>Script...</button>
-                <button>Contents...</button>
-                <button>Tasks...</button>
-              </div>
-              <div class="column gap1">
-                <button
-                  id="okBtn"
-                  disabled="{true}"
-                  onclick="closeDialog(this)"
-                >
-                  OK
-                </button>
-                <button onclick="closeDialog(this)" type="button">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </dialog>
-
+      <button-info-dialog></button-info-dialog>
       <new-stack-dialog></new-stack-dialog>
     </main>
   </body>

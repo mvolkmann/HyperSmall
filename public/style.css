@@ -54,11 +54,6 @@ dialog > form {
   gap: 0.5rem;
 }
 
-.grid-3-columns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
 .icon-button {
   cursor: pointer;
   height: 1rem;

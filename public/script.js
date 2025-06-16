@@ -29,7 +29,10 @@ const cardWidth = {
 setInterval(updateTime, 60000);
 
 function centerInParent(element) {
-  const parentRect = element.parentElement.getBoundingClientRect();
+  let parent = element.parentElement;
+  if (isCustomElement(parent)) parent = parent.parentElement;
+
+  const parentRect = parent.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
   const {style} = element;
   style.left = parentRect.width / 2 - elementRect.width / 2 + 'px';
@@ -47,6 +50,10 @@ function deselectAll(ancestor) {
   for (const element of selected) {
     element.classList.remove('selected');
   }
+}
+
+function isCustomElement(element) {
+  return element.tagName.includes('-');
 }
 
 // This returns a Boolean indicating whether mouse cursor
@@ -168,7 +175,7 @@ async function newButton() {
   });
 
   button.addEventListener('dblclick', () => {
-    const dialog = openTitledDialog('#button-info-dialog');
+    const dialog = openTitledDialog('button-info-dialog');
     const input = dialog.querySelector('#buttonName');
     input.value = button.textContent;
   });
@@ -271,9 +278,7 @@ function onStackSelected(event) {
 
 function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
-  dialog.style.display = 'flex';
   dialog.showModal();
-  centerInParent(dialog);
   const titleBar = dialog.querySelector('.title-bar');
   makeDraggable(dialog, titleBar, false);
   return dialog;
@@ -318,7 +323,6 @@ async function setup() {
     makeDraggable(dialog, titleBar, false);
   }
 
-  /*
   // Simulate user events to take some initial actions in the UI.
   // This is useful for debugging.
   menuBar.selectMenuItem('New Stack...');
@@ -329,7 +333,6 @@ async function setup() {
   await waitForElement(stackDialogSelector(stackName));
   menuBar.selectMenuItem('New Button');
   setupFinished = true;
-  */
 }
 
 const stackDialogSelector = stackName => '#stack-' + stackName;

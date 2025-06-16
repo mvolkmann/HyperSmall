@@ -12,6 +12,7 @@ class NewStackDialog extends HTMLElement {
           padding-right: 1rem;
         }
       </style>
+
       <dialog id="new-stack-dialog">
         <form
           hx-post="/stack"

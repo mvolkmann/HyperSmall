@@ -19,6 +19,7 @@ class MenuBar extends HTMLElement {
             flex-direction: column;
             align-items: flex-start;
             position: relative;
+            z-index: 100;
 
             button {
               background-color: transparent;
