@@ -288,10 +288,12 @@ function onStackSelected(event) {
   submitButton.disabled = event.target.value === '';
 }
 
-function openScriptDialog() {
-  console.log('script.js openScriptDialog: entered');
+function openScriptDialog(button) {
+  // Close the modal dialog containing the button that triggered this.
+  closeDialog(button);
+
   const main = document.querySelector('main');
-  const dialog = document.createElement('script-dialog');
+  dialog = document.createElement('script-dialog');
   main.appendChild(dialog);
   dialog.show();
 }

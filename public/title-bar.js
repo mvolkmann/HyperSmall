@@ -16,7 +16,7 @@ class TitleBar extends HTMLElement {
       </style>
       <div class="title-bar">
         <stripe-lines></stripe-lines>
-        <div>Button Info</div>
+        <div>${this.textContent.trim()}</div>
         <stripe-lines></stripe-lines>
       </div>
     `;

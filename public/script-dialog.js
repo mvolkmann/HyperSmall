@@ -3,37 +3,62 @@ class ScriptDialog extends HTMLElement {
   connectedCallback() {
     this.innerHTML = /*html*/ `
       <style>
-        dialog {
+        .dialog-with-title-bar {
           display: none; /* initially */
+          margin: 0;
+          z-index: 10;
+
+          form {
+            display: flex;
+            padding: 0;
+          }
+
+          textarea {
+            flex-grow: 1;
+            overflow: scroll;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          .top {
+            padding: 1rem;
+          }
         }
       </style>
 
-      <dialog id="script-dialog">
+      <dialog class="dialog-with-title-bar" id="script-dialog">
+        <title-bar>Script of card button id ???</title-bar>
         <form
           hx-post="/script"
           hx-on:htmx:after-request="this.reset()"
           id="script-form"
         >
-          <div class="row">
-            <div class="column">
-              <div class="row">
-                <label>Scripting language:</label>
-                <select>
-                  <option>HyperTalk</option>
-                  <option>AppleScript</option>
-                </select>
+          <div class="top">
+            <div class="row gap2">
+              <div class="column gap2">
+                <div class="row">
+                  <label>Scripting language:</label>
+                  <select>
+                    <option>HyperTalk</option>
+                    <option>AppleScript</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label>Length:</label>
+                  <div>0</div>
+                </div>
               </div>
-              <div class="row">
-                <label>Length:</label>
-                <div>0</div>
-              </div>
-            </div>
-            <div class="column">
-              <div class="row">
-                <label>Handlers:</label>
-              </div>
-              <div class="row">
-                <label>Functions:</label>
+              <div class="column">
+                <div class="row">
+                  <label>Handlers:</label>
+                  <select>
+                  </select>
+                </div>
+                <div class="row">
+                  <label>Functions:</label>
+                  <select>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -53,6 +78,13 @@ class ScriptDialog extends HTMLElement {
     dialog.style.display = 'flex';
     dialog.show();
     centerInParent(dialog);
+
+    const titleBar = dialog.querySelector('title-bar');
+
+    //TODO: Change the way resizing works
+    // so there is a square in the lower-right?
+    // Currently, resizing occurs by resizing the textarea.
+    makeDraggable(dialog, titleBar, false);
   }
 }
 
