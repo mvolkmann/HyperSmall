@@ -81,9 +81,13 @@ function makeDraggable(element, handle, canResize) {
   targetStyle.cursor = 'grab';
 
   if (canResize) {
-    target.addEventListener('mousemove', () => {
+    target.addEventListener('mousemove', event => {
       targetStyle.cursor =
-        canResize && isOverLowerRight(event) ? 'se-resize' : 'grab';
+        canResize && isOverLowerRight(event)
+          ? 'se-resize'
+          : event.buttons > 0 // a mouse button is down
+          ? 'grabbing'
+          : 'grab';
     });
   }
 
