@@ -3,7 +3,7 @@ class ScriptDialog extends HTMLElement {
   connectedCallback() {
     this.innerHTML = /*html*/ `
       <style>
-        .dialog-with-title-bar {
+        .script-dialog {
           display: none; /* initially */
           margin: 0;
           z-index: 10;
@@ -15,6 +15,7 @@ class ScriptDialog extends HTMLElement {
 
           textarea {
             flex-grow: 1;
+            height: 10rem;
             overflow: scroll;
             white-space: nowrap;
             width: 100%;
@@ -26,7 +27,7 @@ class ScriptDialog extends HTMLElement {
         }
       </style>
 
-      <dialog class="dialog-with-title-bar" id="script-dialog">
+      <dialog class="dialog-with-title-bar script-dialog">
         <fancy-title-bar>Script of card button id ???</fancy-title-bar>
         <form
           hx-post="/script"

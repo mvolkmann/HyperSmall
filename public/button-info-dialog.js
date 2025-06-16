@@ -7,6 +7,10 @@ class ButtonInfoDialog extends HTMLElement {
           display: none; /* initially */
         }
 
+        form {
+          padding: 1rem;
+        }
+
         .grid-3-columns {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
