@@ -13,12 +13,12 @@
     <link rel="stylesheet" href="style.css" />
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="menu-bar.js"></script>
     <script src="stripe-lines.js"></script>
     <script src="title-bar.js"></script>
     <script src="script.js"></script>
     <script>
       window.onload = () => {
-        configureMenus();
         updateTime();
         setup();
       };
@@ -41,138 +41,14 @@
     hx-on:new-stack="newStack(event)"
     hx-on:replace-stack="replaceStack(event)"
   >
-    <div class="menu-bar">
-      <img
-        class="menu-bar-logo"
-        src="images/apple-logo-pixels.png"
-        alt="Apple logo"
-      />
-      <div class="menu">
-        <button class="menu-label">File</button>
-        <div class="menuItems">
-          <button id="new-stack-btn">New Stack...</button>
-          <button hx-get="/open-stack" hx-target="#modal-dialog">
-            Open Stack...
-          </button>
-          <button>Close Stack</button>
-          <hr />
-          <button hx-delete="/stack" hx-target="#modal-dialog">
-            Delete Stack...
-          </button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Edit</button>
-        <div class="menuItems">
-          <button>Undo</button>
-          <button>Cut</button>
-          <button>Copy</button>
-          <button>Paste</button>
-          <button>Clear</button>
-          <hr />
-          <button>New Card</button>
-          <button>Delete Card</button>
-          <button>Cut Card</button>
-          <button>Copy Card</button>
-          <hr />
-          <button>Text Style...</button>
-          <button>Background</button>
-          <button>Icon...</button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Go</button>
-        <div class="menuItems">
-          <button>Back</button>
-          <button>Home</button>
-          <button>Help</button>
-          <button>Recent</button>
-          <hr />
-          <button>First</button>
-          <button>Prev</button>
-          <button>Next</button>
-          <button>Last</button>
-          <hr />
-          <button>Find...</button>
-          <button>Message</button>
-          <button>Scroll</button>
-          <button>Next Window</button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Tools</button>
-        <div class="menuItems"></div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Objects</button>
-        <div class="menuItems">
-          <button>Button Info...</button>
-          <button>Field Info...</button>
-          <button>Card Info...</button>
-          <button>Bkgnd Info...</button>
-          <button>Stack Info...</button>
-          <hr />
-          <button>Bring Closer</button>
-          <button>Send Farther</button>
-          <hr />
-          <button hx-get="/new-button">New Button</button>
-          <button>New Field</button>
-          <button>New Background</button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Font</button>
-        <div class="menuItems">
-          <button>Serif</button>
-          <button>Sans-Serif</button>
-          <button>Monospace</button>
-          <button>Cursive</button>
-          <button>Fantasy</button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Style</button>
-        <div class="menuItems">
-          <button>Plain</button>
-          <button>Bold</button>
-          <button>Italic</button>
-          <button>Underline</button>
-          <button>Outline</button>
-          <button>Shadow</button>
-          <button>Group</button>
-          <hr />
-          <button>9</button>
-          <button>10</button>
-          <button>12</button>
-          <button>14</button>
-          <button>18</button>
-          <button>24</button>
-          <hr />
-          <button>Other...</button>
-        </div>
-      </div>
-      <div class="menu">
-        <button class="menu-label">Help</button>
-        <div class="menuItems">
-          <button>About Balloon Help...</button>
-          <button>Show Balloons</button>
-        </div>
-      </div>
-      <div class="spacer"></div>
-      <div id="time"></div>
-      <img
-        class="menuBarLogo"
-        src="images/hypercard-logo.png"
-        style="height: 1.2rem; margin-right: 0.2rem"
-        alt="HyperCard logo"
-      />
-      <div class="menu-label">HyperCard</div>
-    </div>
     <main>
+      <menu-bar></menu-bar>
+
       <!-- This is used for modal dialogs with
            dynamic content returned from an endpoint. -->
       <dialog id="modal-dialog"></dialog>
 
+      <!-- TODO: Move this HTML to a custom element. -->
       <dialog class="dialog-with-title-bar" id="button-info-dialog">
         <title-bar></title-bar>
         <form hx-post="/button-info">
@@ -234,6 +110,7 @@
         </form>
       </dialog>
 
+      <!-- TODO: Move this HTML to a custom element. -->
       <dialog id="new-stack-dialog">
         <form
           hx-post="/stack"

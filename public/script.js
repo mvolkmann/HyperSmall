@@ -1,9 +1,8 @@
 const audioMap = {};
 let currentStackName = '';
 let isResizing = false;
-let menuButtons;
+let menuBar;
 const menuSelectColor = '#339';
-let menus;
 let openMenu;
 let resizeOffsetX;
 let resizeOffsetY;
@@ -41,43 +40,6 @@ function closeDialog(element) {
   const dialog = element.closest('dialog');
   dialog.style.display = 'none';
   dialog.close();
-}
-
-function closeMenus() {
-  for (const menu of menus) {
-    const button = menu.querySelector('button');
-    button.classList.remove('open');
-
-    const menuItems = menu.querySelector('.menuItems');
-    menuItems.style.display = 'none';
-  }
-  openMenu = null;
-}
-
-function configureMenus() {
-  document.body.addEventListener('click', closeMenus);
-  menus = document.querySelectorAll('.menu');
-  for (const menu of menus) {
-    const button = menu.querySelector('button');
-    button.addEventListener('click', onMenuClick);
-    //TODO: Should this listen for 'mouseenter' instead?
-    button.addEventListener('mouseover', onMenuHover);
-    menu.addEventListener('click', onMenuItemClick);
-
-    const menuItems = menu.querySelector('.menuItems');
-    const buttons = menuItems.querySelectorAll('button');
-    for (const button of buttons) {
-      button.addEventListener('mouseenter', () => {
-        playAudio('menu-item.wav');
-        button.style.backgroundColor = menuSelectColor;
-        button.style.color = 'white';
-      });
-      button.addEventListener('mouseleave', () => {
-        button.style.backgroundColor = 'transparent';
-        button.style.color = 'black';
-      });
-    }
-  }
 }
 
 function deselectAll(ancestor) {
@@ -224,9 +186,6 @@ async function newButton() {
 
   makeDraggable(button, null, true);
   centerInParent(button);
-
-  // Process the htmx attributes on an element that was added dynamically.
-  //htmx.process(button);
 }
 
 async function newStack(event) {
@@ -262,7 +221,7 @@ function onCardSizeChange(event) {
 
 function onMenuItemClick(event) {
   playAudio('menu-open.wav');
-  closeMenus();
+  menuBar.closeMenus();
 }
 
 function onMenuClick(event) {
@@ -272,13 +231,13 @@ function onMenuClick(event) {
 
   const menuButton = event.target;
   openMenu = menuButton.parentElement;
-  const menuItems = openMenu.querySelector('.menuItems');
+  const menuItems = openMenu.querySelector('.menu-items');
   const menuItemsStyle = menuItems.style;
   const visible = menuItemsStyle.display === 'flex';
 
   if (visible) {
     menuItemsStyle.display = 'none';
-    closeMenus();
+    menuBar.closeMenus();
   } else {
     menuItemsStyle.display = 'flex';
     //TODO: Why is this necessary?
@@ -294,7 +253,7 @@ function onMenuHover(event) {
   if (openMenu) {
     const button = openMenu.querySelector('.menu-label');
     button.classList.remove('open');
-    const menuItems = openMenu.querySelector('.menuItems');
+    const menuItems = openMenu.querySelector('.menu-items');
     menuItems.style.display = 'none';
     onMenuClick(event);
   }
@@ -337,24 +296,6 @@ function replaceStack() {
   alert('replaceStack called');
 }
 
-function selectMenuItem(name) {
-  // Lazily find all the menu buttons.
-  if (!menuButtons) {
-    const menuBar = document.querySelector('.menu-bar');
-    menuButtons = menuBar.querySelectorAll('button');
-  }
-
-  const button = Array.from(menuButtons).find(
-    b => b.textContent.trim() === name
-  );
-
-  if (button) {
-    button.click();
-  } else {
-    alert(`Unknown menu item "${name}"`);
-  }
-}
-
 async function selectStack(event) {
   if (currentStackName) {
     const dialog = await waitForElement(stackDialogSelector(currentStackName));
@@ -367,12 +308,8 @@ async function selectStack(event) {
 }
 
 async function setup() {
-  // Wire up menu items.
-  document.getElementById('new-stack-btn').addEventListener('click', event => {
-    const dialog = document.getElementById('new-stack-dialog');
-    dialog.style.display = 'flex';
-    dialog.showModal();
-  });
+  menuBar = document.querySelector('menu-bar');
+  document.body.addEventListener('click', () => menuBar.closeMenus());
 
   // Make all dialogs with a title bar be draggable by its title bar.
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
@@ -383,13 +320,13 @@ async function setup() {
 
   // Simulate user events to take some initial actions in the UI.
   // This is useful for debugging.
-  selectMenuItem('New Stack...');
+  menuBar.selectMenuItem('New Stack...');
   const dialog = await waitForElement('#new-stack-dialog');
   const stackName = 'Demo';
   dialog.querySelector('#name').value = stackName;
   dialog.querySelector('#saveBtn').click();
   await waitForElement(stackDialogSelector(stackName));
-  selectMenuItem('New Button');
+  menuBar.selectMenuItem('New Button');
   setupFinished = true;
 }
 
@@ -414,11 +351,13 @@ function toggleDialogCollapse(element) {
 
 function updateTime() {
   const div = document.getElementById('time');
+  /* TODO: Fix this to work with menu-bar custom element.
   div.textContent = new Date().toLocaleTimeString(navigator.language, {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true
   });
+  */
 }
 
 function waitForElement(selector) {

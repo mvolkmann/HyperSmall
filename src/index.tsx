@@ -27,6 +27,7 @@ app.use('/*', logger());
 app.use('/*', serveStatic({root: './public'}));
 
 app.get('/new-button', (c: Context) => {
+  console.log('index.tsx: GET /new-button entered');
   // TODO: Add a button to the stack in the database.
   c.header('HX-Trigger', 'new-button');
   return c.body(null, 204); // No Content
