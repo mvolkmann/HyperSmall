@@ -96,17 +96,22 @@ function makeDraggable(element, handle, canResize) {
 
     const elementRect = element.getBoundingClientRect();
 
-    // These values are the offset from the mouse location
+    // These values are the offsets from the mouse location
     // to the upper-left corner of the draggable element.
     const offsetX = event.clientX - elementRect.left;
     const offsetY = event.clientY - elementRect.top;
+
+    // These values are the distances from the mouse location
+    // to the lower-right corner of the draggable element.
+    const resizeOffsetX = elementRect.width - offsetX;
+    const resizeOffsetY = elementRect.height - offsetY;
 
     // These values are relative to the upper-left corner of the parent element.
     const parentRect = parentElement.getBoundingClientRect();
     const maxDragX = parentRect.width - elementRect.width;
     const maxDragY = parentRect.height - elementRect.height;
-    const maxResizeX = parentRect.left + parentRect.width;
-    const maxResizeY = parentRect.top + parentRect.height;
+    const maxResizeX = parentRect.left + parentRect.width - resizeOffsetX;
+    const maxResizeY = parentRect.top + parentRect.height - resizeOffsetY;
 
     function onMouseMove(event) {
       const targetRect = target.getBoundingClientRect();
@@ -121,15 +126,6 @@ function makeDraggable(element, handle, canResize) {
         // the lower-right corner of the draggable element.
         // If so, resize the element instead of moving it.
         isResizing = width - x < 10 && height - y < 10;
-        if (isResizing) {
-          // Calculate the distance from the right side
-          // of the element being resized to the mouse cursor x.
-          resizeOffsetX = elementRect.left + elementRect.width - event.clientX;
-
-          // Calculate the distance from the bottom side
-          // of the element being resized to the mouse cursor y.
-          resizeOffsetY = elementRect.top + elementRect.height - event.clientY;
-        }
       }
 
       if (isResizing) {
