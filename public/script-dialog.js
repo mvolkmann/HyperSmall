@@ -37,7 +37,9 @@ class ScriptDialog extends HTMLElement {
               </div>
             </div>
           </div>
-          <textarea>
+          <div class="row">
+            <textarea></textarea>
+          </div>
         </form>
       </dialog>
     `;
@@ -50,6 +52,7 @@ class ScriptDialog extends HTMLElement {
     const dialog = this.querySelector('dialog');
     dialog.style.display = 'flex';
     dialog.show();
+    centerInParent(dialog);
   }
 }
 

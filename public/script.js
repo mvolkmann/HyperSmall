@@ -73,7 +73,11 @@ function isOverLowerRight(event) {
 
 function makeDraggable(element, handle, canResize) {
   element.style.position = 'absolute';
-  const {parentElement} = element;
+
+  let {parentElement} = element;
+  if (isCustomElement(parentElement)) {
+    parentElement = parentElement.parentElement;
+  }
   parentElement.style.position = 'relative';
 
   const target = handle || element;
@@ -144,12 +148,6 @@ function makeDraggable(element, handle, canResize) {
           Math.min(maxDragY, event.clientY - parentRect.top - offsetY)
         );
 
-        // Handle special case for dialogs with a title bar.
-        if (element.classList.contains('dialog-with-title-bar')) {
-          const titleBar = element.querySelector('title-bar');
-          top += titleBar.offsetHeight;
-        }
-
         style.left = left + 'px';
         style.top = top + 'px';
       }
@@ -184,9 +182,12 @@ async function newButton(event) {
   });
 
   button.addEventListener('dblclick', () => {
-    const dialog = openTitledDialog('button-info-dialog');
+    const bid = openTitledDialog('button-info-dialog');
+    const dialog = bid.querySelector('dialog');
+
     let input = dialog.querySelector('#buttonName');
     input.value = button.textContent;
+
     input = dialog.querySelector('#cardButtonId');
     input.value = button.id.substring('button'.length);
   });
@@ -289,13 +290,15 @@ function onStackSelected(event) {
 
 function openScriptDialog() {
   console.log('script.js openScriptDialog: entered');
+  const main = document.querySelector('main');
+  const dialog = document.createElement('script-dialog');
+  main.appendChild(dialog);
+  dialog.show();
 }
 
 function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
   dialog.showModal();
-  const titleBar = dialog.querySelector('.title-bar');
-  makeDraggable(dialog, titleBar, false);
   return dialog;
 }
 
