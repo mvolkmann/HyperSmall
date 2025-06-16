@@ -62,12 +62,12 @@ class ButtonInfoDialog extends HTMLElement {
 
           <div class="row gap2">
             <div class="grid-3-columns gap1">
-              <button>Text Style...</button>
-              <button>Icon...</button>
-              <button>LinkTo...</button>
-              <button>Script...</button>
-              <button>Contents...</button>
-              <button>Tasks...</button>
+              <button type="button">Text Style...</button>
+              <button type="button">Icon...</button>
+              <button type="button">LinkTo...</button>
+              <button onclick="openScriptDialog(this)" type="button">Script...</button>
+              <button type="button">Contents...</button>
+              <button type="button">Tasks...</button>
             </div>
             <div class="column gap1">
               <button id="okBtn">OK</button>
