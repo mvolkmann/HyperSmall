@@ -1,4 +1,4 @@
-let clickAudio;
+const audioMap = {};
 let currentStackName = '';
 let isResizing = false;
 let menuButtons;
@@ -245,14 +245,14 @@ function onCardSizeChange(event) {
 }
 
 function onMenuItemClick(event) {
-  playClick();
+  playAudio('menu-open.wav');
   closeMenus();
 }
 
 function onMenuClick(event) {
   event.stopPropagation();
 
-  playClick();
+  playAudio('menu-open.wav');
 
   const button = event.target;
   button.classList.add('hover');
@@ -305,15 +305,17 @@ function openTitledDialog(selector) {
   return dialog;
 }
 
-function playClick() {
+// This lazily loads each audio file only once.
+function playAudio(fileName) {
   // In order to prevent autoplay, sounds cannot be played
   // until the user has interacted with the document.
   if (!setupFinished) return;
 
-  // Lazily load the click sound.
-  if (!clickAudio) clickAudio = new Audio('sounds/click.mp3');
-
-  clickAudio.play();
+  let audio = audioMap[fileName];
+  if (!audio) {
+    audio = audioMap[fileName] = new Audio('sounds/' + fileName);
+  }
+  audio.play();
 }
 
 function replaceStack() {
@@ -384,9 +386,11 @@ function toggleDialogCollapse(element) {
   const section = dialog.querySelector('section');
 
   if (style.height === 'auto') {
+    playAudio('window-expand.wav');
     section.style.display = 'block';
     style.height = dialog.savedHeight;
   } else {
+    playAudio('window-collapse.wav');
     dialog.savedHeight = style.height;
     section.style.display = 'none';
     style.height = 'auto';
