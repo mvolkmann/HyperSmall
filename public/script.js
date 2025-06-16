@@ -359,6 +359,9 @@ async function setup() {
     dialog.showModal();
   });
 
+  // TODO: Add hover sound to each menu item.
+  //playAudio('menu-item.wav');
+
   // Make all dialogs with a title bar be draggable by its title bar.
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
   for (const dialog of dialogs) {
