@@ -1,16 +1,17 @@
 function toggleDialogCollapse(element) {
   const dialog = element.closest('dialog');
   const {style} = dialog;
-  const section = dialog.querySelector('section');
+  const titleBar = dialog.querySelector('fancy-title-bar');
+  const nextSibling = titleBar.nextElementSibling;
 
   if (style.height === 'auto') {
     playAudio('window-expand.wav');
-    section.style.display = 'block';
+    nextSibling.style.display = 'block';
     style.height = dialog.savedHeight;
   } else {
     playAudio('window-collapse.wav');
     dialog.savedHeight = style.height;
-    section.style.display = 'none';
+    nextSibling.style.display = 'none';
     style.height = 'auto';
   }
 }

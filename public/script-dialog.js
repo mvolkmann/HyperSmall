@@ -6,6 +6,7 @@ class ScriptDialog extends HTMLElement {
         .script-dialog {
           display: none; /* initially */
           margin: 0;
+          min-width: 24rem;
           z-index: 10;
 
           form {
@@ -15,7 +16,6 @@ class ScriptDialog extends HTMLElement {
 
           textarea {
             flex-grow: 1;
-            height: 10rem;
             overflow: scroll;
             white-space: nowrap;
             width: 100%;
