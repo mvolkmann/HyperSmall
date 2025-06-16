@@ -45,7 +45,7 @@ class ScriptDialog extends HTMLElement {
                 </div>
                 <div class="row">
                   <label>Length:</label>
-                  <div>0</div>
+                  <div id="length">0</div>
                 </div>
               </div>
               <div class="column">
@@ -71,6 +71,12 @@ class ScriptDialog extends HTMLElement {
 
     // Process the htmx attributes on elements that were added dynamically.
     htmx.process(this);
+
+    const textarea = this.querySelector('textarea');
+    const lengthDiv = this.querySelector('#length');
+    textarea.addEventListener('input', () => {
+      lengthDiv.textContent = textarea.value.length;
+    });
   }
 
   show() {
