@@ -1,4 +1,4 @@
-class TitleBar extends HTMLElement {
+class BasicTitleBar extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
@@ -23,4 +23,4 @@ class TitleBar extends HTMLElement {
   }
 }
 
-customElements.define('title-bar', TitleBar);
+customElements.define('basic-title-bar', BasicTitleBar);

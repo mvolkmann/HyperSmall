@@ -14,7 +14,7 @@ class ButtonInfoDialog extends HTMLElement {
       </style>
 
       <dialog class="dialog-with-title-bar" id="button-info-dialog">
-        <title-bar>Button Info</title-bar>
+        <basic-title-bar>Button Info</basic-title-bar>
         <form
           hx-post="/button-info"
           hx-on:htmx:after-request="closeDialog(this)"

@@ -155,18 +155,3 @@ main {
   display: flex;
   flex-direction: column;
 }
-
-.title-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-
-  background-color: #bfbfbf;
-  padding: 0.25rem;
-
-  hr {
-    border-color: WhiteSmoke;
-    margin: 1px;
-  }
-}

@@ -357,23 +357,6 @@ async function setup() {
 
 const stackDialogSelector = stackName => '#stack-' + stackName;
 
-function toggleDialogCollapse(element) {
-  const dialog = element.closest('dialog');
-  const {style} = dialog;
-  const section = dialog.querySelector('section');
-
-  if (style.height === 'auto') {
-    playAudio('window-expand.wav');
-    section.style.display = 'block';
-    style.height = dialog.savedHeight;
-  } else {
-    playAudio('window-collapse.wav');
-    dialog.savedHeight = style.height;
-    section.style.display = 'none';
-    style.height = 'auto';
-  }
-}
-
 function updateTime() {
   const div = document.getElementById('time');
   /* TODO: Fix this to work with menu-bar custom element.

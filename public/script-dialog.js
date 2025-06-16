@@ -27,7 +27,7 @@ class ScriptDialog extends HTMLElement {
       </style>
 
       <dialog class="dialog-with-title-bar" id="script-dialog">
-        <title-bar>Script of card button id ???</title-bar>
+        <fancy-title-bar>Script of card button id ???</fancy-title-bar>
         <form
           hx-post="/script"
           hx-on:htmx:after-request="this.reset()"

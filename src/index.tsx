@@ -159,22 +159,7 @@ app.post('/stack', async (c: Context) => {
     c.header('HX-Trigger', JSON.stringify(trigger));
     return c.html(
       <dialog id={'stack-' + stackName} class="stack">
-        <div class="title-bar">
-          <img
-            class="icon-button"
-            onclick="closeDialog(this)"
-            src="images/close-icon.png"
-          />
-          <stripe-lines></stripe-lines>
-          <div>{stackName}</div>
-          <stripe-lines></stripe-lines>
-          <img class="icon-button" src="images/zoom-icon.png" />
-          <img
-            class="icon-button"
-            onclick="toggleDialogCollapse(this)"
-            src="images/collapse-icon.png"
-          />
-        </div>
+        <fancy-title-bar>{stackName}</fancy-title-bar>
         <section></section>
       </dialog>
     );
