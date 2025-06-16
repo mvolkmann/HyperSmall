@@ -20,23 +20,6 @@ button {
   border-width: 2px;
 }
 
-/* This adds a "marching ants" border to an element
-   to indicate that it is selected.
-   TODO: Also support field focus! */
-button:focus {
-  border: 1px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-    repeating-linear-gradient(
-        -45deg,
-        black 0,
-        black 25%,
-        transparent 0,
-        transparent 50%
-      )
-      0 / 0.6em 0.6em;
-  animation: ants 3s linear infinite;
-}
-
 .button {
   border: 1px solid black;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
@@ -125,7 +108,7 @@ main {
   background: #ddd;
   font-family: sans-serif;
   font-weight: bold;
-  padding: 0.1rem 0.7rem;
+  padding: 0 0.7rem;
   z-index: 100;
 
   .menu {
@@ -138,7 +121,6 @@ main {
       background-color: transparent;
       border: none;
       cursor: pointer;
-      display: ink;
     }
 
     hr {
@@ -158,13 +140,16 @@ main {
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 
       button {
+        border-radius: 0;
         display: inline-block;
+        text-align: left;
         white-space: nowrap;
+        width: 100%;
       }
     }
 
     .open {
-      background-color: #339;
+      background-color: #339; /* blue */
       color: white;
     }
   }
@@ -178,6 +163,7 @@ main {
     border-radius: 0;
     font-size: 0.8rem;
     font-weight: bold;
+    padding: 2px 6px;
   }
 
   .spacer {
@@ -212,6 +198,23 @@ main {
   margin: 0;
   outline: none;
   padding: 0;
+
+  /* This adds a "marching ants" border to an element
+     to indicate that it is selected.
+     TODO: Also support field focus! */
+  button:focus {
+    border: 1px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+      repeating-linear-gradient(
+          -45deg,
+          black 0,
+          black 25%,
+          transparent 0,
+          transparent 50%
+        )
+        0 / 0.6em 0.6em;
+    animation: ants 3s linear infinite;
+  }
 
   section {
     flex-grow: 1;

@@ -2,6 +2,7 @@ const audioMap = {};
 let currentStackName = '';
 let isResizing = false;
 let menuButtons;
+const menuSelectColor = '#339';
 let menus;
 let openMenu;
 let resizeOffsetX;
@@ -59,8 +60,23 @@ function configureMenus() {
   for (const menu of menus) {
     const button = menu.querySelector('button');
     button.addEventListener('click', onMenuClick);
+    //TODO: Should this listen for 'mouseenter' instead?
     button.addEventListener('mouseover', onMenuHover);
     menu.addEventListener('click', onMenuItemClick);
+
+    const menuItems = menu.querySelector('.menuItems');
+    const buttons = menuItems.querySelectorAll('button');
+    for (const button of buttons) {
+      button.addEventListener('mouseenter', () => {
+        playAudio('menu-item.wav');
+        button.style.backgroundColor = menuSelectColor;
+        button.style.color = 'white';
+      });
+      button.addEventListener('mouseleave', () => {
+        button.style.backgroundColor = 'transparent';
+        button.style.color = 'black';
+      });
+    }
   }
 }
 
@@ -254,25 +270,24 @@ function onMenuClick(event) {
 
   playAudio('menu-open.wav');
 
-  const button = event.target;
-  button.classList.add('hover');
-  openMenu = button.parentElement;
+  const menuButton = event.target;
+  openMenu = menuButton.parentElement;
   const menuItems = openMenu.querySelector('.menuItems');
-  const style = menuItems.style;
+  const menuItemsStyle = menuItems.style;
+  const visible = menuItemsStyle.display === 'flex';
 
-  const visible = style.display === 'flex';
   if (visible) {
-    style.display = 'none';
+    menuItemsStyle.display = 'none';
     closeMenus();
   } else {
-    style.display = 'flex';
+    menuItemsStyle.display = 'flex';
     //TODO: Why is this necessary?
     requestAnimationFrame(() => {
-      style.width = 'fit-content';
+      menuItemsStyle.width = 'fit-content';
     });
   }
 
-  button.classList.toggle('open');
+  menuButton.classList.toggle('open');
 }
 
 function onMenuHover(event) {
@@ -358,9 +373,6 @@ async function setup() {
     dialog.style.display = 'flex';
     dialog.showModal();
   });
-
-  // TODO: Add hover sound to each menu item.
-  //playAudio('menu-item.wav');
 
   // Make all dialogs with a title bar be draggable by its title bar.
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
