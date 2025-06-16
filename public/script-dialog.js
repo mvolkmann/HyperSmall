@@ -86,7 +86,7 @@ class ScriptDialog extends HTMLElement {
     dialog.show();
     centerInParent(dialog);
 
-    const titleBar = dialog.querySelector('title-bar');
+    const titleBar = dialog.querySelector('fancy-title-bar');
 
     //TODO: Change the way resizing works
     // so there is a square in the lower-right?

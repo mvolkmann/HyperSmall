@@ -339,7 +339,7 @@ async function setup() {
   // Make all dialogs with a title bar be draggable by its title bar.
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
   for (const dialog of dialogs) {
-    const titleBar = dialog.querySelector('.title-bar');
+    const titleBar = dialog.querySelector('basic-title-bar');
     makeDraggable(dialog, titleBar, false);
   }
 
