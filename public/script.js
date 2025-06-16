@@ -28,6 +28,12 @@ const cardWidth = {
 
 setInterval(updateTime, 60000);
 
+function buttonInfo(event) {
+  const {buttonName, cardButtonId} = event.detail;
+  const button = document.querySelector('#button' + cardButtonId);
+  button.textContent = buttonName;
+}
+
 function centerInParent(element) {
   let parent = element.parentElement;
   if (isCustomElement(parent)) parent = parent.parentElement;
@@ -162,9 +168,12 @@ function makeDraggable(element, handle, canResize) {
   });
 }
 
-async function newButton() {
+async function newButton(event) {
+  const {buttonId} = event.detail;
+
   // Create a new button.
   const button = document.createElement('button');
+  button.id = 'button' + buttonId;
   button.classList.add('button');
   button.classList.add('selected');
   button.textContent = 'New Button';
@@ -176,8 +185,10 @@ async function newButton() {
 
   button.addEventListener('dblclick', () => {
     const dialog = openTitledDialog('button-info-dialog');
-    const input = dialog.querySelector('#buttonName');
+    let input = dialog.querySelector('#buttonName');
     input.value = button.textContent;
+    input = dialog.querySelector('#cardButtonId');
+    input.value = button.id.substring('button'.length);
   });
 
   button.addEventListener('keydown', event => {

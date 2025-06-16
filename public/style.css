@@ -23,6 +23,15 @@ button {
   position: absolute;
 }
 
+button,
+input.value,
+label,
+select,
+span {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -60,16 +69,17 @@ dialog > form {
   width: 1rem;
 }
 
+input.value {
+  border: none;
+  width: 5rem;
+}
+
 input[type='checkbox'] {
   margin-right: 0.3rem;
 }
 
-button,
-label,
-select,
-span {
-  font-size: 0.8rem;
-  font-weight: bold;
+label {
+  margin-right: 0.5rem;
 }
 
 main {

@@ -6,6 +6,11 @@ import {logger} from 'hono/logger';
 import CardSize from './CardSize';
 import Stack from './Stack';
 
+//TODO: Store these in the stack database so
+//TODO: they aren't reset when the server is restarted.
+let lastButtonId = 0;
+let lastFieldId = 0;
+
 const db = new Database('hypersmall.db');
 db.exec('PRAGMA journal_mode = WAL;');
 
@@ -26,10 +31,24 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+app.post('/button-info', async (c: Context) => {
+  const formData = await c.req.formData();
+  const buttonName = formData.get('buttonName');
+  const cardButtonId = formData.get('cardButtonId');
+
+  // TODO: Update the button in the database.
+
+  const trigger = {'button-info': {buttonName, cardButtonId}};
+  c.header('HX-Trigger', JSON.stringify(trigger));
+  return c.body(null, 204); // No Content
+});
+
 app.get('/new-button', (c: Context) => {
-  console.log('index.tsx: GET /new-button entered');
   // TODO: Add a button to the stack in the database.
-  c.header('HX-Trigger', 'new-button');
+
+  lastButtonId += 1;
+  const trigger = {'new-button': {buttonId: lastButtonId}};
+  c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204); // No Content
 });
 
