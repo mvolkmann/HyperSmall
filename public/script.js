@@ -287,6 +287,10 @@ function onStackSelected(event) {
   submitButton.disabled = event.target.value === '';
 }
 
+function openScriptDialog() {
+  console.log('script.js openScriptDialog: entered');
+}
+
 function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
   dialog.showModal();
