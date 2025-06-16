@@ -242,10 +242,9 @@ class MenuBar extends HTMLElement {
     }
 
     // Wire up menu items.
-    root.querySelector('#new-stack-btn').addEventListener('click', event => {
-      const dialog = document.getElementById('new-stack-dialog');
-      dialog.style.display = 'flex';
-      dialog.showModal();
+    root.querySelector('#new-stack-btn').addEventListener('click', () => {
+      const nsd = document.querySelector('new-stack-dialog');
+      nsd.showModal();
     });
   }
 

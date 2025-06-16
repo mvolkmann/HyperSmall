@@ -318,6 +318,7 @@ async function setup() {
     makeDraggable(dialog, titleBar, false);
   }
 
+  /*
   // Simulate user events to take some initial actions in the UI.
   // This is useful for debugging.
   menuBar.selectMenuItem('New Stack...');
@@ -328,6 +329,7 @@ async function setup() {
   await waitForElement(stackDialogSelector(stackName));
   menuBar.selectMenuItem('New Button');
   setupFinished = true;
+  */
 }
 
 const stackDialogSelector = stackName => '#stack-' + stackName;
