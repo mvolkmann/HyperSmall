@@ -6,6 +6,11 @@ class NewStackDialog extends HTMLElement {
         dialog {
           display: none; /* initially */
         }
+
+        .border-right-dotted {
+          border-right: 1px dotted black;
+          padding-right: 1rem;
+        }
       </style>
       <dialog id="new-stack-dialog">
         <form

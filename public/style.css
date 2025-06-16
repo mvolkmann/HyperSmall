@@ -10,11 +10,6 @@ body {
   margin: 0;
 }
 
-.border-right-dotted {
-  border-right: 1px dotted black;
-  padding-right: 1rem;
-}
-
 button {
   border-radius: 0.5rem;
   border-width: 2px;
