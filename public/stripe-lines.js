@@ -2,7 +2,7 @@ class StripeLines extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = `
+    this.shadowRoot.innerHTML = /*html*/ `
       <style>
         :host {
           flex-grow: 1;
