@@ -36,12 +36,21 @@ function atLeast(value, min) {
 }
 
 function buttonInfo(event) {
-  const {autoHilite, enabled, id, name, showName} = event.detail;
+  const {autoHilite, enabled, id, name, showName, style} = event.detail;
   const button = document.querySelector('#button' + id);
   button.textContent = showName ? name : '';
   // We can't really disable the button because that would prevent
   // dragging, resizing, and double clicking (to edit) the button.
   button.setAttribute('data-enabled', enabled);
+
+  switch (style) {
+    case 'Rectangle':
+      button.style.borderRadius = '0';
+      break;
+    case 'Round Rect':
+      button.style.borderRadius = '0.5rem';
+      break;
+  }
 
   //TODO: Implement autoHilite which inverts the pixel colors
   // in a button when the mouse is pressed down on it.

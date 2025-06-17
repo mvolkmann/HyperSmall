@@ -4,6 +4,7 @@ import {serveStatic} from 'hono/bun';
 import {logger} from 'hono/logger';
 
 import Button from './Button';
+import ButtonStyle from './ButtonStyle';
 import CardSize from './CardSize';
 import Stack from './Stack';
 
@@ -27,6 +28,14 @@ const insertStackPS = db.prepare(
 );
 
 let stack: Stack | undefined = undefined;
+
+function enumValue(anEnum: unknown, key: unknown) {
+  // @ts-ignore
+  for (const [k, v] of Object.entries(anEnum)) {
+    if (k === key) return v;
+  }
+  return null;
+}
 
 // Log all HTTP requests to the terminal where the server is running.
 app.use('/*', logger());
@@ -83,8 +92,22 @@ app.get('/button-info/:id', (c: Context) => {
             </div>
           </div>
           <div class="column">
-            <label>Style:</label>
-            <label>Family:</label>
+            <div class="row">
+              <label>Style:</label>
+              <select id="style" name="style">
+                {Object.keys(ButtonStyle).map(key => {
+                  const value = enumValue(ButtonStyle, key);
+                  return button.style === value ? (
+                    <option selected>{value}</option>
+                  ) : (
+                    <option>{value}</option>
+                  );
+                })}
+              </select>
+            </div>
+            <div class="row">
+              <label>Family:</label>
+            </div>
           </div>
         </div>
 
@@ -157,6 +180,8 @@ app.post('/button-info', async (c: Context) => {
   button.autoHilite = formData.get('autoHilite') === 'on';
   button.enabled = formData.get('enabled') === 'on';
   button.showName = formData.get('showName') === 'on';
+  const style = (formData.get('style') as string).replace(/ /g, '');
+  button.style = ButtonStyle[style as keyof typeof ButtonStyle];
 
   const trigger = {'button-info': button};
   c.header('HX-Trigger', JSON.stringify(trigger));

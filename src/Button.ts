@@ -1,6 +1,5 @@
 import ButtonStyle from './ButtonStyle';
 import Container from './Container';
-import TextStyle from './TextStyle';
 
 class Button extends Container {
   autoHilite = false;
