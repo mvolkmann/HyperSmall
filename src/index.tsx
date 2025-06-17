@@ -97,11 +97,9 @@ app.get('/button-info/:id', (c: Context) => {
               <select id="style" name="style">
                 {Object.keys(ButtonStyle).map(key => {
                   const value = enumValue(ButtonStyle, key);
-                  return button.style === value ? (
-                    <option selected>{value}</option>
-                  ) : (
-                    <option>{value}</option>
-                  );
+                  const attributes =
+                    button.style === value ? {selected: true} : {};
+                  return <option {...attributes}>{value}</option>;
                 })}
               </select>
             </div>
