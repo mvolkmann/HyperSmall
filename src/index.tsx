@@ -154,8 +154,11 @@ app.post('/button-info', async (c: Context) => {
   if (!button) return c.body(null, 404); // Not Found
 
   button.name = buttonName;
+  button.autoHilite = formData.get('autoHilite') === 'on';
+  button.enabled = formData.get('enabled') === 'on';
+  button.showName = formData.get('showName') === 'on';
 
-  const trigger = {'button-info': {buttonName, cardButtonId}};
+  const trigger = {'button-info': button};
   c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204); // No Content
 });

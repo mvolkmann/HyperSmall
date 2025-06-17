@@ -33,9 +33,13 @@ function atLeast(value, min) {
 }
 
 function buttonInfo(event) {
-  const {buttonName, cardButtonId} = event.detail;
-  const button = document.querySelector('#button' + cardButtonId);
-  button.textContent = buttonName;
+  const {autoHilite, enabled, id, name, showName} = event.detail;
+  const button = document.querySelector('#button' + id);
+  button.textContent = showName ? name : '';
+  button.disabled = !enabled;
+
+  //TODO: Implement autoHilite which inverts the pixel colors
+  // in a button when the mouse is pressed down on it.
 }
 
 function centerInParent(element) {
@@ -193,12 +197,26 @@ async function newButton(event) {
   button.classList.add('selected');
   button.textContent = 'New Button';
 
+  let timeoutId;
+
   button.addEventListener('click', event => {
-    button.classList.toggle('selected');
-    event.stopPropagation();
+    // This is some trickery to prevent double clicks
+    // from also triggering this listener.
+    // If there is already a pending click handler, ignore this click.
+    if (timeoutId) return;
+
+    timeoutId = setTimeout(() => {
+      alert('got click');
+      button.classList.toggle('selected');
+      event.stopPropagation();
+    }, 100);
   });
 
   button.addEventListener('dblclick', async () => {
+    // Prevent the pending single click handler from running.
+    clearTimeout(timeoutId);
+    timeoutId = 0;
+
     const id = button.id.substring('button'.length);
     await htmx.ajax('GET', '/button-info/' + id, {
       target: 'main',
