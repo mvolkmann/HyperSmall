@@ -29,6 +29,10 @@ button {
   user-select: none;
 }
 
+.button[data-enabled='false'] {
+  color: #bbb; /* light gray */
+}
+
 button,
 input.value,
 label,

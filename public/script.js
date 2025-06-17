@@ -1,4 +1,5 @@
 const audioMap = {};
+
 let currentStackName = '';
 let isResizing = false;
 let menuBar;
@@ -8,6 +9,7 @@ let resizeOffsetX;
 let resizeOffsetY;
 let setupFinished = false;
 let timeoutId;
+let wasDraggedOrMoved = false;
 
 const cardHeight = {
   Small: 240,
@@ -37,10 +39,19 @@ function buttonInfo(event) {
   const {autoHilite, enabled, id, name, showName} = event.detail;
   const button = document.querySelector('#button' + id);
   button.textContent = showName ? name : '';
-  button.disabled = !enabled;
+  // We can't really disable the button because that would prevent
+  // dragging, resizing, and double clicking (to edit) the button.
+  button.setAttribute('data-enabled', enabled);
 
   //TODO: Implement autoHilite which inverts the pixel colors
   // in a button when the mouse is pressed down on it.
+}
+
+function cancelPendingClick() {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = 0;
+  }
 }
 
 function centerInParent(element) {
@@ -133,6 +144,8 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
     // This function is defined inside the makeDraggable function
     // because it uses variables defined in that function.
     function onMouseMove(event) {
+      cancelPendingClick();
+
       const targetRect = target.getBoundingClientRect();
       const {left, top, width, height} = targetRect;
       const x = event.clientX - left;
@@ -168,6 +181,8 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
         style.left = left + 'px';
         style.top = top + 'px';
       }
+
+      wasDraggedOrMoved = true;
     }
 
     // This function is defined inside the makeDraggable function
@@ -199,22 +214,28 @@ async function newButton(event) {
   button.textContent = 'New Button';
 
   button.addEventListener('click', event => {
+    const enabled = button.getAttribute('data-enabled');
+    if (enabled === 'false') return;
+
     // This is some trickery to prevent double clicks
     // from also triggering this listener.
     // If there is already a pending click handler, ignore this click.
     if (timeoutId) return;
 
+    if (wasDraggedOrMoved) {
+      wasDraggedOrMoved = false;
+      return;
+    }
+
     timeoutId = setTimeout(() => {
       alert('got click');
       button.classList.toggle('selected');
       event.stopPropagation();
-    }, 100);
+    }, 200);
   });
 
   button.addEventListener('dblclick', async () => {
-    // Prevent the pending single click handler from running.
-    clearTimeout(timeoutId);
-    timeoutId = 0;
+    cancelPendingClick();
 
     const id = button.id.substring('button'.length);
     await htmx.ajax('GET', '/button-info/' + id, {
