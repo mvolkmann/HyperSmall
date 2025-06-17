@@ -43,12 +43,51 @@ function buttonInfo(event) {
   // dragging, resizing, and double clicking (to edit) the button.
   button.setAttribute('data-enabled', enabled);
 
+  const bStyle = button.style;
+
+  // Set some default styles that will be customized
+  // in the switch below based on the select button style.
+  button.classList.remove('default');
+  bStyle.backgroundColor = 'white';
+  bStyle.borderRadius = 0;
+  bStyle.borderColor = 'black';
+  bStyle.borderWidth = '1px';
+  bStyle.boxShadow = 'none';
+
   switch (style) {
+    case 'Default':
+      bStyle.borderRadius = '0.5rem';
+      bStyle.borderWidth = '4px';
+      bStyle.position = 'relative';
+      button.classList.add('default');
+      break;
+    case 'Opaque':
+      bStyle.borderColor = 'transparent';
+      break;
+    case 'Oval':
+      bStyle.backgroundColor = 'transparent';
+      bStyle.borderRadius = '50%';
+      bStyle.borderWidth = 1;
+      break;
     case 'Rectangle':
-      button.style.borderRadius = '0';
+      bStyle.borderWidth = 1;
       break;
     case 'Round Rect':
-      button.style.borderRadius = '0.5rem';
+      bStyle.borderRadius = '0.5rem';
+      bStyle.borderWidth = 1;
+      bStyle.boxShadow = '2px 2px 2px black';
+      break;
+    case 'Shadow':
+      bStyle.borderWidth = 1;
+      bStyle.boxShadow = '2px 2px 2px black';
+      break;
+    case 'Standard':
+      bStyle.borderRadius = '0.5rem';
+      bStyle.borderWidth = 1;
+      break;
+    case 'Transparent':
+      bStyle.backgroundColor = 'transparent';
+      bStyle.borderColor = 'transparent';
       break;
   }
 
@@ -254,6 +293,8 @@ async function newButton(event) {
     const dialog = document.getElementById('button-info-dialog');
     dialog.style.display = 'flex';
     centerInParent(dialog);
+    const input = dialog.querySelector('#buttonName');
+    input.select(); // selects all the text so it is ready to be replaced
     dialog.showModal();
   });
 
