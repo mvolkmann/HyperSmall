@@ -28,6 +28,10 @@ const cardWidth = {
 
 setInterval(updateTime, 60000);
 
+function atLeast(value, min) {
+  return min ? Math.max(min, value) : value;
+}
+
 function buttonInfo(event) {
   const {buttonName, cardButtonId} = event.detail;
   const button = document.querySelector('#button' + cardButtonId);
@@ -71,7 +75,7 @@ function isOverLowerRight(event) {
   return width - x < 10 && height - y < 10;
 }
 
-function makeDraggable(element, handle, canResize) {
+function makeDraggable(element, handle, canResize, minWidth, minHeight) {
   element.style.position = 'absolute';
 
   let {parentElement} = element;
@@ -135,8 +139,10 @@ function makeDraggable(element, handle, canResize) {
       if (isResizing) {
         // Don't allow the element to be resized outside its parent.
         if (event.clientX < maxResizeX && event.clientY < maxResizeY) {
-          style.width = event.clientX - left + resizeOffsetX + 'px';
-          style.height = event.clientY - top + resizeOffsetY + 'px';
+          style.width =
+            atLeast(event.clientX - left + resizeOffsetX, minWidth) + 'px';
+          style.height =
+            atLeast(event.clientY - top + resizeOffsetY, minHeight) + 'px';
         }
       } else {
         const left = Math.max(
@@ -205,7 +211,7 @@ async function newButton(event) {
   section.appendChild(button);
   button.focus();
 
-  makeDraggable(button, null, true);
+  makeDraggable(button, null, true, 48, 24);
   centerInParent(button);
 }
 
