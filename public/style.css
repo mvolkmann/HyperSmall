@@ -61,7 +61,6 @@ span {
   position: absolute;
 
   label {
-    pointer-events: none;
     user-select: none;
   }
 }

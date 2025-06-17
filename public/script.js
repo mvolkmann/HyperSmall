@@ -37,8 +37,6 @@ function atLeast(value, min) {
 
 function buttonInfo(event) {
   const {autoHilite, enabled, family, id, name, showName, style} = event.detail;
-  console.log('script.js buttonInfo: family =', family);
-  console.log('script.js buttonInfo: typeof family =', typeof family);
 
   const button = document.querySelector('#button' + id);
   button.textContent = showName ? name : '';
@@ -133,6 +131,7 @@ function checkboxSetup(button, style) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Check Box') {
+    const id = 'cb' + button.id.substring('button'.length);
     let label;
 
     // If the checkbox container already exists, use it.
@@ -141,6 +140,7 @@ function checkboxSetup(button, style) {
     } else {
       // Create the checkbox container.
       const input = document.createElement('input');
+      input.id = id;
       input.type = 'checkbox';
 
       label = document.createElement('label');
@@ -165,7 +165,7 @@ function checkboxSetup(button, style) {
       makeDraggable({element: div});
     }
 
-    // Update the label text to match the button text.
+    label.setAttribute('for', id);
     label.textContent = button.textContent;
   } else {
     // Remove the checkbox container if it exists.
@@ -494,15 +494,17 @@ function radioButtonSetup(button, style, family) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Radio Button') {
-    let label;
+    const id = 'rb' + button.id.substring('button'.length) + '-' + family;
+    let input, label;
 
     // If the radio button container already exists, use it.
     if (nextElement?.classList.contains('radio-button-container')) {
+      input = nextElement.querySelector('input');
       label = nextElement.querySelector('label');
     } else {
       // Create the radio button container.
-      const input = document.createElement('input');
-      input.name = 'family' + family;
+      input = document.createElement('input');
+      input.id = id;
       input.type = 'radio';
 
       label = document.createElement('label');
@@ -527,8 +529,12 @@ function radioButtonSetup(button, style, family) {
       makeDraggable({element: div});
     }
 
-    // Update the label text to match the button text.
-    label.textContent = button.textContent;
+    const value = button.textContent;
+    input.id = id;
+    input.name = 'family' + family;
+    input.value = value;
+    label.setAttribute('for', id);
+    label.textContent = value;
   } else {
     // Remove the radio button container if it exists.
     if (nextElement?.classList.contains('radio-button-container')) {

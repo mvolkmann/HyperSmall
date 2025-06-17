@@ -73,7 +73,7 @@ app.get('/button-info/:id', (c: Context) => {
         </div>
 
         <div class="row-align-start gap2">
-          <div class="column">
+          <div class="column gap2">
             <div class="row">
               <label>Card button number:</label>
             </div>
@@ -91,7 +91,7 @@ app.get('/button-info/:id', (c: Context) => {
               ></input>
             </div>
           </div>
-          <div class="column">
+          <div class="column gap2">
             <div class="row">
               <label>Style:</label>
               <select id="style" name="style">
@@ -105,6 +105,12 @@ app.get('/button-info/:id', (c: Context) => {
             </div>
             <div class="row">
               <label>Family:</label>
+              <select id="family" name="family">
+                <option>None</option>
+                {Array.from({length: 15}).map((_, i) => (
+                  <option>{i + 1}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -168,6 +174,7 @@ app.post('/button-info', async (c: Context) => {
   const formData = await c.req.formData();
   const buttonName = formData.get('buttonName') as string;
   const cardButtonId = formData.get('cardButtonId');
+  const family = formData.get('family');
 
   // TODO: Update the button in the database.
 
@@ -177,6 +184,7 @@ app.post('/button-info', async (c: Context) => {
   button.name = buttonName;
   button.autoHilite = formData.get('autoHilite') === 'on';
   button.enabled = formData.get('enabled') === 'on';
+  button.family = Number(family);
   button.showName = formData.get('showName') === 'on';
   const style = (formData.get('style') as string).replace(/ /g, '');
   button.style = ButtonStyle[style as keyof typeof ButtonStyle];
