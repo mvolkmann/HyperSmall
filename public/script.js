@@ -7,6 +7,7 @@ let openMenu;
 let resizeOffsetX;
 let resizeOffsetY;
 let setupFinished = false;
+let timeoutId;
 
 const cardHeight = {
   Small: 240,
@@ -196,8 +197,6 @@ async function newButton(event) {
   button.classList.add('button');
   button.classList.add('selected');
   button.textContent = 'New Button';
-
-  let timeoutId;
 
   button.addEventListener('click', event => {
     // This is some trickery to prevent double clicks
