@@ -63,16 +63,12 @@ function buttonInfo(event) {
 
       const label = document.createElement('label');
       label.textContent = button.textContent;
-      label.style.pointerEvents = 'none';
-      label.style.userSelect = 'none';
 
       const div = document.createElement('div');
+      div.classList.add('checkbox-container');
       const divStyle = div.style;
-      divStyle.position = bStyle.position;
       divStyle.left = bStyle.left;
       divStyle.top = bStyle.top;
-      divStyle.display = 'flex';
-      divStyle.alignItems = 'center';
       div.appendChild(input);
       div.appendChild(label);
       button.after(div);

@@ -54,6 +54,17 @@ span {
   font-weight: bold;
 }
 
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+
+  label {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 .column {
   display: flex;
   flex-direction: column;
