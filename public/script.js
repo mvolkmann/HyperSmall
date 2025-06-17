@@ -55,6 +55,30 @@ function buttonInfo(event) {
   bStyle.boxShadow = 'none';
 
   switch (style) {
+    case 'Check Box':
+      bStyle.display = 'none';
+
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+
+      const label = document.createElement('label');
+      label.textContent = button.textContent;
+      label.style.pointerEvents = 'none';
+      label.style.userSelect = 'none';
+
+      const div = document.createElement('div');
+      const divStyle = div.style;
+      divStyle.position = bStyle.position;
+      divStyle.left = bStyle.left;
+      divStyle.top = bStyle.top;
+      divStyle.display = 'flex';
+      divStyle.alignItems = 'center';
+      div.appendChild(input);
+      div.appendChild(label);
+      button.after(div);
+      //TODO: Add support for dblclick.
+      makeDraggable({element: div});
+      break;
     case 'Default':
       bStyle.borderRadius = '0.5rem';
       bStyle.borderWidth = '4px';
@@ -68,6 +92,12 @@ function buttonInfo(event) {
       bStyle.backgroundColor = 'transparent';
       bStyle.borderRadius = '50%';
       bStyle.borderWidth = 1;
+      break;
+    case 'Popup':
+      alert("Popups aren't implemented yet.");
+      break;
+    case 'Radio Button':
+      alert("Radio Buttons aren't implemented yet.");
       break;
     case 'Rectangle':
       bStyle.borderWidth = 1;
