@@ -75,7 +75,7 @@ function isOverLowerRight(event) {
   return width - x < 10 && height - y < 10;
 }
 
-function makeDraggable(element, handle, canResize, minWidth, minHeight) {
+function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
   element.style.position = 'absolute';
 
   let {parentElement} = element;
@@ -211,7 +211,12 @@ async function newButton(event) {
   section.appendChild(button);
   button.focus();
 
-  makeDraggable(button, null, true, 48, 24);
+  makeDraggable({
+    element: button,
+    canResize: true,
+    minWidth: 48,
+    minHeight: 24
+  });
   centerInParent(button);
 }
 
@@ -235,7 +240,7 @@ async function newStack(event) {
   section.addEventListener('click', () => deselectAll(section));
 
   const titleBar = dialog.querySelector('.title-bar');
-  makeDraggable(dialog, titleBar, false);
+  makeDraggable({element: dialog, handle: titleBar});
 
   dialog.addEventListener('click', selectStack);
 }
@@ -348,7 +353,7 @@ async function setup() {
   const dialogs = document.querySelectorAll('.dialog-with-title-bar');
   for (const dialog of dialogs) {
     const titleBar = dialog.querySelector('basic-title-bar');
-    makeDraggable(dialog, titleBar, false);
+    makeDraggable({element: dialog, handle: titleBar});
   }
 
   // Simulate user events to take some initial actions in the UI.

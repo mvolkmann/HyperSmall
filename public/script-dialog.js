@@ -91,7 +91,7 @@ class ScriptDialog extends HTMLElement {
     //TODO: Change the way resizing works
     // so there is a square in the lower-right?
     // Currently, resizing occurs by resizing the textarea.
-    makeDraggable(dialog, titleBar, false);
+    makeDraggable({element: dialog, handle: titleBar});
   }
 }
 
