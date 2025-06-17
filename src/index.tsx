@@ -133,7 +133,7 @@ app.get('/button-info/:id', (c: Context) => {
           </div>
           <div class="column gap1">
             <button id="okBtn">OK</button>
-            <button onclick="closeDialog(this)" type="button">
+            <button onclick="closeDialog(this, true)" type="button">
               Cancel
             </button>
           </div>
@@ -156,7 +156,8 @@ app.post('/button-info', async (c: Context) => {
 });
 
 app.get('/new-button', (c: Context) => {
-  // TODO: Add a button to the stack in the database.
+  // TODO: Add a button to the current stack in the database.
+
   lastButtonId += 1;
   const button = new Button(lastButtonId);
   buttonMap.set(button.id, button);

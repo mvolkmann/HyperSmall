@@ -49,10 +49,11 @@ function centerInParent(element) {
   style.top = parentRect.height / 2 - elementRect.height / 2 + 'px';
 }
 
-function closeDialog(element) {
+function closeDialog(element, remove) {
   const dialog = element.closest('dialog');
   dialog.style.display = 'none';
   dialog.close();
+  if (remove) dialog.remove();
 }
 
 function deselectAll(ancestor) {
