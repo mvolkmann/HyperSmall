@@ -59,6 +59,7 @@ function buttonInfo(event) {
   bStyle.display = 'block';
 
   checkboxSetup(button, style);
+  radioButtonSetup(button, style, family);
 
   switch (style) {
     case 'Check Box':
@@ -82,7 +83,7 @@ function buttonInfo(event) {
       alert("Popups aren't implemented yet.");
       break;
     case 'Radio Button':
-      alert("Radio Buttons aren't implemented yet.");
+      bStyle.display = 'none'; // hide the button
       break;
     case 'Rectangle':
       bStyle.borderWidth = 1;
@@ -487,6 +488,53 @@ function playAudio(fileName) {
     audio = audioMap[fileName] = new Audio('sounds/' + fileName);
   }
   audio.play();
+}
+
+function radioButtonSetup(button, style, family) {
+  const nextElement = button.nextElementSibling;
+
+  if (style === 'Radio Button') {
+    let label;
+
+    // If the radio button container already exists, use it.
+    if (nextElement?.classList.contains('radio-button-container')) {
+      label = nextElement.querySelector('label');
+    } else {
+      // Create the radio button container.
+      const input = document.createElement('input');
+      input.name = 'family' + family;
+      input.type = 'radio';
+
+      label = document.createElement('label');
+
+      const div = document.createElement('div');
+      div.classList.add('radio-button-container');
+      const divStyle = div.style;
+      const bStyle = button.style;
+      divStyle.left = bStyle.left;
+      divStyle.top = bStyle.top;
+      div.appendChild(input);
+      div.appendChild(label);
+      button.after(div);
+
+      // If the radio button container is double-clicked, trigger that event
+      // on the button that is currently not displayed
+      // which will open the "Button Info" dialog.
+      div.addEventListener('dblclick', () => {
+        button.dispatchEvent(new MouseEvent('dblclick'));
+      });
+
+      makeDraggable({element: div});
+    }
+
+    // Update the label text to match the button text.
+    label.textContent = button.textContent;
+  } else {
+    // Remove the radio button container if it exists.
+    if (nextElement?.classList.contains('radio-button-container')) {
+      nextElement.remove();
+    }
+  }
 }
 
 function replaceStack() {

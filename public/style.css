@@ -54,7 +54,8 @@ span {
   font-weight: bold;
 }
 
-.checkbox-container {
+.checkbox-container,
+.radio-button-container {
   display: flex;
   align-items: center;
   position: absolute;
@@ -112,7 +113,8 @@ input.value {
   width: 5rem;
 }
 
-input[type='checkbox'] {
+input[type='checkbox'],
+input[type='radio'] {
   cursor: pointer;
   margin-right: 0.3rem;
 }
