@@ -157,6 +157,8 @@ function makeDraggable(element, handle, canResize) {
     document.addEventListener(
       'mouseup',
       () => {
+        //TODO: Send request to server to update
+        // the position and size of the element.
         targetStyle.cursor = 'grab';
         isResizing = false;
         document.removeEventListener('mousemove', onMouseMove);
