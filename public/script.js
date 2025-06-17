@@ -36,7 +36,10 @@ function atLeast(value, min) {
 }
 
 function buttonInfo(event) {
-  const {autoHilite, enabled, id, name, showName, style} = event.detail;
+  const {autoHilite, enabled, family, id, name, showName, style} = event.detail;
+  console.log('script.js buttonInfo: family =', family);
+  console.log('script.js buttonInfo: typeof family =', typeof family);
+
   const button = document.querySelector('#button' + id);
   button.textContent = showName ? name : '';
   // We can't really disable the button because that would prevent
@@ -55,48 +58,7 @@ function buttonInfo(event) {
   bStyle.boxShadow = 'none';
   bStyle.display = 'block';
 
-  const nextElement = button.nextElementSibling;
-
-  if (style === 'Check Box') {
-    let label;
-
-    // If the checkbox container already exists, use it.
-    if (nextElement?.classList.contains('checkbox-container')) {
-      label = nextElement.querySelector('label');
-    } else {
-      // Create the checkbox container.
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-
-      label = document.createElement('label');
-
-      const div = document.createElement('div');
-      div.classList.add('checkbox-container');
-      const divStyle = div.style;
-      divStyle.left = bStyle.left;
-      divStyle.top = bStyle.top;
-      div.appendChild(input);
-      div.appendChild(label);
-      button.after(div);
-
-      // If the checkbox container is double-clicked, trigger that event
-      // on the button that is currently not displayed
-      // which will open the "Button Info" dialog.
-      div.addEventListener('dblclick', () => {
-        button.dispatchEvent(new MouseEvent('dblclick'));
-      });
-
-      makeDraggable({element: div});
-    }
-
-    // Update the label text to match the button text.
-    label.textContent = button.textContent;
-  } else {
-    // Remove the checkbox container if it exists.
-    if (nextElement.classList.contains('checkbox-container')) {
-      nextElement.remove();
-    }
-  }
+  checkboxSetup(button, style);
 
   switch (style) {
     case 'Check Box':
@@ -164,6 +126,52 @@ function centerInParent(element) {
   const {style} = element;
   style.left = parentRect.width / 2 - elementRect.width / 2 + 'px';
   style.top = parentRect.height / 2 - elementRect.height / 2 + 'px';
+}
+
+function checkboxSetup(button, style) {
+  const nextElement = button.nextElementSibling;
+
+  if (style === 'Check Box') {
+    let label;
+
+    // If the checkbox container already exists, use it.
+    if (nextElement?.classList.contains('checkbox-container')) {
+      label = nextElement.querySelector('label');
+    } else {
+      // Create the checkbox container.
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+
+      label = document.createElement('label');
+
+      const div = document.createElement('div');
+      div.classList.add('checkbox-container');
+      const divStyle = div.style;
+      const bStyle = button.style;
+      divStyle.left = bStyle.left;
+      divStyle.top = bStyle.top;
+      div.appendChild(input);
+      div.appendChild(label);
+      button.after(div);
+
+      // If the checkbox container is double-clicked, trigger that event
+      // on the button that is currently not displayed
+      // which will open the "Button Info" dialog.
+      div.addEventListener('dblclick', () => {
+        button.dispatchEvent(new MouseEvent('dblclick'));
+      });
+
+      makeDraggable({element: div});
+    }
+
+    // Update the label text to match the button text.
+    label.textContent = button.textContent;
+  } else {
+    // Remove the checkbox container if it exists.
+    if (nextElement?.classList.contains('checkbox-container')) {
+      nextElement.remove();
+    }
+  }
 }
 
 function closeDialog(element, remove) {
