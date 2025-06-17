@@ -1,3 +1,5 @@
+//TODO: Delete this? It is no longer used because this dialog
+// is now returned by the GET /button-info/:id endpoint.
 class ButtonInfoDialog extends HTMLElement {
   // This custom element does not use shadow DOM.
   connectedCallback() {

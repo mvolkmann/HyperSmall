@@ -189,15 +189,16 @@ async function newButton(event) {
     event.stopPropagation();
   });
 
-  button.addEventListener('dblclick', () => {
-    const bid = openTitledDialog('button-info-dialog');
-    const dialog = bid.querySelector('dialog');
-
-    let input = dialog.querySelector('#buttonName');
-    input.value = button.textContent;
-
-    input = dialog.querySelector('#cardButtonId');
-    input.value = button.id.substring('button'.length);
+  button.addEventListener('dblclick', async () => {
+    const id = button.id.substring('button'.length);
+    await htmx.ajax('GET', '/button-info/' + id, {
+      target: 'main',
+      swap: 'beforeend'
+    });
+    const dialog = document.getElementById('button-info-dialog');
+    dialog.style.display = 'flex';
+    centerInParent(dialog);
+    dialog.showModal();
   });
 
   button.addEventListener('keydown', event => {

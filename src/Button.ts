@@ -11,6 +11,11 @@ class Button extends Container {
   showName = true;
   style: ButtonStyle = ButtonStyle.RoundRect;
 
+  constructor(id: number) {
+    super(id);
+    this.name = 'New Button';
+  }
+
   toHTML(): string {
     return `<button>${this.name}</button>`;
   }

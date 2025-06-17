@@ -3,8 +3,11 @@ import {type Context, Hono} from 'hono';
 import {serveStatic} from 'hono/bun';
 import {logger} from 'hono/logger';
 
+import Button from './Button';
 import CardSize from './CardSize';
 import Stack from './Stack';
+
+const buttonMap = new Map<number, Button>();
 
 //TODO: Store these in the stack database so
 //TODO: they aren't reset when the server is restarted.
@@ -31,6 +34,115 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+app.get('/button-info/:id', (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) {
+    return c.body(null, 404); // Not Found
+  }
+
+  // This is a workaround that enables
+  // using attribute names that contain colons.
+  const formAttributes = {
+    'hx-on:htmx:after-request': 'closeDialog(this)'
+  };
+  return c.html(
+    <dialog class="dialog-with-title-bar" id="button-info-dialog">
+      <basic-title-bar>Button Info</basic-title-bar>
+      <form hx-post="/button-info" {...formAttributes}>
+        <div class="row gap1">
+          <label class="mb1" for="cardSize">
+            Button Name:
+          </label>
+          <input
+            autofocus
+            id="buttonName"
+            name="buttonName"
+            required
+            value={button.name}
+          />
+        </div>
+
+        <div class="row-align-start gap2">
+          <div class="column">
+            <div class="row">
+              <label>Card button number:</label>
+            </div>
+            <div class="row">
+              <label>Card part number:</label>
+            </div>
+            <div class="row">
+              <label>Card button ID:</label>
+              <input
+                id="cardButtonId"
+                name="cardButtonId"
+                class="value"
+                readonly
+                value={button.id}
+              ></input>
+            </div>
+          </div>
+          <div class="column">
+            <label>Style:</label>
+            <label>Family:</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column">
+            <div class="row">
+              <input
+                type="checkbox"
+                id="showName"
+                name="showName"
+                checked={button.showName}
+              />
+              <label for="showName">Show name</label>
+            </div>
+            <div class="row">
+              <input
+                type="checkbox"
+                id="authHilite"
+                name="authHilite"
+                checked={button.autoHilite}
+              />
+              <label for="autoHilite">Auto Hilite</label>
+            </div>
+            <div class="row">
+              <input
+                type="checkbox"
+                id="enabled"
+                name="enabled"
+                checked={button.enabled}
+              />
+              <label for="enabled">Enabled</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gap2">
+          <div class="grid-3-columns gap1">
+            <button type="button">Text Style...</button>
+            <button type="button">Icon...</button>
+            <button type="button">LinkTo...</button>
+            <button onclick="openScriptDialog(this)" type="button">
+              Script...
+            </button>
+            <button type="button">Contents...</button>
+            <button type="button">Tasks...</button>
+          </div>
+          <div class="column gap1">
+            <button id="okBtn">OK</button>
+            <button onclick="closeDialog(this)" type="button">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+  );
+});
+
 app.post('/button-info', async (c: Context) => {
   const formData = await c.req.formData();
   const buttonName = formData.get('buttonName');
@@ -45,8 +157,10 @@ app.post('/button-info', async (c: Context) => {
 
 app.get('/new-button', (c: Context) => {
   // TODO: Add a button to the stack in the database.
-
   lastButtonId += 1;
+  const button = new Button(lastButtonId);
+  buttonMap.set(button.id, button);
+
   const trigger = {'new-button': {buttonId: lastButtonId}};
   c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204); // No Content
