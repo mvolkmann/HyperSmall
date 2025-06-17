@@ -101,6 +101,9 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
   }
 
   target.addEventListener('mousedown', event => {
+    // Only handle the left mouse button.
+    if (event.buttons !== 1) return;
+
     if (targetStyle.cursor === 'grab') targetStyle.cursor = 'grabbing';
 
     const elementRect = element.getBoundingClientRect();
@@ -122,6 +125,8 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
     const maxResizeX = parentRect.left + parentRect.width - resizeOffsetX;
     const maxResizeY = parentRect.top + parentRect.height - resizeOffsetY;
 
+    // This function is defined inside the makeDraggable function
+    // because it uses variables defined in that function.
     function onMouseMove(event) {
       const targetRect = target.getBoundingClientRect();
       const {left, top, width, height} = targetRect;
@@ -160,18 +165,21 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
       }
     }
 
+    // This function is defined inside the makeDraggable function
+    // because it refers to the onMouseMove function
+    // which defined in makeDraggable.
+    function onMouseUp() {
+      //TODO: Send request to server to update
+      // the position and size of the element.
+
+      targetStyle.cursor = 'grab';
+      isResizing = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener(
-      'mouseup',
-      () => {
-        //TODO: Send request to server to update
-        // the position and size of the element.
-        targetStyle.cursor = 'grab';
-        isResizing = false;
-        document.removeEventListener('mousemove', onMouseMove);
-      },
-      {once: true}
-    );
+    document.addEventListener('mouseup', onMouseUp);
   });
 }
 
@@ -305,7 +313,7 @@ function onStackSelected(event) {
 
 function openScriptDialog(button) {
   // Close the modal dialog containing the button that triggered this.
-  closeDialog(button);
+  closeDialog(button, true);
 
   const main = document.querySelector('main');
   dialog = document.createElement('script-dialog');

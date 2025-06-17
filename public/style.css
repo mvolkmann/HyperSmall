@@ -24,6 +24,7 @@ button {
   padding: 0.25rem 0.5rem;
   position: absolute;
   text-overflow: ellipsis;
+  user-select: none;
 }
 
 button,

@@ -44,7 +44,7 @@ app.get('/button-info/:id', (c: Context) => {
   // This is a workaround that enables
   // using attribute names that contain colons.
   const formAttributes = {
-    'hx-on:htmx:after-request': 'closeDialog(this)'
+    'hx-on:htmx:after-request': 'closeDialog(this, true)'
   };
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
@@ -145,10 +145,15 @@ app.get('/button-info/:id', (c: Context) => {
 
 app.post('/button-info', async (c: Context) => {
   const formData = await c.req.formData();
-  const buttonName = formData.get('buttonName');
+  const buttonName = formData.get('buttonName') as string;
   const cardButtonId = formData.get('cardButtonId');
 
   // TODO: Update the button in the database.
+
+  const button = buttonMap.get(Number(cardButtonId));
+  if (!button) return c.body(null, 404); // Not Found
+
+  button.name = buttonName;
 
   const trigger = {'button-info': {buttonName, cardButtonId}};
   c.header('HX-Trigger', JSON.stringify(trigger));
