@@ -53,16 +53,22 @@ function buttonInfo(event) {
   bStyle.borderColor = 'black';
   bStyle.borderWidth = '1px';
   bStyle.boxShadow = 'none';
+  bStyle.display = 'block';
 
-  switch (style) {
-    case 'Check Box':
-      bStyle.display = 'none';
+  const nextElement = button.nextElementSibling;
 
+  if (style === 'Check Box') {
+    let label;
+
+    // If the checkbox container already exists, use it.
+    if (nextElement?.classList.contains('checkbox-container')) {
+      label = nextElement.querySelector('label');
+    } else {
+      // Create the checkbox container.
       const input = document.createElement('input');
       input.type = 'checkbox';
 
-      const label = document.createElement('label');
-      label.textContent = button.textContent;
+      label = document.createElement('label');
 
       const div = document.createElement('div');
       div.classList.add('checkbox-container');
@@ -72,8 +78,29 @@ function buttonInfo(event) {
       div.appendChild(input);
       div.appendChild(label);
       button.after(div);
-      //TODO: Add support for dblclick.
+
+      // If the checkbox container is double-clicked, trigger that event
+      // on the button that is currently not displayed
+      // which will open the "Button Info" dialog.
+      div.addEventListener('dblclick', () => {
+        button.dispatchEvent(new MouseEvent('dblclick'));
+      });
+
       makeDraggable({element: div});
+    }
+
+    // Update the label text to match the button text.
+    label.textContent = button.textContent;
+  } else {
+    // Remove the checkbox container if it exists.
+    if (nextElement.classList.contains('checkbox-container')) {
+      nextElement.remove();
+    }
+  }
+
+  switch (style) {
+    case 'Check Box':
+      bStyle.display = 'none'; // hide the button
       break;
     case 'Default':
       bStyle.borderRadius = '0.5rem';
