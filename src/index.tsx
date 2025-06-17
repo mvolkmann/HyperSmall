@@ -147,8 +147,8 @@ app.get('/button-info/:id', (c: Context) => {
           </div>
         </div>
 
-        <div class="row gap2">
-          <div class="grid-3-columns gap1">
+        <div class="row gap4">
+          <div class="grid-3-columns gap2">
             <button type="button">Text Style...</button>
             <button type="button">Icon...</button>
             <button type="button">LinkTo...</button>
@@ -158,8 +158,10 @@ app.get('/button-info/:id', (c: Context) => {
             <button type="button">Contents...</button>
             <button type="button">Tasks...</button>
           </div>
-          <div class="column gap1">
-            <button id="okBtn">OK</button>
+          <div class="column gap2">
+            <button class="default" id="okBtn">
+              OK
+            </button>
             <button onclick="closeDialog(this, true)" type="button">
               Cancel
             </button>

@@ -96,6 +96,10 @@ dialog > form {
   gap: 0.5rem;
 }
 
+.gap4 {
+  gap: 1rem;
+}
+
 .grid-3-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
