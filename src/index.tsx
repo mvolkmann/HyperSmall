@@ -159,9 +159,7 @@ app.get('/button-info/:id', (c: Context) => {
             <button type="button">Tasks...</button>
           </div>
           <div class="column gap2">
-            <button class="default" id="okBtn">
-              OK
-            </button>
+            <button class="defaultButton">OK</button>
             <button onclick="closeDialog(this, true)" type="button">
               Cancel
             </button>

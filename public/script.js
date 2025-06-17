@@ -48,7 +48,7 @@ function buttonInfo(event) {
 
   // Set some default styles that will be customized
   // in the switch below based on the select button style.
-  button.classList.remove('default');
+  button.classList.remove('defaultButton');
   bStyle.backgroundColor = 'white';
   bStyle.borderRadius = 0;
   bStyle.borderColor = 'black';
@@ -67,7 +67,7 @@ function buttonInfo(event) {
       bStyle.borderRadius = '0.5rem';
       bStyle.borderWidth = '4px';
       bStyle.position = 'relative';
-      button.classList.add('default');
+      button.classList.add('defaultButton');
       break;
     case 'Opaque':
       bStyle.borderColor = 'transparent';
