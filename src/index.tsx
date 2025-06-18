@@ -101,6 +101,9 @@ app.get('/button-info/:id', (c: Context) => {
   //TODO: Need this?
   c.header('HX-Trigger', 'button-info-dialog');
 
+  // TODO: Clicking the "Script..." and "Contents..." buttons
+  // needs to submit the form just like clicking the "OK" button,
+  // but that isn't happening now.
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
       <basic-title-bar>Button Info</basic-title-bar>
@@ -202,7 +205,6 @@ app.get('/button-info/:id', (c: Context) => {
               hx-get={`/script/${id}`}
               hx-target="main"
               hx-swap="beforeend"
-              type="button"
             >
               Script...
             </button>
@@ -211,7 +213,6 @@ app.get('/button-info/:id', (c: Context) => {
               hx-target="main"
               hx-swap="beforeend"
               {...hxOn}
-              type="button"
             >
               Contents...
             </button>
