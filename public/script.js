@@ -568,11 +568,27 @@ async function scriptDialog(event) {
   const titleBar = dialog.querySelector('fancy-title-bar');
   makeDraggable({element: dialog, handle: titleBar});
 
+  let dirty = false;
+
   const textarea = dialog.querySelector('textarea');
   const lengthDiv = dialog.querySelector('#length');
   textarea.addEventListener('input', () => {
     lengthDiv.textContent = textarea.value.length;
+    dirty = true;
   });
+
+  dialog.addEventListener('keydown', event => {
+    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+      event.stopPropagation();
+      event.preventDefault();
+      console.log('NEED TO SAVE SCRIPT!');
+      dirty = false;
+    }
+    // closeDialog(dialog);
+  });
+
+  //TODO: If the user tries to close the dialog and dirty is true,
+  // prompt them to save the script.
 
   dialog.style.display = 'flex';
   centerInParent(dialog);
