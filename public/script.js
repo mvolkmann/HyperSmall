@@ -35,18 +35,29 @@ function atLeast(value, min) {
   return min ? Math.max(min, value) : value;
 }
 
-async function buttonContents(event) {
-  const {id} = event.detail;
-  const dialog = await waitForElement('#button-contents-dialog-' + id);
-  closeDialog(dialog);
+function buttonContents(event) {
+  const {contents, id} = event.detail;
+  console.log('script.js buttonContents: contents =', contents);
+  console.log('script.js buttonContents: id =', id);
+  const select = document.getElementById('popup' + id);
+  updatePopup(select, contents);
 }
 
 //TODO: This function is too long!  Break it up.
 function buttonInfo(event) {
   // action indicates which submit button
   // in the "Button Info" dialog was clicked.
-  const {action, autoHilite, enabled, family, id, name, showName, style} =
-    event.detail;
+  const {
+    action,
+    autoHilite,
+    contents,
+    enabled,
+    family,
+    id,
+    name,
+    showName,
+    style
+  } = event.detail;
 
   const button = document.getElementById('button' + id);
 
@@ -121,51 +132,10 @@ function buttonInfo(event) {
   // in a button when the mouse is pressed down on it.
 
   if (action === 'contents') {
-    setupContentsDialog(id);
+    setupContentsDialog(id, contents);
   } else if (action === 'script') {
     setupScriptDialog(id);
   }
-}
-
-async function setupContentsDialog(id) {
-  const dialog = await waitForElement('#button-contents-dialog-' + id);
-  const handle = dialog.querySelector('basic-title-bar');
-  makeDraggable({element: dialog, handle});
-
-  dialog.style.display = 'flex';
-  centerInParent(dialog);
-  dialog.showModal();
-}
-
-async function setupScriptDialog(id) {
-  const dialog = await waitForElement('#script-dialog-' + id);
-  const handle = dialog.querySelector('fancy-title-bar');
-  makeDraggable({element: dialog, handle});
-
-  dialog.style.display = 'flex';
-  centerInParent(dialog);
-  dialog.show();
-
-  let dirty = false;
-
-  const textarea = dialog.querySelector('textarea');
-  const lengthDiv = dialog.querySelector('#length');
-  textarea.addEventListener('input', () => {
-    lengthDiv.textContent = textarea.value.length;
-    dirty = true;
-  });
-
-  dialog.addEventListener('keydown', event => {
-    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-      event.stopPropagation();
-      event.preventDefault();
-      console.log('NEED TO SAVE SCRIPT!');
-      dirty = false;
-    }
-  });
-
-  //TODO: If the user tries to close the dialog and dirty is true,
-  // prompt them to save the script.
 }
 
 function cancelPendingClick() {
@@ -570,11 +540,7 @@ async function popupSetup(button, style) {
       label = document.createElement('label');
       const select = document.createElement('select');
       select.id = id;
-      for (const optionText of contents.split('\n')) {
-        const option = document.createElement('option');
-        option.textContent = optionText;
-        select.appendChild(option);
-      }
+      updatePopup(select, contents);
 
       const div = document.createElement('div');
       div.classList.add('popup-container');
@@ -699,6 +665,53 @@ async function setup() {
   setupFinished = true;
 }
 
+async function setupContentsDialog(id, contents) {
+  console.log('script.js setupContentsDialog: id =', id);
+  const select = await waitForElement('#popup' + id);
+  console.log('script.js setupContentsDialog: select =', select);
+  updatePopup(select, contents);
+
+  const dialog = await waitForElement('#button-contents-dialog-' + id);
+  htmx.process(dialog);
+  const handle = dialog.querySelector('basic-title-bar');
+  makeDraggable({element: dialog, handle});
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.showModal();
+}
+
+async function setupScriptDialog(id) {
+  const dialog = await waitForElement('#script-dialog-' + id);
+  const handle = dialog.querySelector('fancy-title-bar');
+  makeDraggable({element: dialog, handle});
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.show();
+
+  let dirty = false;
+
+  const textarea = dialog.querySelector('textarea');
+  const lengthDiv = dialog.querySelector('#length');
+  textarea.addEventListener('input', () => {
+    lengthDiv.textContent = textarea.value.length;
+    dirty = true;
+  });
+
+  dialog.addEventListener('keydown', event => {
+    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+      event.stopPropagation();
+      event.preventDefault();
+      console.log('NEED TO SAVE SCRIPT!');
+      dirty = false;
+    }
+  });
+
+  //TODO: If the user tries to close the dialog and dirty is true,
+  // prompt them to save the script.
+}
+
 const stackDialogSelector = stackName => '#stack-' + stackName;
 
 function updateTime() {
@@ -710,6 +723,19 @@ function updateTime() {
     hour12: true
   });
   */
+}
+
+function updatePopup(select, contents) {
+  // Delete all the current options.
+  select.innerHTML = '';
+
+  console.log('script.js updatePopup: contents =', contents);
+  // Add the new options.
+  for (const optionText of contents.split('\n')) {
+    const option = document.createElement('option');
+    option.textContent = optionText;
+    select.appendChild(option);
+  }
 }
 
 function waitForElement(selector) {

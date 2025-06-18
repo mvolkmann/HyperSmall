@@ -140,6 +140,11 @@ app.post('/button-contents/:id', async (c: Context) => {
 
   //TODO: Update the contents of the button in the database.
 
+  console.log('index.tsx POST /button-contents/:id: contents =', contents);
+  console.log('index.tsx POST /button-contents/:id: id =', id);
+  const trigger = {'button-contents': {contents, id}};
+  //TODO: THIS IS NOT TRIGGERING IN index.html!
+  c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204);
 });
 
