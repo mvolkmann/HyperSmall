@@ -56,7 +56,8 @@ async function buttonContentsDialog(event, id) {
 function buttonInfo(event) {
   const {autoHilite, enabled, family, id, name, showName, style} = event.detail;
 
-  const button = document.querySelector('#button' + id);
+  const button = document.getElementById('button' + id);
+
   button.textContent = showName ? name : '';
   // We can't really disable the button because that would prevent
   // dragging, resizing, and double clicking (to edit) the button.
