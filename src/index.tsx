@@ -93,9 +93,15 @@ app.get('/button-info/:id', (c: Context) => {
   }
 
   // This is a workaround that enables
-  // using attribute names that contain colons.
-  const hxOn = {
+  // using attribute names that contain multiple colons.
+  const hxOnForm = {
+    'hx-on:htmx:after-request': 'closeDialog(this, true)'
+  };
+  const hxOnButtonContents = {
     'hx-on:htmx:after-request': `buttonContentsDialog(event, ${id})`
+  };
+  const hxOnScript = {
+    'hx-on:htmx:after-request': `scriptDialog(${id})`
   };
 
   // TODO: Clicking the "Script..." and "Contents..." buttons
@@ -104,7 +110,7 @@ app.get('/button-info/:id', (c: Context) => {
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
       <basic-title-bar>Button Info</basic-title-bar>
-      <form hx-post="/button-info" {...hxOn}>
+      <form hx-post="/button-info" {...hxOnForm}>
         <div class="row">
           <label class="mb1" for="cardSize">
             Button Name:
@@ -202,6 +208,7 @@ app.get('/button-info/:id', (c: Context) => {
               hx-get={`/script/${id}`}
               hx-target="main"
               hx-swap="beforeend"
+              {...hxOnScript}
               type="button"
             >
               Script...
@@ -210,7 +217,7 @@ app.get('/button-info/:id', (c: Context) => {
               hx-get={`/button-contents/${id}`}
               hx-target="main"
               hx-swap="beforeend"
-              {...hxOn}
+              {...hxOnButtonContents}
               type="button"
             >
               Contents...
@@ -311,9 +318,6 @@ app.get('/script/:id', async (c: Context) => {
   const id = Number(c.req.param('id'));
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
-
-  const trigger = {'script-dialog': {id}};
-  c.header('HX-Trigger', JSON.stringify(trigger));
 
   return c.html(
     <dialog

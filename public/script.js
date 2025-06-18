@@ -560,8 +560,7 @@ function replaceStack() {
   alert('replaceStack called');
 }
 
-async function scriptDialog(event) {
-  const {id} = event.detail;
+async function scriptDialog(id) {
   const dialog = await waitForElement('#script-dialog-' + id);
   const titleBar = dialog.querySelector('fancy-title-bar');
   makeDraggable({element: dialog, handle: titleBar});
@@ -582,7 +581,6 @@ async function scriptDialog(event) {
       console.log('NEED TO SAVE SCRIPT!');
       dirty = false;
     }
-    // closeDialog(dialog);
   });
 
   //TODO: If the user tries to close the dialog and dirty is true,
