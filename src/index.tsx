@@ -45,19 +45,21 @@ app.use('/*', serveStatic({root: './public'}));
 
 app.get('/button-contents/:id', async (c: Context) => {
   const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
   const trigger = {'button-contents-dialog': {id}};
   c.header('HX-Trigger', JSON.stringify(trigger));
+
   return c.html(
     <dialog
       class="dialog-with-title-bar button-contents-dialog"
       id={`button-contents-dialog-${id}`}
     >
       <basic-title-bar>Button Contents</basic-title-bar>
-      <form hx-post={`/button-contents/%{id}`}>
+      <form hx-post={`/button-contents/${id}`}>
         <label>Contents of card button {id}</label>
-        <textarea name="contents">
-          {/*TODO: Add current button content here. */}
-        </textarea>
+        <textarea name="contents">{button.contents}</textarea>
         <div class="row gap4">
           <button class="defaultButton">OK</button>
           <button onclick="closeDialog(this, true)" type="button">
@@ -69,13 +71,21 @@ app.get('/button-contents/:id', async (c: Context) => {
   );
 });
 
-app.post('/button-contents', async (c: Context) => {
-  //TODO: Associate the new contents with its button.
+app.post('/button-contents/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
   const formData = await c.req.formData();
   const contents = formData.get('contents') as string;
   console.log('index.tsx: contents =', contents);
+  button.contents = contents;
+
   //TODO: Update the contents of the button in the database.
-  c.body(null, 204);
+
+  const trigger = {'button-contents': {id}};
+  c.header('HX-Trigger', JSON.stringify(trigger));
+  return c.body(null, 204);
 });
 
 app.get('/button-info/:id', (c: Context) => {
@@ -224,8 +234,6 @@ app.post('/button-info', async (c: Context) => {
   const cardButtonId = formData.get('cardButtonId');
   const family = formData.get('family');
 
-  // TODO: Update the button in the database.
-
   const button = buttonMap.get(Number(cardButtonId));
   if (!button) return c.body(null, 404); // Not Found
 
@@ -236,6 +244,8 @@ app.post('/button-info', async (c: Context) => {
   button.showName = formData.get('showName') === 'on';
   const style = (formData.get('style') as string).replace(/ /g, '');
   button.style = ButtonStyle[style as keyof typeof ButtonStyle];
+
+  // TODO: Update the button in the database.
 
   const trigger = {'button-info': button};
   c.header('HX-Trigger', JSON.stringify(trigger));
@@ -298,8 +308,12 @@ app.get('/open-stack', (c: Context) => {
 
 app.get('/script/:id', async (c: Context) => {
   const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
   const trigger = {'script-dialog': {id}};
   c.header('HX-Trigger', JSON.stringify(trigger));
+
   return c.html(
     <dialog
       class="dialog-with-title-bar script-dialog"
@@ -340,24 +354,26 @@ app.get('/script/:id', async (c: Context) => {
           </div>
         </div>
         <div class="row">
-          <textarea name="script">
-            {/*TODO: Add current script text here. */}
-          </textarea>
+          <textarea name="script">{button.script}</textarea>
         </div>
       </form>
     </dialog>
   );
 });
 
-app.post('/script', async (c: Context) => {
-  //TODO: Associate the new script with its button.
+app.post('/script/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  //TODO: Also handle fields.
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
   const formData = await c.req.formData();
   const script = formData.get('script') as string;
-  console.log('index.tsx: script =', script);
+  button.script = script;
 
   //TODO: Update the script of the button in the database.
 
-  c.body(null, 204);
+  return c.body(null, 204);
 });
 
 // Make the stack with a given name be the active stack.

@@ -35,6 +35,12 @@ function atLeast(value, min) {
   return min ? Math.max(min, value) : value;
 }
 
+async function buttonContents(event) {
+  const {id} = event.detail;
+  const dialog = await waitForElement('#button-contents-dialog-' + id);
+  closeDialog(dialog);
+}
+
 async function buttonContentsDialog(event) {
   const {id} = event.detail;
   const dialog = await waitForElement('#button-contents-dialog-' + id);
