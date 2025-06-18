@@ -76,6 +76,7 @@ function buttonInfo(event) {
   bStyle.display = 'block';
 
   checkboxSetup(button, style);
+  popupSetup(button, style);
   radioButtonSetup(button, style, family);
 
   switch (style) {
@@ -97,7 +98,7 @@ function buttonInfo(event) {
       bStyle.borderWidth = 1;
       break;
     case 'Popup':
-      alert("Popups aren't implemented yet.");
+      bStyle.display = 'none'; // hide the button
       break;
     case 'Radio Button':
       bStyle.display = 'none'; // hide the button
@@ -150,7 +151,7 @@ function checkboxSetup(button, style) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Check Box') {
-    const id = 'cb' + button.id.substring('button'.length);
+    const id = 'checkbox' + button.id.substring('button'.length);
     let label;
 
     // If the checkbox container already exists, use it.
@@ -367,7 +368,7 @@ async function newButton(event) {
     cancelPendingClick();
 
     const id = button.id.substring('button'.length);
-    await htmx.ajax('GET', '/button-info/' + id, {
+    await htmx.ajax('GET', '/button-info-dialog/' + id, {
       target: 'main',
       swap: 'beforeend'
     });
@@ -504,11 +505,75 @@ function playAudio(fileName) {
   audio.play();
 }
 
+async function popupSetup(button, style) {
+  const buttonId = button.id.substring('button'.length);
+
+  let contents = '';
+  try {
+    const res = await fetch('/button-contents/' + buttonId);
+    contents = (await res.text()).trim();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+
+  const nextElement = button.nextElementSibling;
+
+  if (style === 'Popup') {
+    const id = 'popup' + button.id.substring('button'.length);
+    let label;
+
+    // If the popup container already exists, use it.
+    if (nextElement?.classList.contains('popup-container')) {
+      label = nextElement.querySelector('label');
+    } else {
+      // Create the popup container.
+      label = document.createElement('label');
+      const select = document.createElement('select');
+      select.id = id;
+      for (const optionText of contents.split('\n')) {
+        const option = document.createElement('option');
+        option.textContent = optionText;
+        select.appendChild(option);
+      }
+
+      const div = document.createElement('div');
+      div.classList.add('popup-container');
+      const divStyle = div.style;
+      const bStyle = button.style;
+      divStyle.left = bStyle.left;
+      divStyle.top = bStyle.top;
+      div.appendChild(label);
+      div.appendChild(select);
+      button.after(div);
+
+      // If the popup container is double-clicked, trigger that event
+      // on the button that is currently not displayed
+      // which will open the "Button Info" dialog.
+      div.addEventListener('dblclick', () => {
+        button.dispatchEvent(new MouseEvent('dblclick'));
+      });
+
+      makeDraggable({element: div});
+    }
+
+    label.setAttribute('for', id);
+    label.textContent = button.textContent;
+  } else {
+    // Remove the popup container if it exists.
+    if (nextElement?.classList.contains('popup-container')) {
+      nextElement.remove();
+    }
+  }
+}
+
 function radioButtonSetup(button, style, family) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Radio Button') {
-    const id = 'rb' + button.id.substring('button'.length) + '-' + family;
+    const id =
+      'radioButton' + button.id.substring('button'.length) + '-' + family;
+
     let input, label;
 
     // If the radio button container already exists, use it.

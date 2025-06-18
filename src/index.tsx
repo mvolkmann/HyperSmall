@@ -48,6 +48,14 @@ app.get('/button-contents/:id', async (c: Context) => {
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
 
+  return c.text(button.contents);
+});
+
+app.get('/button-contents-dialog/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
   return c.html(
     <dialog
       class="dialog-with-title-bar button-contents-dialog"
@@ -85,7 +93,7 @@ app.post('/button-contents/:id', async (c: Context) => {
   return c.body(null, 204);
 });
 
-app.get('/button-info/:id', (c: Context) => {
+app.get('/button-info-dialog/:id', (c: Context) => {
   const id = Number(c.req.param('id'));
   const button = buttonMap.get(id);
   if (!button) {
@@ -205,7 +213,7 @@ app.get('/button-info/:id', (c: Context) => {
             <button type="button">Icon...</button>
             <button type="button">LinkTo...</button>
             <button
-              hx-get={`/script/${id}`}
+              hx-get={`/script-dialog/${id}`}
               hx-target="main"
               hx-swap="beforeend"
               {...hxOnScript}
@@ -214,7 +222,7 @@ app.get('/button-info/:id', (c: Context) => {
               Script...
             </button>
             <button
-              hx-get={`/button-contents/${id}`}
+              hx-get={`/button-contents-dialog/${id}`}
               hx-target="main"
               hx-swap="beforeend"
               {...hxOnButtonContents}
@@ -314,7 +322,7 @@ app.get('/open-stack', (c: Context) => {
   );
 });
 
-app.get('/script/:id', async (c: Context) => {
+app.get('/script-dialog/:id', async (c: Context) => {
   const id = Number(c.req.param('id'));
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
@@ -419,7 +427,7 @@ app.delete('/stack/:id', (c: Context) => {
   return c.body(null, result.changes > 0 ? 204 : 404); // No Content or Not Found
 });
 
-// Create a new stack using data from an HTML form..
+// Create a new stack using data from an HTML form.
 app.post('/stack', async (c: Context) => {
   const formData = await c.req.formData();
 
