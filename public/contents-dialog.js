@@ -33,7 +33,7 @@ class ContentsDialog extends HTMLElement {
         <basic-title-bar>Button Contents</basic-title-bar>
         <form hx-post="/button-contents">
           <label>Contents of card button {buttonId}</label>
-          <textarea></textarea>
+          <textarea name="contents"></textarea>
           <div class="row gap4">
             <button class="defaultButton">OK</button>
             <button onclick="closeDialog(this, true)" type="button">
@@ -46,12 +46,6 @@ class ContentsDialog extends HTMLElement {
 
     // Process the htmx attributes on elements that were added dynamically.
     htmx.process(this);
-
-    const textarea = this.querySelector('textarea');
-    const lengthDiv = this.querySelector('#length');
-    textarea.addEventListener('input', () => {
-      lengthDiv.textContent = textarea.value.length;
-    });
   }
 
   show() {

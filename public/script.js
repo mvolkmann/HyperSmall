@@ -467,13 +467,20 @@ function onStackSelected(event) {
   submitButton.disabled = event.target.value === '';
 }
 
-function openContentsDialog(button) {
+function openContentsDialog(button, buttonId) {
   // Close the "Button Info" dialog that triggered this.
   closeDialog(button, true);
 
   const main = document.querySelector('main');
   dialog = document.createElement('contents-dialog');
   main.appendChild(dialog);
+
+  const form = dialog.querySelector('form');
+  form.setAttribute('hx-post', '/button-contents/' + buttonId);
+  //TODO: Need to call htmx.process() because hx-post was changed?
+  const label = dialog.querySelector('label');
+  label.textContent = 'Contents of card button ' + buttonId;
+
   dialog.show();
 }
 

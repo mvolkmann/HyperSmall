@@ -29,6 +29,11 @@ class ScriptDialog extends HTMLElement {
 
       <dialog class="dialog-with-title-bar script-dialog">
         <fancy-title-bar>Script of card button id ???</fancy-title-bar>
+        <!--
+        TODO: Submit this form on cmd-s.
+        TODO: Warn if closing dialog without saving.
+        TODO: Add a Save button?
+        -->
         <form hx-post="/script">
           <div class="top">
             <div class="row gap2">
@@ -60,7 +65,8 @@ class ScriptDialog extends HTMLElement {
             </div>
           </div>
           <div class="row">
-            <textarea></textarea>
+
+            <textarea name="script"></textarea>
           </div>
         </form>
       </dialog>

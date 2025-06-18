@@ -45,6 +45,9 @@ app.use('/*', serveStatic({root: './public'}));
 
 app.post('/button-contents', async (c: Context) => {
   //TODO: Associate the new contents with its button.
+  const formData = await c.req.formData();
+  const contents = formData.get('contents') as string;
+  console.log('index.tsx: contents =', contents);
 });
 
 app.get('/button-info/:id', (c: Context) => {
@@ -160,7 +163,7 @@ app.get('/button-info/:id', (c: Context) => {
             <button onclick="openScriptDialog(this)" type="button">
               Script...
             </button>
-            <button onclick="openContentsDialog(this)" type="button">
+            <button onclick={`openContentsDialog(this, ${id})`} type="button">
               Contents...
             </button>
             <button type="button">Tasks...</button>
@@ -257,6 +260,11 @@ app.get('/open-stack', (c: Context) => {
 
 app.post('/script', async (c: Context) => {
   //TODO: Associate the new script with its button.
+  const formData = await c.req.formData();
+  const script = formData.get('script') as string;
+  console.log('index.tsx: script =', script);
+
+  //TODO: Add response!
 });
 
 // Make the stack with a given name be the active stack.
