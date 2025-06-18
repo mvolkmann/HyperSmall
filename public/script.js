@@ -41,18 +41,7 @@ async function buttonContents(event) {
   closeDialog(dialog);
 }
 
-async function buttonContentsDialog(event, id) {
-  closeDialog(event.target, true);
-
-  const dialog = await waitForElement('#button-contents-dialog-' + id);
-  const titleBar = dialog.querySelector('basic-title-bar');
-  makeDraggable({element: dialog, handle: titleBar});
-
-  dialog.style.display = 'flex';
-  centerInParent(dialog);
-  dialog.showModal();
-}
-
+//TODO: This function is too long!  Break it up.
 async function buttonInfo(event) {
   // action indicates which submit button
   // in the "Button Info" dialog was clicked.
@@ -132,12 +121,11 @@ async function buttonInfo(event) {
   // in a button when the mouse is pressed down on it.
 
   if (action === 'contents' || action === 'script') {
-    let dialog, handle, isModal;
+    let dialog, handle;
 
     if (action === 'contents') {
       dialog = await waitForElement('#button-contents-dialog-' + id);
       handle = dialog.querySelector('basic-title-bar');
-      isModal = true;
     } else if (action === 'script') {
       dialog = await waitForElement('#script-dialog-' + id);
       handle = dialog.querySelector('fancy-title-bar');
@@ -147,10 +135,32 @@ async function buttonInfo(event) {
     makeDraggable({element: dialog, handle});
     dialog.style.display = 'flex';
     centerInParent(dialog);
-    if (isModal) {
+
+    if (action === 'contents') {
       dialog.showModal();
-    } else {
+    } else if (action === 'script') {
       dialog.show();
+
+      let dirty = false;
+
+      const textarea = dialog.querySelector('textarea');
+      const lengthDiv = dialog.querySelector('#length');
+      textarea.addEventListener('input', () => {
+        lengthDiv.textContent = textarea.value.length;
+        dirty = true;
+      });
+
+      dialog.addEventListener('keydown', event => {
+        if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+          event.stopPropagation();
+          event.preventDefault();
+          console.log('NEED TO SAVE SCRIPT!');
+          dirty = false;
+        }
+      });
+
+      //TODO: If the user tries to close the dialog and dirty is true,
+      // prompt them to save the script.
     }
   }
 }
@@ -650,37 +660,6 @@ function radioButtonSetup(button, style, family) {
 
 function replaceStack() {
   alert('replaceStack called');
-}
-
-async function scriptDialog(id) {
-  const dialog = await waitForElement('#script-dialog-' + id);
-  const titleBar = dialog.querySelector('fancy-title-bar');
-  makeDraggable({element: dialog, handle: titleBar});
-
-  let dirty = false;
-
-  const textarea = dialog.querySelector('textarea');
-  const lengthDiv = dialog.querySelector('#length');
-  textarea.addEventListener('input', () => {
-    lengthDiv.textContent = textarea.value.length;
-    dirty = true;
-  });
-
-  dialog.addEventListener('keydown', event => {
-    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-      event.stopPropagation();
-      event.preventDefault();
-      console.log('NEED TO SAVE SCRIPT!');
-      dirty = false;
-    }
-  });
-
-  //TODO: If the user tries to close the dialog and dirty is true,
-  // prompt them to save the script.
-
-  dialog.style.display = 'flex';
-  centerInParent(dialog);
-  dialog.show();
 }
 
 async function selectStack(event) {
