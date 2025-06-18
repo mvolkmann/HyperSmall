@@ -127,12 +127,6 @@ function buttonInfo(event) {
   // in a button when the mouse is pressed down on it.
 }
 
-async function buttonInfoDialog(event) {
-  const dialog = await waitForElement('#button-info-dialog');
-  const titleBar = dialog.querySelector('basic-title-bar');
-  makeDraggable({element: dialog, handle: titleBar});
-}
-
 function cancelPendingClick() {
   if (timeoutId) {
     clearTimeout(timeoutId);
@@ -379,10 +373,13 @@ async function newButton(event) {
     const dialog = document.getElementById('button-info-dialog');
     htmx.process(dialog);
 
-    dialog.style.display = 'flex';
-    centerInParent(dialog);
     const input = dialog.querySelector('#buttonName');
     input.select(); // selects all the text so it is ready to be replaced
+
+    dialog.style.display = 'flex';
+    centerInParent(dialog);
+    const titleBar = dialog.querySelector('basic-title-bar');
+    makeDraggable({element: dialog, handle: titleBar});
     dialog.showModal();
   });
 
