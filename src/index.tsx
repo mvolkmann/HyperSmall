@@ -29,30 +29,7 @@ const insertStackPS = db.prepare(
 
 let stack: Stack | undefined = undefined;
 
-function enumValue(anEnum: unknown, key: unknown) {
-  // @ts-ignore
-  for (const [k, v] of Object.entries(anEnum)) {
-    if (k === key) return v;
-  }
-  return null;
-}
-
-// Log all HTTP requests to the terminal where the server is running.
-app.use('/*', logger());
-
-// This serves static files from the public directory.
-app.use('/*', serveStatic({root: './public'}));
-
-app.get('/button-contents/:id', async (c: Context) => {
-  const id = Number(c.req.param('id'));
-  const button = buttonMap.get(id);
-  if (!button) return c.body(null, 404); // Not Found
-
-  return c.text(button.contents);
-});
-
-app.get('/button-contents-dialog/:id', async (c: Context) => {
-  const id = Number(c.req.param('id'));
+function buttonContentsDialog(c: Context, id: number) {
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
 
@@ -77,6 +54,79 @@ app.get('/button-contents-dialog/:id', async (c: Context) => {
       </form>
     </dialog>
   );
+}
+
+function enumValue(anEnum: unknown, key: unknown) {
+  // @ts-ignore
+  for (const [k, v] of Object.entries(anEnum)) {
+    if (k === key) return v;
+  }
+  return null;
+}
+
+function scriptDialog(c: Context, id: number) {
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
+  return c.html(
+    <dialog
+      class="dialog-with-title-bar script-dialog"
+      id={`script-dialog-${id}`}
+    >
+      <fancy-title-bar>Script of card button id {id}</fancy-title-bar>
+      {/*
+      TODO: Submit this form on cmd-s.
+      TODO: Warn if closing dialog without saving.
+      TODO: Add a Save button?
+      */}
+      <form hx-post={`/script/${id}`} hx-on:submit="closeDialog(this, true)">
+        <div class="top">
+          <div class="row gap2">
+            <div class="column gap2">
+              <div class="row">
+                <label>Scripting language:</label>
+                <select>
+                  <option>HyperTalk</option>
+                  <option>AppleScript</option>
+                </select>
+              </div>
+              <div class="row">
+                <label>Length:</label>
+                <div id="length">0</div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="row">
+                <label>Handlers:</label>
+                <select></select>
+              </div>
+              <div class="row">
+                <label>Functions:</label>
+                <select></select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <textarea name="script">{button.script}</textarea>
+        </div>
+      </form>
+    </dialog>
+  );
+}
+
+// Log all HTTP requests to the terminal where the server is running.
+app.use('/*', logger());
+
+// This serves static files from the public directory.
+app.use('/*', serveStatic({root: './public'}));
+
+app.get('/button-contents/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const button = buttonMap.get(id);
+  if (!button) return c.body(null, 404); // Not Found
+
+  return c.text(button.contents);
 });
 
 app.post('/button-contents/:id', async (c: Context) => {
@@ -105,20 +155,36 @@ app.get('/button-info-dialog/:id', (c: Context) => {
   const hxOnForm = {
     'hx-on:htmx:after-request': 'closeDialog(this, true)'
   };
-  const hxOnButtonContents = {
-    'hx-on:htmx:after-request': `buttonContentsDialog(event, ${id})`
-  };
-  const hxOnScript = {
-    'hx-on:htmx:after-request': `scriptDialog(${id})`
-  };
 
-  // TODO: Clicking the "Script..." and "Contents..." buttons
-  // needs to submit the form just like clicking the "OK" button,
-  // but that isn't happening now.
+  // This form contains multiple submit buttons.
+  // Each one has a "name" attribute set to "action" and
+  // a "value" attribute that allows the POST /button-info endpoint
+  // to determine which submit button was clicked.
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
       <basic-title-bar>Button Info</basic-title-bar>
-      <form hx-post="/button-info" {...hxOnForm}>
+
+      {/*
+      hx-target and hx-swap are needed when the response contains HTML.
+      That is the case when the "Script..." and "Contents..." buttons
+      are clicked, but not when the "OK" button is clicked.
+      */}
+      <form
+        hx-post="/button-info"
+        hx-target="main"
+        hx-swap="beforeend"
+        {...hxOnForm}
+      >
+        {/*
+        When the return key is pressed, the first submit button is triggered.
+        We want it to be the "OK" button,
+        but that is not the first submit button.
+        This hidden submit button IS the first one,
+        so when the return key is pressed,
+        the value of the "action" in the form data will be "return".
+        */}
+        <button name="action" value="return" style="display: none"></button>
+
         <div class="row">
           <label class="mb1" for="cardSize">
             Button Name:
@@ -212,28 +278,18 @@ app.get('/button-info-dialog/:id', (c: Context) => {
             <button type="button">Text Style...</button>
             <button type="button">Icon...</button>
             <button type="button">LinkTo...</button>
-            <button
-              hx-get={`/script-dialog/${id}`}
-              hx-target="main"
-              hx-swap="beforeend"
-              {...hxOnScript}
-              type="button"
-            >
+            <button name="action" value="script">
               Script...
             </button>
-            <button
-              hx-get={`/button-contents-dialog/${id}`}
-              hx-target="main"
-              hx-swap="beforeend"
-              {...hxOnButtonContents}
-              type="button"
-            >
+            <button name="action" value="contents">
               Contents...
             </button>
             <button type="button">Tasks...</button>
           </div>
           <div class="column gap2">
-            <button class="defaultButton">OK</button>
+            <button class="defaultButton" name="action" value="ok">
+              OK
+            </button>
             <button onclick="closeDialog(this, true)" type="button">
               Cancel
             </button>
@@ -246,8 +302,9 @@ app.get('/button-info-dialog/:id', (c: Context) => {
 
 app.post('/button-info', async (c: Context) => {
   const formData = await c.req.formData();
+  const action = formData.get('action') as string;
   const buttonName = formData.get('buttonName') as string;
-  const cardButtonId = formData.get('cardButtonId');
+  const cardButtonId = Number(formData.get('cardButtonId') || 0);
   const family = formData.get('family');
 
   const button = buttonMap.get(Number(cardButtonId));
@@ -263,9 +320,14 @@ app.post('/button-info', async (c: Context) => {
 
   // TODO: Update the button in the database.
 
-  const trigger = {'button-info': button};
+  const trigger = {'button-info': {action, ...button}};
   c.header('HX-Trigger', JSON.stringify(trigger));
-  return c.body(null, 204); // No Content
+
+  return action === 'contents'
+    ? buttonContentsDialog(c, cardButtonId)
+    : action === 'script'
+    ? scriptDialog(c, cardButtonId)
+    : c.body(null, 204); // No Content
 });
 
 app.get('/new-button', (c: Context) => {
@@ -319,58 +381,6 @@ app.get('/open-stack', (c: Context) => {
         </div>
       </form>
     </>
-  );
-});
-
-app.get('/script-dialog/:id', async (c: Context) => {
-  const id = Number(c.req.param('id'));
-  const button = buttonMap.get(id);
-  if (!button) return c.body(null, 404); // Not Found
-
-  return c.html(
-    <dialog
-      class="dialog-with-title-bar script-dialog"
-      id={`script-dialog-${id}`}
-    >
-      <fancy-title-bar>Script of card button id {id}</fancy-title-bar>
-      {/*
-      TODO: Submit this form on cmd-s.
-      TODO: Warn if closing dialog without saving.
-      TODO: Add a Save button?
-      */}
-      <form hx-post={`/script/${id}`} hx-on:submit="closeDialog(this, true)">
-        <div class="top">
-          <div class="row gap2">
-            <div class="column gap2">
-              <div class="row">
-                <label>Scripting language:</label>
-                <select>
-                  <option>HyperTalk</option>
-                  <option>AppleScript</option>
-                </select>
-              </div>
-              <div class="row">
-                <label>Length:</label>
-                <div id="length">0</div>
-              </div>
-            </div>
-            <div class="column">
-              <div class="row">
-                <label>Handlers:</label>
-                <select></select>
-              </div>
-              <div class="row">
-                <label>Functions:</label>
-                <select></select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <textarea name="script">{button.script}</textarea>
-        </div>
-      </form>
-    </dialog>
   );
 });
 

@@ -53,8 +53,11 @@ async function buttonContentsDialog(event, id) {
   dialog.showModal();
 }
 
-function buttonInfo(event) {
-  const {autoHilite, enabled, family, id, name, showName, style} = event.detail;
+async function buttonInfo(event) {
+  // action indicates which submit button
+  // in the "Button Info" dialog was clicked.
+  const {action, autoHilite, enabled, family, id, name, showName, style} =
+    event.detail;
 
   const button = document.getElementById('button' + id);
 
@@ -127,6 +130,29 @@ function buttonInfo(event) {
 
   //TODO: Implement autoHilite which inverts the pixel colors
   // in a button when the mouse is pressed down on it.
+
+  if (action === 'contents' || action === 'script') {
+    let dialog, handle, isModal;
+
+    if (action === 'contents') {
+      dialog = await waitForElement('#button-contents-dialog-' + id);
+      handle = dialog.querySelector('basic-title-bar');
+      isModal = true;
+    } else if (action === 'script') {
+      dialog = await waitForElement('#script-dialog-' + id);
+      handle = dialog.querySelector('fancy-title-bar');
+      isModal = false;
+    }
+
+    makeDraggable({element: dialog, handle});
+    dialog.style.display = 'flex';
+    centerInParent(dialog);
+    if (isModal) {
+      dialog.showModal();
+    } else {
+      dialog.show();
+    }
+  }
 }
 
 function cancelPendingClick() {
