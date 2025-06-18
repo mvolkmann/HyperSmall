@@ -33,16 +33,18 @@ function buttonContentsDialog(c: Context, id: number) {
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
 
+  // This is a workaround that enables
+  // using attribute names that contain multiple colons.
+  const hxOn = {
+    'hx-on:htmx:after-request': 'closeDialog(this, true)'
+  };
   return c.html(
     <dialog
       class="dialog-with-title-bar button-contents-dialog"
       id={`button-contents-dialog-${id}`}
     >
       <basic-title-bar>Button Contents</basic-title-bar>
-      <form
-        hx-post={`/button-contents/${id}`}
-        hx-on:submit="closeDialog(this, true)"
-      >
+      <form hx-post={`/button-contents/${id}`} {...hxOn}>
         <label>Contents of card button {id}</label>
         <textarea name="contents">{button.contents}</textarea>
         <div class="row gap4">
@@ -140,10 +142,7 @@ app.post('/button-contents/:id', async (c: Context) => {
 
   //TODO: Update the contents of the button in the database.
 
-  console.log('index.tsx POST /button-contents/:id: contents =', contents);
-  console.log('index.tsx POST /button-contents/:id: id =', id);
   const trigger = {'button-contents': {contents, id}};
-  //TODO: THIS IS NOT TRIGGERING IN index.html!
   c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204);
 });
@@ -157,7 +156,7 @@ app.get('/button-info-dialog/:id', (c: Context) => {
 
   // This is a workaround that enables
   // using attribute names that contain multiple colons.
-  const hxOnForm = {
+  const hxOn = {
     'hx-on:htmx:after-request': 'closeDialog(this, true)'
   };
 
@@ -178,7 +177,7 @@ app.get('/button-info-dialog/:id', (c: Context) => {
         hx-post="/button-info"
         hx-target="main"
         hx-swap="beforeend"
-        {...hxOnForm}
+        {...hxOn}
       >
         {/*
         When the return key is pressed, the first submit button is triggered.

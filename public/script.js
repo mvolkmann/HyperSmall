@@ -37,8 +37,6 @@ function atLeast(value, min) {
 
 function buttonContents(event) {
   const {contents, id} = event.detail;
-  console.log('script.js buttonContents: contents =', contents);
-  console.log('script.js buttonContents: id =', id);
   const select = document.getElementById('popup' + id);
   updatePopup(select, contents);
 }
@@ -666,9 +664,7 @@ async function setup() {
 }
 
 async function setupContentsDialog(id, contents) {
-  console.log('script.js setupContentsDialog: id =', id);
   const select = await waitForElement('#popup' + id);
-  console.log('script.js setupContentsDialog: select =', select);
   updatePopup(select, contents);
 
   const dialog = await waitForElement('#button-contents-dialog-' + id);
@@ -703,7 +699,7 @@ async function setupScriptDialog(id) {
     if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
       event.stopPropagation();
       event.preventDefault();
-      console.log('NEED TO SAVE SCRIPT!');
+      //TODO: Save script in database.
       dirty = false;
     }
   });
@@ -729,7 +725,6 @@ function updatePopup(select, contents) {
   // Delete all the current options.
   select.innerHTML = '';
 
-  console.log('script.js updatePopup: contents =', contents);
   // Add the new options.
   for (const optionText of contents.split('\n')) {
     const option = document.createElement('option');
