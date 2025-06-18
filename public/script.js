@@ -42,7 +42,7 @@ async function buttonContents(event) {
 }
 
 //TODO: This function is too long!  Break it up.
-async function buttonInfo(event) {
+function buttonInfo(event) {
   // action indicates which submit button
   // in the "Button Info" dialog was clicked.
   const {action, autoHilite, enabled, family, id, name, showName, style} =
@@ -120,49 +120,52 @@ async function buttonInfo(event) {
   //TODO: Implement autoHilite which inverts the pixel colors
   // in a button when the mouse is pressed down on it.
 
-  if (action === 'contents' || action === 'script') {
-    let dialog, handle;
-
-    if (action === 'contents') {
-      dialog = await waitForElement('#button-contents-dialog-' + id);
-      handle = dialog.querySelector('basic-title-bar');
-    } else if (action === 'script') {
-      dialog = await waitForElement('#script-dialog-' + id);
-      handle = dialog.querySelector('fancy-title-bar');
-      isModal = false;
-    }
-
-    makeDraggable({element: dialog, handle});
-    dialog.style.display = 'flex';
-    centerInParent(dialog);
-
-    if (action === 'contents') {
-      dialog.showModal();
-    } else if (action === 'script') {
-      dialog.show();
-
-      let dirty = false;
-
-      const textarea = dialog.querySelector('textarea');
-      const lengthDiv = dialog.querySelector('#length');
-      textarea.addEventListener('input', () => {
-        lengthDiv.textContent = textarea.value.length;
-        dirty = true;
-      });
-
-      dialog.addEventListener('keydown', event => {
-        if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-          event.stopPropagation();
-          event.preventDefault();
-          console.log('NEED TO SAVE SCRIPT!');
-          dirty = false;
-        }
-      });
-
-      //TODO: If the user tries to close the dialog and dirty is true,
-      // prompt them to save the script.
-    }
+  if (action === 'contents') {
+    setupContentsDialog(id);
+  } else if (action === 'script') {
+    setupScriptDialog(id);
   }
+}
+
+async function setupContentsDialog(id) {
+  const dialog = await waitForElement('#button-contents-dialog-' + id);
+  const handle = dialog.querySelector('basic-title-bar');
+  makeDraggable({element: dialog, handle});
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.showModal();
+}
+
+async function setupScriptDialog(id) {
+  const dialog = await waitForElement('#script-dialog-' + id);
+  const handle = dialog.querySelector('fancy-title-bar');
+  makeDraggable({element: dialog, handle});
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.show();
+
+  let dirty = false;
+
+  const textarea = dialog.querySelector('textarea');
+  const lengthDiv = dialog.querySelector('#length');
+  textarea.addEventListener('input', () => {
+    lengthDiv.textContent = textarea.value.length;
+    dirty = true;
+  });
+
+  dialog.addEventListener('keydown', event => {
+    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+      event.stopPropagation();
+      event.preventDefault();
+      console.log('NEED TO SAVE SCRIPT!');
+      dirty = false;
+    }
+  });
+
+  //TODO: If the user tries to close the dialog and dirty is true,
+  // prompt them to save the script.
 }
 
 function cancelPendingClick() {
