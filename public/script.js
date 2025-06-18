@@ -41,8 +41,9 @@ async function buttonContents(event) {
   closeDialog(dialog);
 }
 
-async function buttonContentsDialog(event) {
-  const {id} = event.detail;
+async function buttonContentsDialog(event, id) {
+  closeDialog(event.target, true);
+
   const dialog = await waitForElement('#button-contents-dialog-' + id);
   const titleBar = dialog.querySelector('basic-title-bar');
   makeDraggable({element: dialog, handle: titleBar});

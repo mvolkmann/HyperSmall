@@ -48,16 +48,16 @@ app.get('/button-contents/:id', async (c: Context) => {
   const button = buttonMap.get(id);
   if (!button) return c.body(null, 404); // Not Found
 
-  const trigger = {'button-contents-dialog': {id}};
-  c.header('HX-Trigger', JSON.stringify(trigger));
-
   return c.html(
     <dialog
       class="dialog-with-title-bar button-contents-dialog"
       id={`button-contents-dialog-${id}`}
     >
       <basic-title-bar>Button Contents</basic-title-bar>
-      <form hx-post={`/button-contents/${id}`}>
+      <form
+        hx-post={`/button-contents/${id}`}
+        hx-on:submit="closeDialog(this, true)"
+      >
         <label>Contents of card button {id}</label>
         <textarea name="contents">{button.contents}</textarea>
         <div class="row gap4">
@@ -78,13 +78,10 @@ app.post('/button-contents/:id', async (c: Context) => {
 
   const formData = await c.req.formData();
   const contents = formData.get('contents') as string;
-  console.log('index.tsx: contents =', contents);
   button.contents = contents;
 
   //TODO: Update the contents of the button in the database.
 
-  const trigger = {'button-contents': {id}};
-  c.header('HX-Trigger', JSON.stringify(trigger));
   return c.body(null, 204);
 });
 
@@ -97,15 +94,18 @@ app.get('/button-info/:id', (c: Context) => {
 
   // This is a workaround that enables
   // using attribute names that contain colons.
-  const formAttributes = {
-    'hx-on:htmx:after-request': 'closeDialog(this, true)'
+  const hxOn = {
+    'hx-on:htmx:after-request': `buttonContentsDialog(event, ${id})`
   };
+
+  //TODO: Need this?
   c.header('HX-Trigger', 'button-info-dialog');
+
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
       <basic-title-bar>Button Info</basic-title-bar>
-      <form hx-post="/button-info" {...formAttributes}>
-        <div class="row gap1">
+      <form hx-post="/button-info" {...hxOn}>
+        <div class="row">
           <label class="mb1" for="cardSize">
             Button Name:
           </label>
@@ -210,6 +210,7 @@ app.get('/button-info/:id', (c: Context) => {
               hx-get={`/button-contents/${id}`}
               hx-target="main"
               hx-swap="beforeend"
+              {...hxOn}
               type="button"
             >
               Contents...
@@ -325,7 +326,7 @@ app.get('/script/:id', async (c: Context) => {
       TODO: Warn if closing dialog without saving.
       TODO: Add a Save button?
       */}
-      <form hx-post={`/script/${id}`}>
+      <form hx-post={`/script/${id}`} hx-on:submit="closeDialog(this, true)">
         <div class="top">
           <div class="row gap2">
             <div class="column gap2">
