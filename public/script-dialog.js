@@ -7,7 +7,7 @@ class ScriptDialog extends HTMLElement {
           display: none; /* initially */
           margin: 0;
           min-width: 24rem;
-          z-index: 10;
+          z-index: 200;
 
           form {
             display: flex;
@@ -29,11 +29,7 @@ class ScriptDialog extends HTMLElement {
 
       <dialog class="dialog-with-title-bar script-dialog">
         <fancy-title-bar>Script of card button id ???</fancy-title-bar>
-        <form
-          hx-post="/script"
-          hx-on:htmx:after-request="this.reset()"
-          id="script-form"
-        >
+        <form hx-post="/script">
           <div class="top">
             <div class="row gap2">
               <div class="column gap2">

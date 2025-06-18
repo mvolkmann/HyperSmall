@@ -109,6 +109,12 @@ function buttonInfo(event) {
   // in a button when the mouse is pressed down on it.
 }
 
+async function buttonInfoDialog(event) {
+  const dialog = await waitForElement('#button-info-dialog');
+  const titleBar = dialog.querySelector('basic-title-bar');
+  makeDraggable({element: dialog, handle: titleBar});
+}
+
 function cancelPendingClick() {
   if (timeoutId) {
     clearTimeout(timeoutId);
@@ -461,8 +467,18 @@ function onStackSelected(event) {
   submitButton.disabled = event.target.value === '';
 }
 
+function openContentsDialog(button) {
+  // Close the "Button Info" dialog that triggered this.
+  closeDialog(button, true);
+
+  const main = document.querySelector('main');
+  dialog = document.createElement('contents-dialog');
+  main.appendChild(dialog);
+  dialog.show();
+}
+
 function openScriptDialog(button) {
-  // Close the modal dialog containing the button that triggered this.
+  // Close the "Button Info" dialog that triggered this.
   closeDialog(button, true);
 
   const main = document.querySelector('main');

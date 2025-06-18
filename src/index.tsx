@@ -43,6 +43,10 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+app.post('/button-contents', async (c: Context) => {
+  //TODO: Associate the new contents with its button.
+});
+
 app.get('/button-info/:id', (c: Context) => {
   const id = Number(c.req.param('id'));
   const button = buttonMap.get(id);
@@ -55,6 +59,7 @@ app.get('/button-info/:id', (c: Context) => {
   const formAttributes = {
     'hx-on:htmx:after-request': 'closeDialog(this, true)'
   };
+  c.header('HX-Trigger', 'button-info-dialog');
   return c.html(
     <dialog class="dialog-with-title-bar" id="button-info-dialog">
       <basic-title-bar>Button Info</basic-title-bar>
@@ -155,7 +160,9 @@ app.get('/button-info/:id', (c: Context) => {
             <button onclick="openScriptDialog(this)" type="button">
               Script...
             </button>
-            <button type="button">Contents...</button>
+            <button onclick="openContentsDialog(this)" type="button">
+              Contents...
+            </button>
             <button type="button">Tasks...</button>
           </div>
           <div class="column gap2">
@@ -246,6 +253,10 @@ app.get('/open-stack', (c: Context) => {
       </form>
     </>
   );
+});
+
+app.post('/script', async (c: Context) => {
+  //TODO: Associate the new script with its button.
 });
 
 // Make the stack with a given name be the active stack.
