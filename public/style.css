@@ -34,6 +34,30 @@ button {
   color: #bbb; /* light gray */
 }
 
+.button-contents-dialog {
+  display: none; /* initially */
+  margin: 0;
+  min-width: 24rem;
+  z-index: 200;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .row {
+    justify-content: flex-end;
+  }
+
+  textarea {
+    flex-grow: 1;
+    height: 10rem;
+    overflow: scroll;
+    white-space: nowrap;
+    width: 100%;
+  }
+}
 #button-info-dialog {
   z-index: 100;
 }
@@ -168,6 +192,29 @@ main {
 .row-align-start {
   display: flex;
   align-items: flex-start;
+}
+
+.script-dialog {
+  display: none; /* initially */
+  margin: 0;
+  min-width: 24rem;
+  z-index: 200;
+
+  form {
+    display: flex;
+    padding: 0;
+  }
+
+  textarea {
+    flex-grow: 1;
+    overflow: scroll;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .top {
+    padding: 1rem;
+  }
 }
 
 .stack {

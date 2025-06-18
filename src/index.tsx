@@ -43,11 +43,39 @@ app.use('/*', logger());
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
 
+app.get('/button-contents/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const trigger = {'button-contents-dialog': {id}};
+  c.header('HX-Trigger', JSON.stringify(trigger));
+  return c.html(
+    <dialog
+      class="dialog-with-title-bar button-contents-dialog"
+      id={`button-contents-dialog-${id}`}
+    >
+      <basic-title-bar>Button Contents</basic-title-bar>
+      <form hx-post={`/button-contents/%{id}`}>
+        <label>Contents of card button {id}</label>
+        <textarea name="contents">
+          {/*TODO: Add current button content here. */}
+        </textarea>
+        <div class="row gap4">
+          <button class="defaultButton">OK</button>
+          <button onclick="closeDialog(this, true)" type="button">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </dialog>
+  );
+});
+
 app.post('/button-contents', async (c: Context) => {
   //TODO: Associate the new contents with its button.
   const formData = await c.req.formData();
   const contents = formData.get('contents') as string;
   console.log('index.tsx: contents =', contents);
+  //TODO: Update the contents of the button in the database.
+  c.body(null, 204);
 });
 
 app.get('/button-info/:id', (c: Context) => {
@@ -160,10 +188,20 @@ app.get('/button-info/:id', (c: Context) => {
             <button type="button">Text Style...</button>
             <button type="button">Icon...</button>
             <button type="button">LinkTo...</button>
-            <button onclick="openScriptDialog(this)" type="button">
+            <button
+              hx-get={`/script/${id}`}
+              hx-target="main"
+              hx-swap="beforeend"
+              type="button"
+            >
               Script...
             </button>
-            <button onclick={`openContentsDialog(this, ${id})`} type="button">
+            <button
+              hx-get={`/button-contents/${id}`}
+              hx-target="main"
+              hx-swap="beforeend"
+              type="button"
+            >
               Contents...
             </button>
             <button type="button">Tasks...</button>
@@ -258,13 +296,68 @@ app.get('/open-stack', (c: Context) => {
   );
 });
 
+app.get('/script/:id', async (c: Context) => {
+  const id = Number(c.req.param('id'));
+  const trigger = {'script-dialog': {id}};
+  c.header('HX-Trigger', JSON.stringify(trigger));
+  return c.html(
+    <dialog
+      class="dialog-with-title-bar script-dialog"
+      id={`script-dialog-${id}`}
+    >
+      <fancy-title-bar>Script of card button id {id}</fancy-title-bar>
+      {/*
+      TODO: Submit this form on cmd-s.
+      TODO: Warn if closing dialog without saving.
+      TODO: Add a Save button?
+      */}
+      <form hx-post={`/script/${id}`}>
+        <div class="top">
+          <div class="row gap2">
+            <div class="column gap2">
+              <div class="row">
+                <label>Scripting language:</label>
+                <select>
+                  <option>HyperTalk</option>
+                  <option>AppleScript</option>
+                </select>
+              </div>
+              <div class="row">
+                <label>Length:</label>
+                <div id="length">0</div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="row">
+                <label>Handlers:</label>
+                <select></select>
+              </div>
+              <div class="row">
+                <label>Functions:</label>
+                <select></select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <textarea name="script">
+            {/*TODO: Add current script text here. */}
+          </textarea>
+        </div>
+      </form>
+    </dialog>
+  );
+});
+
 app.post('/script', async (c: Context) => {
   //TODO: Associate the new script with its button.
   const formData = await c.req.formData();
   const script = formData.get('script') as string;
   console.log('index.tsx: script =', script);
 
-  //TODO: Add response!
+  //TODO: Update the script of the button in the database.
+
+  c.body(null, 204);
 });
 
 // Make the stack with a given name be the active stack.

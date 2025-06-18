@@ -35,6 +35,17 @@ function atLeast(value, min) {
   return min ? Math.max(min, value) : value;
 }
 
+async function buttonContentsDialog(event) {
+  const {id} = event.detail;
+  const dialog = await waitForElement('#button-contents-dialog-' + id);
+  const titleBar = dialog.querySelector('basic-title-bar');
+  makeDraggable({element: dialog, handle: titleBar});
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.showModal();
+}
+
 function buttonInfo(event) {
   const {autoHilite, enabled, family, id, name, showName, style} = event.detail;
 
@@ -359,6 +370,8 @@ async function newButton(event) {
       swap: 'beforeend'
     });
     const dialog = document.getElementById('button-info-dialog');
+    htmx.process(dialog);
+
     dialog.style.display = 'flex';
     centerInParent(dialog);
     const input = dialog.querySelector('#buttonName');
@@ -467,33 +480,6 @@ function onStackSelected(event) {
   submitButton.disabled = event.target.value === '';
 }
 
-function openContentsDialog(button, buttonId) {
-  // Close the "Button Info" dialog that triggered this.
-  closeDialog(button, true);
-
-  const main = document.querySelector('main');
-  dialog = document.createElement('contents-dialog');
-  main.appendChild(dialog);
-
-  const form = dialog.querySelector('form');
-  form.setAttribute('hx-post', '/button-contents/' + buttonId);
-  //TODO: Need to call htmx.process() because hx-post was changed?
-  const label = dialog.querySelector('label');
-  label.textContent = 'Contents of card button ' + buttonId;
-
-  dialog.show();
-}
-
-function openScriptDialog(button) {
-  // Close the "Button Info" dialog that triggered this.
-  closeDialog(button, true);
-
-  const main = document.querySelector('main');
-  dialog = document.createElement('script-dialog');
-  main.appendChild(dialog);
-  dialog.show();
-}
-
 function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
   dialog.showModal();
@@ -568,6 +554,23 @@ function radioButtonSetup(button, style, family) {
 
 function replaceStack() {
   alert('replaceStack called');
+}
+
+async function scriptDialog(event) {
+  const {id} = event.detail;
+  const dialog = await waitForElement('#script-dialog-' + id);
+  const titleBar = dialog.querySelector('fancy-title-bar');
+  makeDraggable({element: dialog, handle: titleBar});
+
+  const textarea = dialog.querySelector('textarea');
+  const lengthDiv = dialog.querySelector('#length');
+  textarea.addEventListener('input', () => {
+    lengthDiv.textContent = textarea.value.length;
+  });
+
+  dialog.style.display = 'flex';
+  centerInParent(dialog);
+  dialog.show();
 }
 
 async function selectStack(event) {
