@@ -84,7 +84,7 @@ class MenuBar extends HTMLElement {
             top: 1.2rem;
             left: 0.1rem;
 
-            box-shadow: 2px 2px 2px black;
+            box-shadow: 3px 3px black;
             display: none;
             grid-template-columns: repeat(3, 32px);
             grid-template-rows: repeat(6, 28px);
