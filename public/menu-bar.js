@@ -287,6 +287,20 @@ class MenuBar extends HTMLElement {
     const palette = this.shadowRoot.getElementById('tools-palette');
     const {style} = palette;
     style.display = style.display === 'block' ? 'none' : 'block';
+
+    const rect = palette.getBoundingClientRect();
+    const {left, top, width, height} = rect;
+    const rowHeight = height / 6;
+    const columnWidth = width / 3;
+
+    palette.addEventListener('mousemove', event => {
+      const dx = event.clientX - left;
+      const dy = event.clientY - top;
+      const column = Math.floor(dx / columnWidth) + 1;
+      const row = Math.floor(dy / rowHeight) + 1;
+      console.log('dx =', dx, 'dy =', dy);
+      console.log('row =', row, 'column =', column);
+    });
   }
 }
 
