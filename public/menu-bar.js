@@ -1,9 +1,21 @@
 class MenuBar extends HTMLElement {
+  filledPrefix = '';
+  selectedTool = '';
+
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
     this.shadowRoot.innerHTML = /*html*/ `
       <style>
+        @keyframes flashBorder {
+          0%, 100% {
+            border-color: transparent;
+          }
+          50% {
+            border-color: black;
+          }
+        }
+
         .menu-bar {
           display: flex;
           align-items: center;
@@ -74,8 +86,26 @@ class MenuBar extends HTMLElement {
 
             box-shadow: 2px 2px 2px black;
             display: none;
-            height: auto;
-            width: 200%;
+            grid-template-columns: repeat(3, 32px);
+            grid-template-rows: repeat(6, 28px);
+
+            button {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              background-color: white;
+              border-left: 1px solid black;
+              border-top: 1px solid black;
+              border-right: 1px solid white;
+              border-bottom: 1px solid white;
+              padding: 2px;
+
+              img {
+                width: 20px;
+                height: auto;
+              }
+            }
           }
         }
 
@@ -152,7 +182,26 @@ class MenuBar extends HTMLElement {
         </div>
         <div class="menu" style="position: relative">
           <button class="menu-label" onclick="openTools()">Tools</button>
-          <img id="tools-palette" src="images/tools-palette.png" />
+          <div id="tools-palette">
+            <button><img alt="Browse mode" src="images/tools-palette/browse-mode-icon.png" /></button>
+            <button><img alt="Button mode" src="images/tools-palette/button-mode-icon.png" /></button>
+            <button><img alt="Field mode" src="images/tools-palette/field-mode-icon.png" /></button>
+            <button><img alt="Select tool" src="images/tools-palette/select-tool-icon.png" /></button>
+            <button><img alt="Lasso tool" src="images/tools-palette/lasso-tool-icon.png" /></button>
+            <button><img alt="Pencil tool" src="images/tools-palette/pencil-tool-icon.png" /></button>
+            <button><img alt="Brush tool" src="images/tools-palette/brush-tool-icon.png" /></button>
+            <button><img alt="Eraser tool" src="images/tools-palette/eraser-tool-icon.png" /></button>
+            <button><img alt="Line tool" src="images/tools-palette/line-tool-icon.png" /></button>
+            <button><img alt="Spray tool" src="images/tools-palette/spray-tool-icon.png" /></button>
+            <button><img alt="Rectangle tool" src="images/tools-palette/${this.filledPrefix}rectangle-tool-icon.png" /></button>
+            <button><img alt="Rounded Rectangle tool" src="images/tools-palette/${this.filledPrefix}rounded-rectangle-tool-icon.png" /></button>
+            <button><img alt="Bucket tool" src="images/tools-palette/bucket-tool-icon.png" /></button>
+            <button><img alt="Oval tool" src="images/tools-palette/${this.filledPrefix}oval-tool-icon.png" /></button>
+            <button><img alt="Curve tool" src="images/tools-palette/${this.filledPrefix}curve-tool-icon.png" /></button>
+            <button><img alt="Text tool" src="images/tools-palette/text-tool-icon.png" /></button>
+            <button><img alt="Polygon tool" src="images/tools-palette/${this.filledPrefix}regular-polygon-tool-icon.png" /></button>
+            <button><img alt="Irregular Polygon tool" src="images/tools-palette/${this.filledPrefix}irregular-polygon-tool-icon.png" /></button>
+          </div>
         </div>
         <div class="menu">
           <button class="menu-label">Objects</button>
@@ -231,6 +280,7 @@ class MenuBar extends HTMLElement {
     this.menus = root.querySelectorAll('.menu');
     this.menuButtons = root.querySelectorAll('.menu-items > button');
 
+    // Add event handling to menus and menu items.
     for (const menu of this.menus) {
       const button = menu.querySelector('button');
       button.addEventListener('click', onMenuClick);
@@ -253,11 +303,13 @@ class MenuBar extends HTMLElement {
       }
     }
 
-    // Wire up menu items.
+    // Wire up menu item functionality.
     root.querySelector('#new-stack-btn').addEventListener('click', () => {
       const nsd = document.querySelector('new-stack-dialog');
       nsd.showModal();
     });
+
+    this.toolsPaletteSetup();
   }
 
   closeMenus() {
@@ -269,6 +321,11 @@ class MenuBar extends HTMLElement {
       if (menuItems) menuItems.style.display = 'none';
     }
     openMenu = null;
+  }
+
+  setFilled(filled) {
+    this.filledPrefix = filled ? 'filled-' : '';
+    this.render();
   }
 
   selectMenuItem(name) {
@@ -286,21 +343,34 @@ class MenuBar extends HTMLElement {
   toggleToolsPalette() {
     const palette = this.shadowRoot.getElementById('tools-palette');
     const {style} = palette;
-    style.display = style.display === 'block' ? 'none' : 'block';
+    style.display = style.display === 'grid' ? 'none' : 'grid';
+  }
 
-    const rect = palette.getBoundingClientRect();
-    const {left, top, width, height} = rect;
-    const rowHeight = height / 6;
-    const columnWidth = width / 3;
+  toolsPaletteSetup() {
+    const palette = this.shadowRoot.getElementById('tools-palette');
+    const buttons = palette.querySelectorAll('button');
+    for (const button of buttons) {
+      const {style} = button;
 
-    palette.addEventListener('mousemove', event => {
-      const dx = event.clientX - left;
-      const dy = event.clientY - top;
-      const column = Math.floor(dx / columnWidth) + 1;
-      const row = Math.floor(dy / rowHeight) + 1;
-      console.log('dx =', dx, 'dy =', dy);
-      console.log('row =', row, 'column =', column);
-    });
+      button.addEventListener('click', () => {
+        const img = button.querySelector('img');
+        console.log('menu-bar.js toolsPaletteSetup: img.alt =', img.alt);
+        this.selectedTool = img.alt;
+      });
+
+      button.addEventListener('mouseenter', () => {
+        playAudio('menu-item.wav');
+        style.borderRight = '1px solid black';
+        style.borderBottom = '1px solid black';
+        style.animation = 'flashBorder 100ms step-end infinite';
+      });
+
+      button.addEventListener('mouseleave', () => {
+        style.borderRight = '1px solid white';
+        style.borderBottom = '1px solid white';
+        style.animation = 'none';
+      });
+    }
   }
 }
 
