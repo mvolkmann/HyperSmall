@@ -485,15 +485,13 @@ function onMenuClick(event) {
 
 function onMenuHover(event) {
   if (openMenu) {
-    console.log('script.js onMenuHover: openMenu =', openMenu);
     const button = openMenu.querySelector('.menu-label');
     button.classList.remove('open');
     const menuItems = openMenu.querySelector('.menu-items');
     if (menuItems) {
       menuItems.style.display = 'none';
     } else {
-      const menuBar = document.querySelector('menu-bar');
-      menuBar.toggleToolsPalette();
+      if (button.textContent === 'Tools') hideTools();
     }
     onMenuClick(event);
   }
@@ -515,9 +513,22 @@ function openTitledDialog(selector) {
   return dialog;
 }
 
-function openTools() {
+function hideTools() {
   const menuBar = document.querySelector('menu-bar');
-  menuBar.toggleToolsPalette();
+  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+  toolsPalette.hide();
+}
+
+function showTools() {
+  const menuBar = document.querySelector('menu-bar');
+  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+  toolsPalette.show();
+}
+
+function toggleTools() {
+  const menuBar = document.querySelector('menu-bar');
+  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+  toolsPalette.toggle();
 }
 
 // This lazily loads each audio file only once.
