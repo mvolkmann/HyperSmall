@@ -1,6 +1,7 @@
 class MenuBar extends HTMLElement {
   filledPrefix = '';
-  selectedTool = '';
+  selectedToolButton = null;
+  selectedToolName = '';
 
   constructor() {
     super();
@@ -86,7 +87,7 @@ class MenuBar extends HTMLElement {
 
             box-shadow: 3px 3px black;
             display: none;
-            grid-template-columns: repeat(3, 32px);
+            grid-template-columns: repeat(3, 30px);
             grid-template-rows: repeat(6, 28px);
 
             button {
@@ -104,6 +105,16 @@ class MenuBar extends HTMLElement {
               img {
                 width: 20px;
                 height: auto;
+              }
+            }
+
+            button.selected {
+              background-color: black;
+              border-right-color: black;
+              border-bottom-color: black;
+
+              img {
+                filter: invert(100%);
               }
             }
           }
@@ -353,9 +364,19 @@ class MenuBar extends HTMLElement {
       const {style} = button;
 
       button.addEventListener('click', () => {
+        if (this.selectedButton) {
+          if (this.selectedButton !== button) {
+            this.selectedButton.classList.remove('selected');
+            button.classList.add('selected');
+          }
+        } else {
+          button.classList.add('selected');
+        }
+        this.selectedButton = button;
+
         const img = button.querySelector('img');
-        console.log('menu-bar.js toolsPaletteSetup: img.alt =', img.alt);
-        this.selectedTool = img.alt;
+        this.selectedToolName = img.alt;
+        console.log('selected', this.selectedToolName);
       });
 
       button.addEventListener('mouseenter', () => {
