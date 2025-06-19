@@ -6,9 +6,11 @@ import {logger} from 'hono/logger';
 import Button from './Button';
 import ButtonStyle from './ButtonStyle';
 import CardSize from './CardSize';
+import Field from './Field';
 import Stack from './Stack';
 
 const buttonMap = new Map<number, Button>();
+const fieldMap = new Map<number, Field>();
 
 //TODO: Store these in the stack database so
 //TODO: they aren't reset when the server is restarted.
@@ -117,11 +119,32 @@ function scriptDialog(c: Context, id: number) {
   );
 }
 
+function updateZIndex(c: Context) {
+  const id = Number(c.req.param('id'));
+  const zIndex = Number(c.req.param('zIndex'));
+
+  const button = buttonMap.get(id);
+  if (button) {
+    //TODO: Update the z-index of the button in the database.
+    return c.body(null, 204);
+  } else {
+    const field = fieldMap.get(id);
+    if (field) {
+      //TODO: Update the z-index of the field in the database.
+      return c.body(null, 204);
+    } else {
+      return c.body(null, 404); // Not Found
+    }
+  }
+}
+
 // Log all HTTP requests to the terminal where the server is running.
 app.use('/*', logger());
 
 // This serves static files from the public directory.
 app.use('/*', serveStatic({root: './public'}));
+
+app.post('/bring-closer/:id', updateZIndex);
 
 app.get('/button-contents/:id', async (c: Context) => {
   const id = Number(c.req.param('id'));
@@ -410,6 +433,8 @@ app.post('/select-stack', async (c: Context) => {
   stack = getStackByIdPS.get(id) as Stack;
   return c.body(null, stack ? 204 : 404); // No Content or Not Found
 });
+
+app.post('/send-farther/:id', updateZIndex);
 
 // Return HTML for a dialog to confirm the delete.
 app.delete('/stack', (c: Context) => {

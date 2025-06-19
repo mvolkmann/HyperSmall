@@ -7,6 +7,7 @@ const menuSelectColor = '#339';
 let openMenu;
 let resizeOffsetX;
 let resizeOffsetY;
+let selectedObject;
 let setupFinished = false;
 let timeoutId;
 let wasDraggedOrMoved = false;
@@ -33,6 +34,12 @@ setInterval(updateTime, 60000);
 
 function atLeast(value, min) {
   return min ? Math.max(min, value) : value;
+}
+
+function bringCloser() {
+  const zIndex = selectedObject.style.zIndex || 0;
+  selectedObject.style.zIndex = zIndex + 1;
+  htmx.ajax('POST', '/bring-closer', {id: selectedObject.id});
 }
 
 function buttonContents(event) {
@@ -351,6 +358,7 @@ async function newButton(event) {
   button.textContent = 'New Button';
 
   button.addEventListener('click', event => {
+    selectedObject = button;
     const enabled = button.getAttribute('data-enabled');
     if (enabled === 'false') return;
 
@@ -456,6 +464,8 @@ function onMenuClick(event) {
   const menuButton = event.target;
   openMenu = menuButton.parentElement;
   const menuItems = openMenu.querySelector('.menu-items');
+  if (!menuItems) return;
+
   const menuItemsStyle = menuItems.style;
   const visible = menuItemsStyle.display === 'flex';
 
@@ -475,10 +485,16 @@ function onMenuClick(event) {
 
 function onMenuHover(event) {
   if (openMenu) {
+    console.log('script.js onMenuHover: openMenu =', openMenu);
     const button = openMenu.querySelector('.menu-label');
     button.classList.remove('open');
     const menuItems = openMenu.querySelector('.menu-items');
-    menuItems.style.display = 'none';
+    if (menuItems) {
+      menuItems.style.display = 'none';
+    } else {
+      const menuBar = document.querySelector('menu-bar');
+      menuBar.toggleToolsPalette();
+    }
     onMenuClick(event);
   }
 }
@@ -497,6 +513,11 @@ function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
   dialog.showModal();
   return dialog;
+}
+
+function openTools() {
+  const menuBar = document.querySelector('menu-bar');
+  menuBar.toggleToolsPalette();
 }
 
 // This lazily loads each audio file only once.
@@ -661,6 +682,14 @@ async function setup() {
   await waitForElement(stackDialogSelector(stackName));
   menuBar.selectMenuItem('New Button');
   setupFinished = true;
+}
+
+function sendFarther() {
+  const zIndex = selectedObject.style.zIndex || 0;
+  if (zIndex > 0) {
+    selectedObject.style.zIndex = zIndex - 1;
+    htmx.ajax('POST', '/sendFarther', {id: selectedObject.id});
+  }
 }
 
 async function setupContentsDialog(id, contents) {

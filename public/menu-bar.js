@@ -66,6 +66,17 @@ class MenuBar extends HTMLElement {
             font-size: 0.8rem;
             margin-right: 0.5rem;
           }
+
+          #tools-palette {
+            position: absolute;
+            top: 1.2rem;
+            left: 0.1rem;
+
+            box-shadow: 2px 2px 2px black;
+            display: none;
+            height: auto;
+            width: 200%;
+          }
         }
 
         .menu-bar-logo {
@@ -139,9 +150,9 @@ class MenuBar extends HTMLElement {
             <button>Next Window</button>
           </div>
         </div>
-        <div class="menu">
-          <button class="menu-label">Tools</button>
-          <div class="menu-items"></div>
+        <div class="menu" style="position: relative">
+          <button class="menu-label" onclick="openTools()">Tools</button>
+          <img id="tools-palette" src="images/tools-palette.png" />
         </div>
         <div class="menu">
           <button class="menu-label">Objects</button>
@@ -152,8 +163,8 @@ class MenuBar extends HTMLElement {
             <button>Bkgnd Info...</button>
             <button>Stack Info...</button>
             <hr />
-            <button>Bring Closer</button>
-            <button>Send Farther</button>
+            <button onclick="bringCloser()">Bring Closer</button>
+            <button onclick="sendFarther()">Send Farther</button>
             <hr />
             <button hx-get="/new-button">New Button</button>
             <button>New Field</button>
@@ -228,7 +239,7 @@ class MenuBar extends HTMLElement {
       menu.addEventListener('click', onMenuItemClick);
 
       const menuItems = menu.querySelector('.menu-items');
-      const buttons = menuItems.querySelectorAll('button');
+      const buttons = menuItems?.querySelectorAll('button') || [];
       for (const button of buttons) {
         button.addEventListener('mouseenter', () => {
           playAudio('menu-item.wav');
@@ -255,7 +266,7 @@ class MenuBar extends HTMLElement {
       button.classList.remove('open');
 
       const menuItems = menu.querySelector('.menu-items');
-      menuItems.style.display = 'none';
+      if (menuItems) menuItems.style.display = 'none';
     }
     openMenu = null;
   }
@@ -270,6 +281,12 @@ class MenuBar extends HTMLElement {
     } else {
       alert(`Unknown menu item "${name}"`);
     }
+  }
+
+  toggleToolsPalette() {
+    const palette = this.shadowRoot.getElementById('tools-palette');
+    const {style} = palette;
+    style.display = style.display === 'block' ? 'none' : 'block';
   }
 }
 
