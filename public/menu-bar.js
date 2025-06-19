@@ -236,10 +236,10 @@ class MenuBar extends HTMLElement {
     // Add event handling to menus and menu items.
     for (const menu of this.menus) {
       const button = menu.querySelector('button');
-      button.addEventListener('click', onMenuClick);
+      button.addEventListener('click', e => this.onMenuClick(e));
       //TODO: Should this listen for 'mouseenter' instead?
-      button.addEventListener('mouseover', onMenuHover);
-      menu.addEventListener('click', onMenuItemClick);
+      button.addEventListener('mouseover', e => this.onMenuHover(e));
+      menu.addEventListener('click', e => this.onMenuItemClick(e));
 
       const menuItems = menu.querySelector('.menu-items');
       const buttons = menuItems?.querySelectorAll('button') || [];
@@ -261,17 +261,95 @@ class MenuBar extends HTMLElement {
       const nsd = document.querySelector('new-stack-dialog');
       nsd.showModal();
     });
+
+    root.addEventListener('tool-selected', event => {
+      console.log('menu-bar.js: tool selected is', event.detail);
+      this.closeMenu(openMenu);
+    });
+  }
+
+  closeMenu(menu) {
+    const button = menu.querySelector('button');
+    button.classList.remove('open');
+
+    const menuItems = menu.querySelector('.menu-items');
+    if (menuItems) menuItems.style.display = 'none';
+
+    const menuName = button.textContent;
+    if (menuName === 'Tools') hideTools();
   }
 
   closeMenus() {
     for (const menu of this.menus) {
-      const button = menu.querySelector('button');
-      button.classList.remove('open');
-
-      const menuItems = menu.querySelector('.menu-items');
-      if (menuItems) menuItems.style.display = 'none';
+      this.closeMenu(menu);
     }
     openMenu = null;
+  }
+
+  onMenuClick(event) {
+    event.stopPropagation();
+
+    playAudio('menu-open.wav');
+
+    const menuButton = event.target;
+    const menu = menuButton.parentElement;
+    if (menu === openMenu) {
+      this.closeMenu(menu);
+      openMenu = null;
+      return;
+    }
+
+    const menuItems = menu.querySelector('.menu-items');
+    if (menuItems) {
+      const menuItemsStyle = menuItems.style;
+      const visible = menuItemsStyle.display === 'flex';
+
+      if (visible) {
+        menuItemsStyle.display = 'none';
+        menuBar.closeMenus();
+      } else {
+        menuItemsStyle.display = 'flex';
+        //TODO: Why is this necessary?
+        requestAnimationFrame(() => {
+          menuItemsStyle.width = 'fit-content';
+        });
+      }
+    } else {
+      const menuName = menuButton.textContent;
+      if (menuName === 'Tools') {
+        const openMenuName = openMenu?.querySelector('.menu-label').textContent;
+        if (openMenuName === 'Tools') {
+          hideTools();
+          openMenu = null;
+        } else {
+          showTools();
+        }
+      }
+    }
+
+    menuButton.classList.toggle('open');
+    openMenu = menu;
+  }
+
+  onMenuHover(event) {
+    // If another menu is open, close it.
+    if (openMenu) {
+      const button = openMenu.querySelector('.menu-label');
+      button.classList.remove('open');
+      const menuItems = openMenu.querySelector('.menu-items');
+      if (menuItems) {
+        menuItems.style.display = 'none';
+      } else {
+        if (button.textContent === 'Tools') hideTools();
+      }
+
+      this.onMenuClick(event);
+    }
+  }
+
+  onMenuItemClick(event) {
+    playAudio('menu-open.wav');
+    menuBar.closeMenus();
   }
 
   setFilled(filled) {

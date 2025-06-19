@@ -141,7 +141,13 @@ class ToolsPalette extends HTMLElement {
 
         const img = button.querySelector('img');
         this.selectedToolName = img.alt;
-        console.log('selected', this.selectedToolName);
+        this.dispatchEvent(
+          new CustomEvent('tool-selected', {
+            bubbles: true,
+            composed: true,
+            detail: this.selectedToolName
+          })
+        );
       });
 
       button.addEventListener('mouseenter', () => {

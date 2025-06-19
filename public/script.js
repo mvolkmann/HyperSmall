@@ -451,52 +451,6 @@ function onCardSizeChange(event) {
   document.querySelector('#cardHeight').textContent = cardHeight[cardSize];
 }
 
-function onMenuItemClick(event) {
-  playAudio('menu-open.wav');
-  menuBar.closeMenus();
-}
-
-function onMenuClick(event) {
-  event.stopPropagation();
-
-  playAudio('menu-open.wav');
-
-  const menuButton = event.target;
-  openMenu = menuButton.parentElement;
-  const menuItems = openMenu.querySelector('.menu-items');
-  if (!menuItems) return;
-
-  const menuItemsStyle = menuItems.style;
-  const visible = menuItemsStyle.display === 'flex';
-
-  if (visible) {
-    menuItemsStyle.display = 'none';
-    menuBar.closeMenus();
-  } else {
-    menuItemsStyle.display = 'flex';
-    //TODO: Why is this necessary?
-    requestAnimationFrame(() => {
-      menuItemsStyle.width = 'fit-content';
-    });
-  }
-
-  menuButton.classList.toggle('open');
-}
-
-function onMenuHover(event) {
-  if (openMenu) {
-    const button = openMenu.querySelector('.menu-label');
-    button.classList.remove('open');
-    const menuItems = openMenu.querySelector('.menu-items');
-    if (menuItems) {
-      menuItems.style.display = 'none';
-    } else {
-      if (button.textContent === 'Tools') hideTools();
-    }
-    onMenuClick(event);
-  }
-}
-
 function onStackNameChange(event) {
   const submitButton = document.getElementById('saveBtn');
   submitButton.disabled = event.target.value === '';
