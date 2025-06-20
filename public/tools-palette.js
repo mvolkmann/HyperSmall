@@ -25,7 +25,7 @@ class ToolsPalette extends HTMLElement {
           box-shadow: 3px 3px black;
           display: none;
           grid-template-columns: repeat(3, 30px);
-          grid-template-rows: repeat(6, 28px);
+          grid-template-rows: 28px, 5px, repeat(5, 28px);
 
           button {
             display: flex;
@@ -54,6 +54,17 @@ class ToolsPalette extends HTMLElement {
               filter: invert(100%);
             }
           }
+
+          .separator {
+            background-color: white;
+            border-top: 1px solid black;
+            grid-column: span 3;
+            height: 5px;
+
+            hr {
+              border-top: 2px dotted black;
+              margin-top: 2px;
+          }
         }
       </style>
 
@@ -61,6 +72,9 @@ class ToolsPalette extends HTMLElement {
         <button class="selected"><img alt="Browse mode" src="images/tools-palette/browse-mode-icon.png" /></button>
         <button><img alt="Button mode" src="images/tools-palette/button-mode-icon.png" /></button>
         <button><img alt="Field mode" src="images/tools-palette/field-mode-icon.png" /></button>
+        <div class="separator">
+          <hr />
+        </div>
         <button><img alt="Select tool" src="images/tools-palette/select-tool-icon.png" /></button>
         <button><img alt="Lasso tool" src="images/tools-palette/lasso-tool-icon.png" /></button>
         <button><img alt="Pencil tool" src="images/tools-palette/pencil-tool-icon.png" /></button>
