@@ -247,7 +247,7 @@ class MenuBar extends HTMLElement {
       for (const button of buttons) {
         button.addEventListener('mouseenter', () => {
           playAudio('menu-item.wav');
-          button.style.backgroundColor = '#339';
+          button.style.backgroundColor = '#339'; // matches CSS class open
           button.style.color = 'white';
         });
         button.addEventListener('mouseleave', () => {
