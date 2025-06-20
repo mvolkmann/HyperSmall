@@ -298,9 +298,12 @@ class MenuBar extends HTMLElement {
   onMenuClick(event) {
     event.stopPropagation();
 
-    playAudio('menu-open.wav');
-
     const menuButton = event.target;
+    const sound = menuButton.classList.contains('open')
+      ? 'menu-close'
+      : 'menu-open';
+    playAudio(sound + '.wav');
+
     const menu = menuButton.parentElement;
     if (menu === openMenu) {
       this.closeMenu(menu);
