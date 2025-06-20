@@ -406,6 +406,10 @@ async function newButton(event) {
   button.addEventListener('dblclick', async () => {
     cancelPendingClick();
 
+    // Only open the "Button Info" dialog if in Button mode.
+    const mode = sessionStorage.getItem('mode');
+    if (mode !== 'Button') return;
+
     const id = button.id.substring('button'.length);
     await htmx.ajax('GET', '/button-info-dialog/' + id, {
       target: 'main',
