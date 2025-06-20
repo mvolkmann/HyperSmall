@@ -266,10 +266,6 @@ class MenuBar extends HTMLElement {
     });
 
     root.addEventListener('tool-selected', event => {
-      const tool = event.detail;
-      console.log('menu-bar.js: tool selected is', tool);
-      const parts = tool.split(' ');
-      if (parts[1] === 'mode') sessionStorage.setItem('mode', parts[0]);
       this.closeMenu(openMenu);
     });
   }

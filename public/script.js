@@ -1,5 +1,6 @@
 const audioMap = {};
 
+let cardIndex = 0;
 let currentStackName = '';
 let isResizing = false;
 let menuBar;
@@ -8,6 +9,14 @@ let resizeOffsetX;
 let resizeOffsetY;
 let selectedObject;
 let setupFinished = false;
+let stack = {
+  cards: [
+    {
+      buttons: [],
+      fields: []
+    }
+  ]
+};
 let timeoutId;
 let wasDraggedOrMoved = false;
 
@@ -246,16 +255,13 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
 
   const target = handle || element;
   const targetStyle = target.style;
-  targetStyle.cursor = 'grab';
 
   if (canResize) {
     target.addEventListener('mousemove', event => {
       targetStyle.cursor =
         canResize && isOverLowerRight(event)
           ? 'se-resize'
-          : event.buttons > 0 // a mouse button is down
-          ? 'grabbing'
-          : 'grab';
+          : getCursor(target, event.buttons > 0);
     });
   }
 
@@ -341,7 +347,7 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
       //TODO: Send request to server to update
       // the position and size of the element.
 
-      targetStyle.cursor = 'grab';
+      targetStyle.cursor = getCursor(target, false);
       isResizing = false;
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -352,6 +358,14 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
   });
 }
 
+function getCursor(element, mouseDown) {
+  const {tagName} = element;
+  const mode = sessionStorage.getItem('mode');
+  if (tagName === 'BUTTON' && mode !== 'Button') return 'pointer';
+  if (tagName === 'INPUT' && mode !== 'Field') return 'text';
+  return mouseDown ? 'grabbing' : 'grab';
+}
+
 async function newButton(event) {
   const {buttonId} = event.detail;
 
@@ -359,7 +373,6 @@ async function newButton(event) {
   const button = document.createElement('button');
   button.id = 'button' + buttonId;
   button.classList.add('button');
-  //button.classList.add('selected');
   button.textContent = 'New Button';
 
   button.addEventListener('click', event => {
@@ -377,7 +390,7 @@ async function newButton(event) {
         const enabled = button.getAttribute('data-enabled');
         if (enabled === 'false') return;
         //TODO: Run the button script instead of calling alert.
-        alert('got click');
+        alert(`You clicked "${button.textContent}".`);
       } else if (mode === 'Button' || mode === 'Field') {
         if (wasDraggedOrMoved) {
           wasDraggedOrMoved = false;
@@ -641,6 +654,29 @@ async function setup() {
   dialog.querySelector('#saveBtn').click();
   await waitForElement(stackDialogSelector(stackName));
   menuBar.selectMenuItem('New Button');
+
+  document.addEventListener('tool-selected', event => {
+    const tool = event.detail;
+    console.log('script.js: tool selected is', tool);
+    const parts = tool.split(' ');
+    if (parts[1] === 'mode') {
+      const mode = parts[0];
+      sessionStorage.setItem('mode', mode);
+
+      // Change the cursor for all buttons and fields in the current stack.
+      const buttonCursor = mode === 'Button' ? 'grab' : 'pointer';
+      const fieldCursor = mode === 'Field' ? 'grab' : 'text';
+      for (const card of stack.cards) {
+        for (const button of card.buttons) {
+          button.style.cursor = buttonCursor;
+        }
+        for (const field of card.fields) {
+          field.style.cursor = fieldCursor;
+        }
+      }
+    }
+  });
+
   setupFinished = true;
 }
 
