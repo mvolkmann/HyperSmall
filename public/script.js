@@ -3,7 +3,6 @@ const audioMap = {};
 let currentStackName = '';
 let isResizing = false;
 let menuBar;
-const menuSelectColor = '#339';
 let openMenu;
 let resizeOffsetX;
 let resizeOffsetY;
@@ -465,24 +464,6 @@ function openTitledDialog(selector) {
   const dialog = document.querySelector(selector);
   dialog.showModal();
   return dialog;
-}
-
-function hideTools() {
-  const menuBar = document.querySelector('menu-bar');
-  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
-  toolsPalette.hide();
-}
-
-function showTools() {
-  const menuBar = document.querySelector('menu-bar');
-  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
-  toolsPalette.show();
-}
-
-function toggleTools() {
-  const menuBar = document.querySelector('menu-bar');
-  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
-  toolsPalette.toggle();
 }
 
 // This lazily loads each audio file only once.

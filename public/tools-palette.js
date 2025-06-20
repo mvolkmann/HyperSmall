@@ -19,8 +19,8 @@ class ToolsPalette extends HTMLElement {
 
         #tools-palette {
           position: absolute;
-          top: 1.2rem;
-          left: 0.1rem;
+          top: 1.5rem;
+          left: 0;
 
           box-shadow: 3px 3px black;
           display: none;

@@ -38,6 +38,7 @@ class MenuBar extends HTMLElement {
               background-color: transparent;
               border: none;
               cursor: pointer;
+              padding: 0.2rem 0.5rem;
             }
 
             hr {
@@ -50,7 +51,7 @@ class MenuBar extends HTMLElement {
               align-items: flex-start;
 
               position: absolute;
-              top: 1.2rem;
+              top: 1.5rem;
 
               background-color: #ddd;
               border: 1px solid black;
@@ -59,6 +60,7 @@ class MenuBar extends HTMLElement {
               button {
                 border-radius: 0;
                 display: inline-block;
+                font-size: 1rem;
                 text-align: left;
                 white-space: nowrap;
                 width: 100%;
@@ -83,12 +85,12 @@ class MenuBar extends HTMLElement {
 
         .menu-bar-logo {
           height: 1rem;
-          margin.right: 0.4rem;
+          margin-right: 0.5rem;
         }
 
         .menu-label {
           border-radius: 0;
-          font-size: 0.8rem;
+          font-size: 1rem;
           font-weight: bold;
           padding: 2px 6px;
         }
@@ -153,7 +155,7 @@ class MenuBar extends HTMLElement {
           </div>
         </div>
         <div class="menu" style="position: relative">
-          <button class="menu-label" onclick="toggleTools()">Tools</button>
+          <button class="menu-label" onclick="this.toggleTools()">Tools</button>
           <tools-palette></tools-palette>
         </div>
         <div class="menu">
@@ -237,8 +239,7 @@ class MenuBar extends HTMLElement {
     for (const menu of this.menus) {
       const button = menu.querySelector('button');
       button.addEventListener('click', e => this.onMenuClick(e));
-      //TODO: Should this listen for 'mouseenter' instead?
-      button.addEventListener('mouseover', e => this.onMenuHover(e));
+      button.addEventListener('mouseenter', e => this.onMenuEnter(e));
       menu.addEventListener('click', e => this.onMenuItemClick(e));
 
       const menuItems = menu.querySelector('.menu-items');
@@ -246,7 +247,7 @@ class MenuBar extends HTMLElement {
       for (const button of buttons) {
         button.addEventListener('mouseenter', () => {
           playAudio('menu-item.wav');
-          button.style.backgroundColor = menuSelectColor;
+          button.style.backgroundColor = '#339';
           button.style.color = 'white';
         });
         button.addEventListener('mouseleave', () => {
@@ -276,7 +277,7 @@ class MenuBar extends HTMLElement {
     if (menuItems) menuItems.style.display = 'none';
 
     const menuName = button.textContent;
-    if (menuName === 'Tools') hideTools();
+    if (menuName === 'Tools') this.hideTools();
   }
 
   closeMenus() {
@@ -284,6 +285,12 @@ class MenuBar extends HTMLElement {
       this.closeMenu(menu);
     }
     openMenu = null;
+  }
+
+  hideTools() {
+    const menuBar = document.querySelector('menu-bar');
+    const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+    toolsPalette.hide();
   }
 
   onMenuClick(event) {
@@ -319,10 +326,10 @@ class MenuBar extends HTMLElement {
       if (menuName === 'Tools') {
         const openMenuName = openMenu?.querySelector('.menu-label').textContent;
         if (openMenuName === 'Tools') {
-          hideTools();
+          this.hideTools();
           openMenu = null;
         } else {
-          showTools();
+          this.showTools();
         }
       }
     }
@@ -331,7 +338,7 @@ class MenuBar extends HTMLElement {
     openMenu = menu;
   }
 
-  onMenuHover(event) {
+  onMenuEnter(event) {
     // If another menu is open, close it.
     if (openMenu) {
       const button = openMenu.querySelector('.menu-label');
@@ -340,7 +347,7 @@ class MenuBar extends HTMLElement {
       if (menuItems) {
         menuItems.style.display = 'none';
       } else {
-        if (button.textContent === 'Tools') hideTools();
+        if (button.textContent === 'Tools') this.hideTools();
       }
 
       this.onMenuClick(event);
@@ -367,6 +374,18 @@ class MenuBar extends HTMLElement {
     } else {
       alert(`Unknown menu item "${name}"`);
     }
+  }
+
+  showTools() {
+    const menuBar = document.querySelector('menu-bar');
+    const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+    toolsPalette.show();
+  }
+
+  toggleTools() {
+    const menuBar = document.querySelector('menu-bar');
+    const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+    toolsPalette.toggle();
   }
 }
 
