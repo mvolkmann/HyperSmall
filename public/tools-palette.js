@@ -25,7 +25,7 @@ class ToolsPalette extends HTMLElement {
           box-shadow: 3px 3px black;
           display: none;
           grid-template-columns: repeat(3, 30px);
-          grid-template-rows: 28px, 5px, repeat(5, 28px);
+          grid-template-rows: 28px, 6px, repeat(5, 28px);
 
           button {
             display: flex;
@@ -59,7 +59,7 @@ class ToolsPalette extends HTMLElement {
             background-color: white;
             border-top: 1px solid black;
             grid-column: span 3;
-            height: 5px;
+            height: 6px;
 
             hr {
               border-top: 2px dotted black;
