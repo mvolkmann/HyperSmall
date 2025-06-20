@@ -243,6 +243,10 @@ class MenuBar extends HTMLElement {
       menu.addEventListener('click', e => this.onMenuItemClick(e));
 
       const menuItems = menu.querySelector('.menu-items');
+      if (menuItems) {
+        menuItems.addEventListener('mouseenter', e => this.onMenuItemsEnter(e));
+      }
+
       const buttons = menuItems?.querySelectorAll('button') || [];
       for (const button of buttons) {
         button.addEventListener('mouseenter', () => {
@@ -337,8 +341,10 @@ class MenuBar extends HTMLElement {
   }
 
   onMenuEnter(event) {
+    const menu = event.target.parentElement;
+
     // If another menu is open, close it.
-    if (openMenu) {
+    if (openMenu && openMenu !== menu) {
       const button = openMenu.querySelector('.menu-label');
       button.classList.remove('open');
       const menuItems = openMenu.querySelector('.menu-items');
@@ -355,6 +361,12 @@ class MenuBar extends HTMLElement {
   onMenuItemClick(event) {
     playAudio('menu-open.wav');
     menuBar.closeMenus();
+  }
+
+  onMenuItemsEnter(event) {
+    const menu = event.target.parentElement;
+    const button = menu.querySelector('.menu-label');
+    button.classList.add('open');
   }
 
   setFilled(filled) {
