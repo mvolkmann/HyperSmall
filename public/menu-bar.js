@@ -94,6 +94,12 @@ class MenuBar extends HTMLElement {
           font-weight: bold;
           padding: 2px 6px;
         }
+
+        #tool {
+          font-size: 0.8rem;
+          font-weight: normal;
+          margin-right: 1rem;
+        }
       </style>
 
       <div class="menu-bar">
@@ -215,6 +221,7 @@ class MenuBar extends HTMLElement {
         </div>
         <div class="spacer"></div>
         <div id="time"></div>
+        <div id="tool">Browse tool</div>
         <img
           class="menuBarLogo"
           src="images/hypercard-logo.png"
@@ -266,6 +273,8 @@ class MenuBar extends HTMLElement {
     });
 
     root.addEventListener('tool-selected', event => {
+      const toolDiv = this.shadowRoot.querySelector('#tool');
+      toolDiv.textContent = event.detail;
       this.closeMenu(openMenu);
     });
   }
