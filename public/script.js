@@ -263,6 +263,12 @@ function makeDraggable({element, handle, canResize, minWidth, minHeight}) {
     // Only handle the left mouse button.
     if (event.buttons !== 1) return;
 
+    // Only allow buttons and fields to be dragged if in the correct mode.
+    const {tagName} = event.target;
+    const mode = sessionStorage.getItem('mode');
+    if (tagName === 'BUTTON' && mode !== 'Button') return;
+    if (tagName === 'INPUT' && mode !== 'Field') return;
+
     if (targetStyle.cursor === 'grab') targetStyle.cursor = 'grabbing';
 
     const elementRect = element.getBoundingClientRect();
@@ -353,28 +359,34 @@ async function newButton(event) {
   const button = document.createElement('button');
   button.id = 'button' + buttonId;
   button.classList.add('button');
-  button.classList.add('selected');
+  //button.classList.add('selected');
   button.textContent = 'New Button';
 
   button.addEventListener('click', event => {
-    selectedObject = button;
-    const enabled = button.getAttribute('data-enabled');
-    if (enabled === 'false') return;
+    event.stopPropagation();
 
     // This is some trickery to prevent double clicks
     // from also triggering this listener.
     // If there is already a pending click handler, ignore this click.
     if (timeoutId) return;
 
-    if (wasDraggedOrMoved) {
-      wasDraggedOrMoved = false;
-      return;
-    }
-
     timeoutId = setTimeout(() => {
-      alert('got click');
-      button.classList.toggle('selected');
-      event.stopPropagation();
+      timeoutId = 0;
+      const mode = sessionStorage.getItem('mode');
+      if (mode === 'Browse') {
+        const enabled = button.getAttribute('data-enabled');
+        if (enabled === 'false') return;
+        //TODO: Run the button script instead of calling alert.
+        alert('got click');
+      } else if (mode === 'Button' || mode === 'Field') {
+        if (wasDraggedOrMoved) {
+          wasDraggedOrMoved = false;
+          return;
+        }
+
+        button.classList.toggle('selected');
+        selectedObject = button;
+      }
     }, 200);
   });
 
@@ -608,6 +620,8 @@ async function selectStack(event) {
 }
 
 async function setup() {
+  sessionStorage.setItem('mode', 'Browse');
+
   menuBar = document.querySelector('menu-bar');
   document.body.addEventListener('click', () => menuBar.closeMenus());
 

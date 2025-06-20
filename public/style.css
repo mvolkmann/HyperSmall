@@ -230,7 +230,7 @@ main {
   /* This adds a "marching ants" border to an element
      to indicate that it is selected.
      TODO: Also support field focus! */
-  button:focus {
+  button.selected {
     border: 1px solid transparent;
     background: linear-gradient(white, white) padding-box,
       repeating-linear-gradient(

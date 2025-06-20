@@ -155,7 +155,7 @@ class MenuBar extends HTMLElement {
           </div>
         </div>
         <div class="menu" style="position: relative">
-          <button class="menu-label" onclick="this.toggleTools()">Tools</button>
+          <button class="menu-label" onclick="toggleTools()">Tools</button>
           <tools-palette></tools-palette>
         </div>
         <div class="menu">
@@ -266,7 +266,10 @@ class MenuBar extends HTMLElement {
     });
 
     root.addEventListener('tool-selected', event => {
-      console.log('menu-bar.js: tool selected is', event.detail);
+      const tool = event.detail;
+      console.log('menu-bar.js: tool selected is', tool);
+      const parts = tool.split(' ');
+      if (parts[1] === 'mode') sessionStorage.setItem('mode', parts[0]);
       this.closeMenu(openMenu);
     });
   }
@@ -394,12 +397,12 @@ class MenuBar extends HTMLElement {
     const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
     toolsPalette.show();
   }
+}
 
-  toggleTools() {
-    const menuBar = document.querySelector('menu-bar');
-    const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
-    toolsPalette.toggle();
-  }
+function toggleTools() {
+  const menuBar = document.querySelector('menu-bar');
+  const toolsPalette = menuBar.shadowRoot.querySelector('tools-palette');
+  toolsPalette.toggle();
 }
 
 customElements.define('menu-bar', MenuBar);

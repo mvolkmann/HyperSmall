@@ -58,7 +58,7 @@ class ToolsPalette extends HTMLElement {
       </style>
 
       <div id="tools-palette">
-        <button><img alt="Browse mode" src="images/tools-palette/browse-mode-icon.png" /></button>
+        <button class="selected"><img alt="Browse mode" src="images/tools-palette/browse-mode-icon.png" /></button>
         <button><img alt="Button mode" src="images/tools-palette/button-mode-icon.png" /></button>
         <button><img alt="Field mode" src="images/tools-palette/field-mode-icon.png" /></button>
         <button><img alt="Select tool" src="images/tools-palette/select-tool-icon.png" /></button>
@@ -125,6 +125,10 @@ class ToolsPalette extends HTMLElement {
   toolsPaletteSetup() {
     const palette = this.shadowRoot.getElementById('tools-palette');
     const buttons = palette.querySelectorAll('button');
+
+    // Select the "Browse mode" button by default.
+    this.selectedButton = buttons[0];
+
     for (const button of buttons) {
       const {style} = button;
 
