@@ -45,9 +45,9 @@ function atLeast(value, min) {
 }
 
 function bringCloser() {
-  const zIndex = selectedObject.style.zIndex || 0;
+  const zIndex = Number(selectedObject.style.zIndex);
   selectedObject.style.zIndex = zIndex + 1;
-  htmx.ajax('POST', '/bring-closer', {id: selectedObject.id});
+  htmx.ajax('POST', '/bring-closer/' + getButtonId(selectedObject));
 }
 
 function buttonContents(event) {
@@ -55,6 +55,8 @@ function buttonContents(event) {
   const select = document.getElementById('popup' + id);
   updatePopup(select, contents);
 }
+
+const getButtonId = button => button.id.substring('button'.length);
 
 //TODO: This function is too long!  Break it up.
 function buttonInfo(event) {
@@ -173,7 +175,7 @@ function checkboxSetup(button, style) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Check Box') {
-    const id = 'checkbox' + button.id.substring('button'.length);
+    const id = 'checkbox' + getButtonId(button);
     let label;
 
     // If the checkbox container already exists, use it.
@@ -410,8 +412,7 @@ async function newButton(event) {
     const mode = sessionStorage.getItem('mode');
     if (mode !== 'Button') return;
 
-    const id = button.id.substring('button'.length);
-    await htmx.ajax('GET', '/button-info-dialog/' + id, {
+    await htmx.ajax('GET', '/button-info-dialog/' + getButtonId(button), {
       target: 'main',
       swap: 'beforeend'
     });
@@ -524,11 +525,9 @@ function playAudio(fileName) {
 }
 
 async function popupSetup(button, style) {
-  const buttonId = button.id.substring('button'.length);
-
   let contents = '';
   try {
-    const res = await fetch('/button-contents/' + buttonId);
+    const res = await fetch('/button-contents/' + getButtonId(button));
     contents = (await res.text()).trim();
   } catch (e) {
     console.error(e);
@@ -538,7 +537,7 @@ async function popupSetup(button, style) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Popup') {
-    const id = 'popup' + button.id.substring('button'.length);
+    const id = 'popup' + getButtonId(button);
     let label;
 
     // If the popup container already exists, use it.
@@ -585,8 +584,7 @@ function radioButtonSetup(button, style, family) {
   const nextElement = button.nextElementSibling;
 
   if (style === 'Radio Button') {
-    const id =
-      'radioButton' + button.id.substring('button'.length) + '-' + family;
+    const id = `radioButton${getButtonId(button)}-${family}`;
 
     let input, label;
 
@@ -700,10 +698,10 @@ async function setup() {
 }
 
 function sendFarther() {
-  const zIndex = selectedObject.style.zIndex || 0;
+  const zIndex = Number(selectedObject.style.zIndex);
   if (zIndex > 0) {
     selectedObject.style.zIndex = zIndex - 1;
-    htmx.ajax('POST', '/sendFarther', {id: selectedObject.id});
+    htmx.ajax('POST', '/send-farther/' + getButtonId(selectedObject));
   }
 }
 
