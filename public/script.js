@@ -429,8 +429,12 @@ async function newButton(event) {
   });
 
   button.addEventListener('keydown', event => {
-    event.stopPropagation();
-    if (event.key === 'Backspace') button.remove();
+    if (event.key === 'Backspace') {
+      button.remove();
+      event.stopPropagation();
+    }
+    // Allow other key events to propagate,
+    // such as cmd-plus (Bring Closer) and cmd-minus (Send Farther).
   });
 
   // Add the button to the section.
@@ -471,6 +475,17 @@ async function newStack(event) {
   makeDraggable({element: dialog, handle: titleBar});
 
   dialog.addEventListener('click', selectStack);
+
+  dialog.addEventListener('keydown', event => {
+    const {ctrlKey, key, metaKey} = event;
+    if ((metaKey || ctrlKey) && key === '-') {
+      event.preventDefault(); // prevents browser zoom out
+      sendFarther();
+    } else if ((metaKey || ctrlKey) && key === '=') {
+      event.preventDefault(); // prevents browser zoom in
+      bringCloser();
+    }
+  });
 }
 
 function onCardSizeChange(event) {
